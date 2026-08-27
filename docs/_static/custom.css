@@ -1,0 +1,96 @@
+/* 主要内容区域居中显示，两侧留白 */
+.wy-nav-content {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    padding: 0 2rem !important;
+}
+
+/* 确保导航栏正常显示 */
+.wy-nav-side {
+    position: fixed;
+    width: 300px;
+}
+
+.wy-nav-content-wrap {
+    margin-left: 300px;
+}
+
+/* 响应式设计：小屏幕设备适配 */
+@media (max-width: 768px) {
+    .wy-nav-content-wrap {
+        margin-left: 0;
+    }
+    .wy-nav-content {
+        padding: 0 1rem !important;
+    }
+}
+
+/* override the logo for admonition */
+.rst-content .admonition.myoption > .admonition-title:before,
+.rst-content .admonition.mytodo > .admonition-title:before {
+  content: "";
+}
+
+.rst-content .admonition.mycomment > .admonition-title:before {
+  content: "";
+}
+
+.rst-content .admonition.myquestion > .admonition-title:before {
+  content: "";
+}
+
+.rst-content .admonition.myflag > .admonition-title:before {
+  content: "";
+}
+
+.rst-content .admonition.myhint > .admonition-title:before {
+  content: "";
+}
+
+.rst-content .admonition.mydanger > .admonition-title:before {
+  content: "";
+}
+
+.rst-content .admonition.mycaution > .admonition-title:before {
+  content: "";
+}
+
+.rst-content .admonition.mycomment > .admonition-title,
+.rst-content .admonition.myquestion > .admonition-title,
+.rst-content .admonition.myoption > .admonition-title {
+  background: #6ab0de;
+}
+
+.rst-content .admonition.mycomment,
+.rst-content .admonition.myquestion,
+.rst-content .admonition.myoption {
+  background: #e7f2fa;
+}
+
+.rst-content .admonition.myhint > .admonition-title {
+  background: #58B957;
+}
+
+.rst-content .admonition.myflag,
+.rst-content .admonition.myhint {
+  background: #DFF0D7;
+}
+
+.rst-content .admonition.mytodo > .admonition-title {
+  background: #f0b37e;
+}
+
+.rst-content .admonition.mytodo,
+.rst-content .admonition.myread {
+  background: #ffedcc;
+}
+
+.rst-content .admonition.mydanger > .admonition-title,
+.rst-content .admonition.mycaution > .admonition-title {
+  background: #DB524B;
+}
+
+.rst-content .admonition.mydanger,
+.rst-content .admonition.mycaution {
+  background: #F2DEDE;
+}
