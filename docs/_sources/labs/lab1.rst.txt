@@ -8,6 +8,19 @@ xv6 是一个面向教学的、类 Unix 的小型操作系统。它保留了进�
 本次实验不要求修改 xv6 内核。你需要搭建 Linux 实验环境，安装 RISC-V 交叉编译工具链和
 QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本操作。
 
+.. raw:: html
+
+   <nav class="lab-progress" aria-label="实验流程">
+     <a href="#lab1-goals"><span>01</span>了解目标</a>
+     <a href="#lab1-environment"><span>02</span>选择环境</a>
+     <a href="#lab1-tools"><span>03</span>安装工具</a>
+     <a href="#lab1-source"><span>04</span>获取源码</a>
+     <a href="#lab1-run"><span>05</span>启动 xv6</a>
+     <a href="#lab1-shell"><span>06</span>完成操作</a>
+   </nav>
+
+.. _lab1-goals:
+
 实验目标
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -18,11 +31,37 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 * 识别 xv6 源码仓库的主要目录；
 * 在 xv6 shell 中运行程序并进行简单的文件操作。
 
+.. _lab1-report:
+
+实验报告要求
+~~~~~~~~~~~~~~~~~~~~~
+
+实验报告至少应包含以下内容：
+
+#. 实验环境类型（Linux 真机、WSL 2 或虚拟机）、Ubuntu 版本和宿主机体系结构；
+#. RISC-V 交叉编译器与 QEMU 的版本信息；
+#. xv6-riscv 的 Git 提交短哈希；
+#. xv6 成功编译、启动并进入 shell 的截图；
+#. xv6 shell 基础操作的命令、输出截图和对管道、重定向的解释；
+#. 实验中遇到的问题、定位过程和解决方法；如果没有遇到问题，也应简要总结本次实验的收获。
+
+.. raw:: html
+
+   <div class="admonition mycaution">
+      <p class="admonition-title">提交前检查</p>
+      <p>橙色提示框是实验必做内容。截图应包含命令和输出，文字应清晰可辨；
+      不要只放截图而不说明操作目的和结果。</p>
+   </div>
+
+.. _lab1-environment:
+
 系统环境
 ~~~~~~~~~~~~~~~~~~~~~
 
 本课程优先推荐使用 **Ubuntu 22.04 LTS 或 Ubuntu 24.04 LTS**。你可以选择 Linux 真机、Windows Subsystem for Linux
 （WSL 2），或者 VMware 等虚拟机。三种方式完成实验的体验基本相同。
+
+.. _lab1-basic-tools:
 
 安装基础工具
 ~~~~~~~~~~~~~~~~~~~~~
@@ -40,11 +79,14 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 
 
 更换合适的国内源后，在 Ubuntu 中打开终端，执行：
+
 .. code-block:: bash
 
    sudo apt update
    sudo apt install git build-essential
 
+
+.. _lab1-tools:
 
 安装实验工具
 ~~~~~~~~~~~~~~~~~~~~~
@@ -172,6 +214,8 @@ Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打�
       在实验报告中说明自己选择的是 Linux 真机、WSL 2 还是虚拟机，并附上能够看清上述信息的终端截图。</p>
    </div>
 
+.. _lab1-source:
+
 获取 xv6-riscv
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -228,6 +272,8 @@ Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打�
 
 按 ``q`` 可以退出 ``less``。现在不要求读懂所有源代码，先建立“某类功能大致位于哪里”的印象。
 
+.. _lab1-run:
+
 编译并启动 xv6
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -273,6 +319,8 @@ xv6 默认没有 ``shutdown`` 命令。退出 QEMU 时，先按 ``Ctrl+a``，松
       <p>本实验中的简单操作通常不会造成问题，但养成正确退出 QEMU 的习惯很重要。
       如果终端没有响应，先确认自己当前处于 xv6 shell、QEMU 控制台还是 Ubuntu shell。</p>
    </div>
+
+.. _lab1-shell:
 
 在 xv6 shell 中操作
 ~~~~~~~~~~~~~~~~~~~~~
@@ -347,6 +395,8 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 当你修改 ``user/`` 中的程序并重新执行 ``make qemu`` 时，Makefile 会把相应程序重新编译并放入
 文件系统镜像。修改 ``kernel/`` 中的代码则会改变下一次启动的 xv6 内核。
 
+.. _lab1-faq:
+
 常见问题
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -380,26 +430,6 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 重新编译后行为异常
   退出 QEMU，在 xv6-riscv 根目录执行 ``make clean``，再执行 ``make qemu``。不要在 QEMU 仍在
   运行时删除构建产物。
-
-实验报告要求
-~~~~~~~~~~~~~~~~~~~~~
-
-实验报告至少应包含以下内容：
-
-#. 实验环境类型（Linux 真机、WSL 2 或虚拟机）、Ubuntu 版本和宿主机体系结构；
-#. RISC-V 交叉编译器与 QEMU 的版本信息；
-#. xv6-riscv 的 Git 提交短哈希；
-#. xv6 成功编译、启动并进入 shell 的截图；
-#. xv6 shell 基础操作的命令、输出截图和对管道、重定向的解释；
-#. 实验中遇到的问题、定位过程和解决方法；如果没有遇到问题，也应简要总结本次实验的收获。
-
-.. raw:: html
-
-   <div class="admonition mycaution">
-      <p class="admonition-title">提交前检查</p>
-      <p>橙色提示框是实验必做内容。截图应包含命令和输出，文字应清晰可辨；
-      不要只放截图而不说明操作目的和结果。</p>
-   </div>
 
 扩展阅读
 ~~~~~~~~~~~~~~~~~~~~~
