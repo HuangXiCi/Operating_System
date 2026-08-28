@@ -25,7 +25,7 @@ ifeq ($(OS),Windows_NT)
 	@powershell -Command "Copy-Item -Recurse -Path "./build/html/*" -Destination "./docs/""
 	@powershell -Command "New-Item -Path "./docs/.nojekyll" -ItemType File"
 else
-    @rm -rf docs/*
+	@rm -rf docs/*
 	@cp -r build/html/* docs/
 	@touch docs/.nojekyll
 endif

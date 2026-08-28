@@ -1,96 +1,377 @@
-/* 主要内容区域居中显示，两侧留白 */
-.wy-nav-content {
-    max-width: 1200px !important;
-    margin: 0 auto !important;
-    padding: 0 2rem !important;
+:root {
+  --os-primary: #2563eb;
+  --os-primary-dark: #1e3a8a;
+  --os-primary-soft: #eff6ff;
+  --os-text: #1f2937;
+  --os-muted: #64748b;
+  --os-line: #e2e8f0;
+  --os-surface: #f8fafc;
+  --os-code: #f3f4f6;
+  --os-radius: 12px;
 }
 
-/* 确保导航栏正常显示 */
+/* 页面骨架 */
+.wy-nav-side,
+.wy-side-scroll,
+.wy-menu-vertical {
+  width: 300px;
+}
+
 .wy-nav-side {
-    position: fixed;
-    width: 300px;
+  position: fixed;
 }
 
 .wy-nav-content-wrap {
-    margin-left: 300px;
+  margin-left: 300px;
+  background: #f1f5f9;
 }
 
-/* 响应式设计：小屏幕设备适配 */
-@media (max-width: 768px) {
-    .wy-nav-content-wrap {
-        margin-left: 0;
-    }
-    .wy-nav-content {
-        padding: 0 1rem !important;
-    }
+.wy-nav-content {
+  box-sizing: border-box;
+  max-width: 1120px !important;
+  min-height: 100vh;
+  margin: 0 auto !important;
+  padding: 2.75rem 3.25rem 4rem !important;
+  color: var(--os-text);
+  background: #fff;
+  box-shadow: 0 0 32px rgba(15, 23, 42, 0.05);
 }
 
-/* override the logo for admonition */
-.rst-content .admonition.myoption > .admonition-title:before,
-.rst-content .admonition.mytodo > .admonition-title:before {
-  content: "";
+.rst-content {
+  font-size: 16px;
+  line-height: 1.8;
 }
 
-.rst-content .admonition.mycomment > .admonition-title:before {
-  content: "";
+.rst-content p {
+  margin-bottom: 1rem;
 }
 
-.rst-content .admonition.myquestion > .admonition-title:before {
-  content: "";
+.rst-content h1 {
+  margin: 0 0 2rem;
+  padding-bottom: 1rem;
+  color: #0f172a;
+  font-size: 2.25rem;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  border-bottom: 1px solid var(--os-line);
 }
 
-.rst-content .admonition.myflag > .admonition-title:before {
-  content: "";
+.rst-content h2 {
+  margin: 3.5rem 0 1.25rem;
+  padding: 0 0 0.75rem;
+  color: var(--os-primary-dark);
+  font-size: 1.55rem;
+  line-height: 1.35;
+  border-bottom: 1px solid var(--os-line);
 }
 
-.rst-content .admonition.myhint > .admonition-title:before {
-  content: "";
+.rst-content h3 {
+  margin: 2.25rem 0 1rem;
+  color: #1e40af;
+  font-size: 1.18rem;
 }
 
-.rst-content .admonition.mydanger > .admonition-title:before {
-  content: "";
+.rst-content h1 .headerlink,
+.rst-content h2 .headerlink,
+.rst-content h3 .headerlink {
+  color: #94a3b8;
 }
 
-.rst-content .admonition.mycaution > .admonition-title:before {
-  content: "";
+/* 首页 */
+.course-hero {
+  position: relative;
+  overflow: hidden;
+  margin: -0.5rem 0 3rem;
+  padding: 2.5rem;
+  color: #fff;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 58%, #2563eb 100%);
+  border-radius: 16px;
+  box-shadow: 0 16px 36px rgba(30, 58, 138, 0.22);
 }
+
+.course-hero::after {
+  position: absolute;
+  top: -90px;
+  right: -70px;
+  width: 250px;
+  height: 250px;
+  content: "";
+  border: 52px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.course-hero__eyebrow {
+  margin-bottom: 0.8rem;
+  color: #bfdbfe;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.course-hero__title {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.course-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+}
+
+.course-hero__meta span {
+  padding: 0.25rem 0.7rem;
+  color: #dbeafe;
+  font-size: 0.82rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+.course-hero__action {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 0.65rem 1rem;
+  color: #1e3a8a !important;
+  font-weight: 700;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.course-hero__action:hover {
+  color: #1d4ed8 !important;
+  background: #eff6ff;
+}
+
+.course-introduction {
+  padding: 1.5rem 1.75rem 0.5rem;
+  background: var(--os-surface);
+  border: 1px solid var(--os-line);
+  border-left: 4px solid var(--os-primary);
+  border-radius: 0 var(--os-radius) var(--os-radius) 0;
+}
+
+.rst-content table.docutils,
+.rst-content table.docutils:not(.field-list) {
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid var(--os-line);
+  border-radius: var(--os-radius);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.rst-content table.docutils thead th {
+  color: #fff;
+  background: var(--os-primary-dark);
+  border-color: var(--os-primary-dark);
+}
+
+.rst-content table.docutils td,
+.rst-content table.docutils th {
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+}
+
+/* 实验流程导航 */
+.lab-progress {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 2rem 0 3rem;
+}
+
+.lab-progress a {
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  padding: 0.75rem 0.9rem;
+  color: #1e3a8a !important;
+  font-weight: 700;
+  background: var(--os-primary-soft);
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lab-progress a:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.12);
+}
+
+.lab-progress span {
+  margin-right: 0.65rem;
+  color: var(--os-primary);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+}
+
+/* 命令块 */
+.rst-content div[class^="highlight"],
+.rst-content pre.literal-block {
+  margin: 1rem 0 1.5rem;
+  background: var(--os-code);
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+}
+
+.rst-content div[class^="highlight"] pre,
+.rst-content pre.literal-block {
+  padding: 1rem 1.15rem;
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.rst-content code.literal {
+  padding: 0.1rem 0.35rem;
+  color: #9f1239;
+  background: #fff1f2;
+  border: 1px solid #ffe4e6;
+  border-radius: 4px;
+}
+
+/* 提示框统一为卡片 */
+.rst-content .admonition {
+  overflow: hidden;
+  margin: 1.5rem 0;
+  padding: 0 1.15rem 0.2rem;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+}
+
+.rst-content .admonition > .admonition-title {
+  margin: 0 -1.15rem 0.9rem;
+  padding: 0.65rem 1rem;
+  font-weight: 700;
+}
+
+/* 自定义 admonition 图标 */
+.rst-content .admonition.myoption > .admonition-title::before,
+.rst-content .admonition.mytodo > .admonition-title::before {
+  content: "\f044";
+}
+
+.rst-content .admonition.mycomment > .admonition-title::before { content: "\f075"; }
+.rst-content .admonition.myquestion > .admonition-title::before { content: "\f059"; }
+.rst-content .admonition.myflag > .admonition-title::before { content: "\f024"; }
+.rst-content .admonition.myhint > .admonition-title::before { content: "\f0eb"; }
+.rst-content .admonition.mydanger > .admonition-title::before { content: "\f071"; }
+.rst-content .admonition.mycaution > .admonition-title::before { content: "\f0a1"; }
 
 .rst-content .admonition.mycomment > .admonition-title,
 .rst-content .admonition.myquestion > .admonition-title,
 .rst-content .admonition.myoption > .admonition-title {
-  background: #6ab0de;
+  background: #3b82f6;
 }
 
 .rst-content .admonition.mycomment,
 .rst-content .admonition.myquestion,
 .rst-content .admonition.myoption {
-  background: #e7f2fa;
+  background: #eff6ff;
 }
 
-.rst-content .admonition.myhint > .admonition-title {
-  background: #58B957;
-}
-
+.rst-content .admonition.myhint > .admonition-title { background: #16a34a; }
 .rst-content .admonition.myflag,
-.rst-content .admonition.myhint {
-  background: #DFF0D7;
-}
-
-.rst-content .admonition.mytodo > .admonition-title {
-  background: #f0b37e;
-}
-
+.rst-content .admonition.myhint { background: #f0fdf4; }
+.rst-content .admonition.mytodo > .admonition-title { background: #f59e0b; }
 .rst-content .admonition.mytodo,
-.rst-content .admonition.myread {
-  background: #ffedcc;
-}
-
+.rst-content .admonition.myread { background: #fffbeb; }
 .rst-content .admonition.mydanger > .admonition-title,
-.rst-content .admonition.mycaution > .admonition-title {
-  background: #DB524B;
+.rst-content .admonition.mycaution > .admonition-title { background: #dc2626; }
+.rst-content .admonition.mydanger,
+.rst-content .admonition.mycaution { background: #fef2f2; }
+
+/* FAQ：不折叠内容，只降低连续文字带来的压迫感 */
+#lab1-faq + h2 ~ dl,
+section#lab1-faq dl,
+.section#lab1-faq dl {
+  margin-top: 1.25rem;
 }
 
-.rst-content .admonition.mydanger,
-.rst-content .admonition.mycaution {
-  background: #F2DEDE;
+section#lab1-faq dl > dt,
+.section#lab1-faq dl > dt {
+  margin-top: 0.9rem;
+  padding: 0.9rem 1rem 0.5rem;
+  color: #0f172a;
+  background: var(--os-surface);
+  border: 1px solid var(--os-line);
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+}
+
+section#lab1-faq dl > dd,
+.section#lab1-faq dl > dd {
+  margin: 0;
+  padding: 0 1rem 0.9rem;
+  color: #475569;
+  background: var(--os-surface);
+  border: 1px solid var(--os-line);
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+}
+
+/* 侧栏 */
+.wy-side-nav-search {
+  background: #1e3a8a;
+}
+
+.wy-menu-vertical header,
+.wy-menu-vertical p.caption {
+  color: #93c5fd;
+}
+
+.wy-menu-vertical a {
+  line-height: 1.45;
+}
+
+.wy-menu-vertical li.current > a,
+.wy-menu-vertical li.on a {
+  color: #1e3a8a;
+  border-right: 3px solid var(--os-primary);
+}
+
+@media (max-width: 900px) {
+  .wy-nav-content {
+    padding: 2rem 1.75rem 3rem !important;
+  }
+
+  .lab-progress {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .wy-nav-content-wrap {
+    margin-left: 0;
+  }
+
+  .wy-nav-content {
+    padding: 1.5rem 1rem 2.5rem !important;
+  }
+
+  .rst-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .course-hero {
+    padding: 1.6rem 1.25rem;
+  }
+
+  .course-hero__title {
+    font-size: 1.5rem;
+  }
+
+  .lab-progress {
+    grid-template-columns: 1fr;
+  }
 }
