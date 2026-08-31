@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>实验一 搭建实验环境 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
+  <title>实验一：搭建实验环境 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a35f3dd6" />
@@ -75,10 +75,16 @@
 <li class="toctree-l2"><a class="reference internal" href="#vs-code-xv6">VS Code 调试 xv6</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id12">安装插件</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id13">添加调试配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">启动调试与设置断点</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">调试工具栏按钮</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id16">认识调试侧栏</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17">查看变量值</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#risc-v">查看 RISC-V 寄存器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18">查看内存地址处的值</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#lab1-faq">常见问题</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id15">扩展阅读</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id20">扩展阅读</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
@@ -98,7 +104,7 @@
           <div role="navigation" aria-label="页面导航">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">实验一 搭建实验环境</li>
+      <li class="breadcrumb-item active">实验一：搭建实验环境</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/labs/lab1.rst.txt" rel="nofollow"> 查看页面源码</a>
       </li>
@@ -109,12 +115,12 @@
            <div itemprop="articleBody">
              
   <section id="id1">
-<h1>实验一 搭建实验环境<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>本课程使用 <a class="reference external" href="https://github.com/mit-pdos/xv6-riscv">xv6-riscv</a> 学习操作系统的基本原理。
-xv6 是一个面向教学的、类 Unix 的小型操作系统。它保留了进程、虚拟内存、系统调用、
-文件系统和设备驱动等操作系统的核心概念，同时代码规模远小于 Linux，适合阅读、修改和实验。</p>
-<p>本次实验不要求修改 xv6 内核。你需要搭建 Linux 实验环境，安装 RISC-V 交叉编译工具链和
-QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本操作。</p>
+<h1>实验一：搭建实验环境<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本课程以 <a class="reference external" href="https://github.com/mit-pdos/xv6-riscv">xv6-riscv</a> 为教学平台，用于学习操作系统的基本原理。
+xv6 是一个面向教学的类 Unix 小型操作系统。它保留了进程、虚拟内存、系统调用、
+文件系统和设备驱动等操作系统的核心概念，同时代码规模远小于 Linux，适合阅读、修改和开展实验。</p>
+<p>本次实验不要求修改 xv6 内核，主要任务包括搭建 Linux 实验环境、安装 RISC-V 交叉编译工具链和
+QEMU、编译并启动 xv6，以及在 xv6 shell 中完成若干基本操作。</p>
 <nav class="lab-progress" aria-label="实验流程">
   <a href="#lab1-goals"><span>01</span>实验目标</a>
   <a href="#lab1-tools"><span>02</span>实验工具</a>
@@ -124,7 +130,7 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
   <a href="#lab1-faq"><span>06</span>常见问题</a>
 </nav><section id="lab1-goals">
 <span id="id2"></span><h2>实验目标<a class="headerlink" href="#lab1-goals" title="Link to this heading"></a></h2>
-<p>完成本次实验后，你应该能够：</p>
+<p>完成本次实验后，应能够：</p>
 <ul class="simple">
 <li><p>使用 <code class="docutils literal notranslate"><span class="pre">riscv64-unknown-elf</span></code> 工具链交叉编译 RISC-V 程序；</p></li>
 <li><p>使用 <code class="docutils literal notranslate"><span class="pre">qemu-system-riscv64</span></code> 启动 xv6；</p></li>
@@ -137,7 +143,6 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 <ol class="arabic simple">
 <li><p>实验环境类型（Linux 真机、WSL 2 或虚拟机）、Ubuntu 版本和宿主机体系结构；</p></li>
 <li><p>RISC-V 交叉编译器与 QEMU 的版本信息；</p></li>
-<li><p>xv6-riscv 的 Git 提交短哈希；</p></li>
 <li><p>xv6 成功编译、启动并进入 shell 的截图；</p></li>
 <li><p>xv6 shell 基础操作的命令、输出截图和对管道、重定向的解释；</p></li>
 <li><p>实验中遇到的问题、定位过程和解决方法；如果没有遇到问题，也应简要总结本次实验的收获。</p></li>
@@ -145,22 +150,21 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 <div class="admonition mycaution">
    <p class="admonition-title">提交前检查</p>
    <p>橙色提示框是实验必做内容。截图应包含命令和输出，文字应清晰可辨；
-   不要只放截图而不说明操作目的和结果。</p>
+   每幅截图均应配有操作目的和结果说明。</p>
 </div></section>
 </section>
 <section id="lab1-tools">
 <span id="id4"></span><h2>实验工具<a class="headerlink" href="#lab1-tools" title="Link to this heading"></a></h2>
 <section id="id5">
 <h3>系统环境<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
-<p>本课程优先推荐使用 <strong>Ubuntu 22.04 LTS 或 Ubuntu 24.04 LTS</strong>。你可以选择 Linux 真机、Windows Subsystem for Linux
-（WSL 2），或者 VMware 等虚拟机。三种方式完成实验的体验基本相同。</p>
-<p>如果你是初次配置 Ubuntu ，可以更换合适的国内源。</p>
+<p>本课程建议优先使用 <strong>Ubuntu 22.04 LTS 或 Ubuntu 24.04 LTS</strong>。实验环境可部署在 Linux 真机、
+Windows Subsystem for Linux（WSL 2）或 VMware 等虚拟机中，三种方式均可满足实验要求。</p>
+<p>首次配置 Ubuntu 时，可根据网络状况选择合适的软件镜像源。</p>
 <div class="admonition mydanger">
-   <p class="admonition-title">更换合适的国内源</p>
-   <p>更换了国内的软件镜像源后，通过包管理器安装软件会更快。Ubuntu 官方源在国内访问速度较慢，甚至可能无法访问。
-   在更换国内软件镜像源时，使用与系统不相符的源会导致工具包版本冲突, 强行安装将会损坏系统。
-   所以请你仔细核对 Ubuntu 版本和对应的国内镜像源版本，否则会损坏你的系统。</p>
-</div><p>更换合适的国内源后，在 Ubuntu 中打开终端，执行：</p>
+   <p class="admonition-title">正确配置软件镜像源</p>
+   <p>合适的软件镜像源能够提高软件包的下载速度。配置前必须核对 Ubuntu 版本、代号及宿主机架构；
+   使用与当前系统不匹配的软件源可能造成依赖冲突，强制安装不兼容的软件包还可能破坏系统环境。</p>
+</div><p>完成软件镜像源配置后，在 Ubuntu 终端中执行：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>build-essential
 </pre></div>
@@ -168,22 +172,22 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </section>
 <section id="risc-v-gnu">
 <h3>安装 RISC-V GNU 工具链<a class="headerlink" href="#risc-v-gnu" title="Link to this heading"></a></h3>
-<p>打开 <a class="reference external" href="https://github.com/riscv-collab/riscv-gnu-toolchain/releases">riscv-gnu-toolchain Releases</a>，在一个较新的 Release 中展开
-<code class="docutils literal notranslate"><span class="pre">Assets</span></code>。按照自己的 Ubuntu 版本下载下面两个文件之一：</p>
+<p>打开 <a class="reference external" href="https://github.com/riscv-collab/riscv-gnu-toolchain/releases">riscv-gnu-toolchain Releases</a>，选择适用于当前系统的正式 Release 并展开
+<code class="docutils literal notranslate"><span class="pre">Assets</span></code>。根据所使用的 Ubuntu 版本下载下列文件之一：</p>
 <ul class="simple">
 <li><p>Ubuntu 22.04：<code class="docutils literal notranslate"><span class="pre">riscv64-elf-ubuntu-22.04-gcc.tar.xz</span></code></p></li>
 <li><p>Ubuntu 24.04：<code class="docutils literal notranslate"><span class="pre">riscv64-elf-ubuntu-24.04-gcc.tar.xz</span></code></p></li>
 </ul>
-<p>这里必须选择 <code class="docutils literal notranslate"><span class="pre">riscv64</span></code>、<code class="docutils literal notranslate"><span class="pre">elf</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gcc</span></code> 的组合。<code class="docutils literal notranslate"><span class="pre">elf</span></code> 表示面向裸机环境，符合 xv6
-内核和用户程序的构建需求；不要下载 <code class="docutils literal notranslate"><span class="pre">riscv32</span></code>、<code class="docutils literal notranslate"><span class="pre">glibc</span></code>、<code class="docutils literal notranslate"><span class="pre">musl</span></code>、<code class="docutils literal notranslate"><span class="pre">picolibc</span></code> 或
-<code class="docutils literal notranslate"><span class="pre">llvm</span></code> 版本。Release 页面还会给出文件的 SHA-256 值，可以用来检查下载是否完整：</p>
+<p>必须选择 <code class="docutils literal notranslate"><span class="pre">riscv64</span></code>、<code class="docutils literal notranslate"><span class="pre">elf</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gcc</span></code> 的组合。<code class="docutils literal notranslate"><span class="pre">elf</span></code> 表示该工具链面向裸机环境，符合 xv6
+内核和用户程序的构建需求。<code class="docutils literal notranslate"><span class="pre">riscv32</span></code>、<code class="docutils literal notranslate"><span class="pre">glibc</span></code>、<code class="docutils literal notranslate"><span class="pre">musl</span></code>、<code class="docutils literal notranslate"><span class="pre">picolibc</span></code> 或 <code class="docutils literal notranslate"><span class="pre">llvm</span></code> 版本
+不适用于本实验。Release 页面同时提供文件的 SHA-256 校验值，可用于检查下载文件的完整性：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/Downloads
 sha256sum<span class="w"> </span>riscv64-elf-ubuntu-24.04-gcc.tar.xz
 </pre></div>
 </div>
-<p>上面以 Ubuntu 24.04 为例；使用 Ubuntu 22.04 时替换文件名。将终端输出与发布页中对应文件下方的
+<p>上述命令以 Ubuntu 24.04 为例；使用 Ubuntu 22.04 时应替换相应文件名。将终端输出与发布页中对应文件的
 <code class="docutils literal notranslate"><span class="pre">sha256</span></code> 值比较，两者应完全相同。</p>
-<p>创建安装目录，并把压缩包解压到 <code class="docutils literal notranslate"><span class="pre">~/.local/riscv</span></code>：</p>
+<p>创建安装目录，并将压缩包解压到 <code class="docutils literal notranslate"><span class="pre">~/.local/riscv</span></code>：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.local/riscv
 tar<span class="w"> </span>-xJf<span class="w"> </span>~/Downloads/riscv64-elf-ubuntu-24.04-gcc.tar.xz<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-C<span class="w"> </span>~/.local/riscv<span class="w"> </span>--strip-components<span class="o">=</span><span class="m">1</span>
@@ -197,9 +201,9 @@ ls<span class="w"> </span>~/.local/riscv/bin/riscv64-unknown-elf-gcc
 <section id="xpack-qemu-risc-v">
 <h3>安装 xPack QEMU RISC-V<a class="headerlink" href="#xpack-qemu-risc-v" title="Link to this heading"></a></h3>
 <p>打开 <a class="reference external" href="https://github.com/xpack-dev-tools/qemu-riscv-xpack/releases">xPack QEMU RISC-V Releases</a>，选择较新的正式版本，在 <code class="docutils literal notranslate"><span class="pre">Assets</span></code>
-中下载与 <strong>宿主机架构</strong> 对应的 GNU/Linux 压缩包。以 9.2.4-1 为例：</p>
-<p>发布页中的版本号可能已经更新，应以下载页面实际显示的最新正式版本为准。下面以
-<code class="docutils literal notranslate"><span class="pre">9.2.4-1-linux-x64</span></code> 为例，将其解压到固定目录 <code class="docutils literal notranslate"><span class="pre">~/.local/qemu-riscv</span></code>：</p>
+中下载与 <strong>宿主机架构</strong> 对应的 GNU/Linux 压缩包。</p>
+<p>发布页中的版本号可能已经更新，应以下载页面实际显示的最新正式版本为准。以下以
+<code class="docutils literal notranslate"><span class="pre">9.2.4-1-linux-x64</span></code> 为例，将压缩包解压到固定目录 <code class="docutils literal notranslate"><span class="pre">~/.local/qemu-riscv</span></code>：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.local/qemu-riscv
 tar<span class="w"> </span>-xzf<span class="w"> </span>~/Downloads/xpack-qemu-riscv-9.2.4-1-linux-x64.tar.gz<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-C<span class="w"> </span>~/.local/qemu-riscv<span class="w"> </span>--strip-components<span class="o">=</span><span class="m">1</span>
@@ -209,26 +213,26 @@ ls<span class="w"> </span>~/.local/qemu-riscv/bin/qemu-system-riscv64
 </section>
 <section id="path">
 <h3>添加 PATH 环境变量<a class="headerlink" href="#path" title="Link to this heading"></a></h3>
-<p>Linux 只会在 <code class="docutils literal notranslate"><span class="pre">PATH</span></code> 所列目录中查找命令。使用文本编辑器打开 Bash 配置文件：</p>
+<p>Linux shell 按照 <code class="docutils literal notranslate"><span class="pre">PATH</span></code> 中的目录顺序查找命令。使用文本编辑器打开 Bash 配置文件：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>~/.bashrc
 </pre></div>
 </div>
-<p>在文件末尾加入下面一行：</p>
+<p>在文件末尾添加以下内容：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.local/riscv/bin:</span><span class="nv">$HOME</span><span class="s2">/.local/qemu-riscv/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
-<p>保存配置文件，让配置在当前终端立即生效：</p>
+<p>保存配置文件后，执行以下命令使配置在当前终端立即生效：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>~/.bashrc
 </pre></div>
 </div>
-<p>这项配置以后会在每次打开 Bash 时自动生效，只需添加一次。使用下面的命令检查实际找到的程序：</p>
+<p>该配置将在每次启动 Bash 时自动生效，无须重复添加。使用以下命令检查实际调用的程序：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>which<span class="w"> </span>riscv64-unknown-elf-gcc
 which<span class="w"> </span>qemu-system-riscv64
 </pre></div>
 </div>
-<p>输出应分别位于 <code class="docutils literal notranslate"><span class="pre">/home/你的用户名/.local/riscv/bin</span></code> 和
-<code class="docutils literal notranslate"><span class="pre">/home/你的用户名/.local/qemu-riscv/bin</span></code>。如果系统中曾经安装过其他同名工具，<code class="docutils literal notranslate"><span class="pre">which</span></code> 还可以
-确认当前优先使用的是本实验刚安装的版本。</p>
+<p>输出路径应分别位于 <code class="docutils literal notranslate"><span class="pre">/home/&lt;用户名&gt;/.local/riscv/bin</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">/home/&lt;用户名&gt;/.local/qemu-riscv/bin</span></code>。如果系统中已经安装其他同名工具，<code class="docutils literal notranslate"><span class="pre">which</span></code> 的输出还可用于
+确认当前优先调用的是否为本实验安装的版本。</p>
 </section>
 <section id="id6">
 <h3>验证安装结果<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
@@ -240,14 +244,14 @@ riscv64-unknown-elf-ld<span class="w"> </span>--version
 qemu-system-riscv64<span class="w"> </span>--version
 </pre></div>
 </div>
-<p>只要每条命令都能输出版本信息且没有出现 <code class="docutils literal notranslate"><span class="pre">command</span> <span class="pre">not</span> <span class="pre">found</span></code>，就说明基本工具已经就绪。
-具体版本号可能随着发布页更新而变化，不必与讲义示例完全相同。</p>
+<p>若每条命令均能输出版本信息，且未出现 <code class="docutils literal notranslate"><span class="pre">command</span> <span class="pre">not</span> <span class="pre">found</span></code>，则说明基本工具已经就绪。
+具体版本号可能随发布版本更新而变化，无须与讲义示例完全一致。</p>
 <div class="admonition mytodo">
    <p class="admonition-title">检查并记录实验环境</p>
    <p>依次执行 <code>cat /etc/os-release</code>、<code>uname -m</code>、
    <code>which riscv64-unknown-elf-gcc</code>、<code>which qemu-system-riscv64</code>、
    <code>riscv64-unknown-elf-gcc --version</code> 和 <code>qemu-system-riscv64 --version</code>。
-   在实验报告中说明自己选择的是 Linux 真机、WSL 2 还是虚拟机，并附上能够看清上述信息的终端截图。</p>
+   在实验报告中说明所采用的环境类型（Linux 真机、WSL 2 或虚拟机），并附上上述信息清晰可辨的终端截图。</p>
 </div></section>
 </section>
 <section id="lab1-source">
@@ -259,7 +263,7 @@ qemu-system-riscv64<span class="w"> </span>--version
 </div>
 <section id="id8">
 <h3>初识源码目录<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
-<p>在 xv6-riscv 仓库中执行 <code class="docutils literal notranslate"><span class="pre">ls</span></code>，可以看到几个重要部分：</p>
+<p>在 xv6-riscv 仓库中执行 <code class="docutils literal notranslate"><span class="pre">ls</span></code>，可查看以下主要目录和文件：</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">kernel/</span></code></dt><dd><p>xv6 内核源代码，包括进程管理、虚拟内存、文件系统、系统调用、陷阱处理和设备驱动等。</p>
 </dd>
@@ -281,8 +285,8 @@ qemu-system-riscv64<span class="w"> </span>--version
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>qemu
 </pre></div>
 </div>
-<p>Make 会调用 <code class="docutils literal notranslate"><span class="pre">riscv64-unknown-elf</span></code> 工具链编译内核和用户程序，生成文件系统镜像，再启动
-<code class="docutils literal notranslate"><span class="pre">qemu-system-riscv64</span></code>。第一次编译会输出较多命令。成功启动后，可以看到类似下面的内容：</p>
+<p>Make 将调用 <code class="docutils literal notranslate"><span class="pre">riscv64-unknown-elf</span></code> 工具链编译内核和用户程序，生成文件系统镜像，再启动
+<code class="docutils literal notranslate"><span class="pre">qemu-system-riscv64</span></code>。首次编译会输出较多构建命令。成功启动后，终端将显示类似以下内容：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>xv6 kernel is booting
 
 hart 1 starting
@@ -291,28 +295,28 @@ init: starting sh
 $
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">hart</span></code> 是 RISC-V 对硬件线程的称呼。最后的 <code class="docutils literal notranslate"><span class="pre">$</span></code> 是 xv6 shell 的提示符，表示 xv6 已经启动成功，
+<p><code class="docutils literal notranslate"><span class="pre">hart</span></code> 是 RISC-V 对硬件线程的称呼。最后的 <code class="docutils literal notranslate"><span class="pre">$</span></code> 是 xv6 shell 的提示符，表示 xv6 已成功启动，
 正在等待命令。不同源码版本的启动信息可能略有差异。</p>
 <div class="admonition mytodo">
-   <p class="admonition-title">第一次启动 xv6</p>
+   <p class="admonition-title">首次启动 xv6</p>
    <p>执行 <code>make qemu</code>，等待 xv6 启动并出现 <code>$</code> 提示符。
    将包含 <code>xv6 kernel is booting</code> 和 shell 提示符的终端截图放入实验报告。</p>
 </div><section id="xv6-qemu">
 <h3>退出 xv6 和 QEMU<a class="headerlink" href="#xv6-qemu" title="Link to this heading"></a></h3>
-<p>xv6 默认没有 <code class="docutils literal notranslate"><span class="pre">shutdown</span></code> 命令。退出 QEMU 时，先按 <code class="docutils literal notranslate"><span class="pre">Ctrl+a</span></code>，松开后再按 <code class="docutils literal notranslate"><span class="pre">x</span></code>。
-这是两个依次完成的按键动作，不是同时按下三个键。退出后会重新退回到 shell。</p>
+<p>xv6 默认不提供 <code class="docutils literal notranslate"><span class="pre">shutdown</span></code> 命令。退出 QEMU 时，应先按 <code class="docutils literal notranslate"><span class="pre">Ctrl+a</span></code>，松开后再按 <code class="docutils literal notranslate"><span class="pre">x</span></code>。
+这两个按键操作需要依次完成，而非同时按下三个按键。退出后将返回宿主机 shell。</p>
 <div class="admonition mydanger">
-   <p class="admonition-title">不要直接关闭正在写入的虚拟机</p>
-   <p>本实验中的简单操作通常不会造成问题，但养成正确退出 QEMU 的习惯很重要。
-   如果终端没有响应，先确认自己当前处于 xv6 shell、QEMU 控制台还是 Ubuntu shell。</p>
+   <p class="admonition-title">避免强制关闭正在写入磁盘镜像的 QEMU</p>
+   <p>强制关闭 QEMU 可能导致文件系统镜像处于不一致状态，因此应按照上述按键顺序正常退出。
+   如果终端未响应，应先确认当前环境是 xv6 shell、QEMU 控制台还是 Ubuntu shell。</p>
 </div></section>
 <section id="xv6-shell">
 <h3>初识 xv6 shell<a class="headerlink" href="#xv6-shell" title="Link to this heading"></a></h3>
-<p>再次执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code> 进入 xv6。先输入：</p>
+<p>重新执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code> 进入 xv6，并在 shell 提示符后执行：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ls
 </pre></div>
 </div>
-<p>你看到的是 xv6 文件系统根目录的内容。目录中的 <code class="docutils literal notranslate"><span class="pre">cat</span></code>、<code class="docutils literal notranslate"><span class="pre">echo</span></code>、<code class="docutils literal notranslate"><span class="pre">grep</span></code>、<code class="docutils literal notranslate"><span class="pre">ls</span></code>、<code class="docutils literal notranslate"><span class="pre">mkdir</span></code>、
+<p>该命令显示 xv6 文件系统根目录的内容。目录中的 <code class="docutils literal notranslate"><span class="pre">cat</span></code>、<code class="docutils literal notranslate"><span class="pre">echo</span></code>、<code class="docutils literal notranslate"><span class="pre">grep</span></code>、<code class="docutils literal notranslate"><span class="pre">ls</span></code>、<code class="docutils literal notranslate"><span class="pre">mkdir</span></code>、
 <code class="docutils literal notranslate"><span class="pre">rm</span></code>、<code class="docutils literal notranslate"><span class="pre">sh</span></code> 和 <code class="docutils literal notranslate"><span class="pre">wc</span></code> 等都是编译进 xv6 文件系统镜像的用户程序。</p>
 </section>
 <section id="id9">
@@ -322,12 +326,12 @@ $
 <span class="nb">echo</span><span class="w"> </span>one<span class="w"> </span>two<span class="w"> </span>three<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc
 </pre></div>
 </div>
-<p>第一条命令启动 <code class="docutils literal notranslate"><span class="pre">echo</span></code> 程序并传入两个参数。第二条命令使用管道 <code class="docutils literal notranslate"><span class="pre">|</span></code>，shell 会创建管道并启动
-<code class="docutils literal notranslate"><span class="pre">echo</span></code> 与 <code class="docutils literal notranslate"><span class="pre">wc</span></code> 两个进程，把前一个程序的输出连接到后一个程序的输入。</p>
+<p>第一条命令启动 <code class="docutils literal notranslate"><span class="pre">echo</span></code> 程序并传入两个参数。第二条命令使用管道 <code class="docutils literal notranslate"><span class="pre">|</span></code>；shell 将创建管道并启动
+<code class="docutils literal notranslate"><span class="pre">echo</span></code> 与 <code class="docutils literal notranslate"><span class="pre">wc</span></code> 两个进程，将前一个程序的输出连接至后一个程序的输入。</p>
 </section>
 <section id="id10">
 <h3>文件与目录<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
-<p>继续完成下面的操作：</p>
+<p>继续执行以下操作：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>lab1
 <span class="nb">cd</span><span class="w"> </span>lab1
 <span class="nb">echo</span><span class="w"> </span>hello<span class="w"> </span>xv6<span class="w"> </span>&gt;<span class="w"> </span>hello.txt
@@ -339,61 +343,64 @@ rm<span class="w"> </span>hello.txt
 <span class="nb">cd</span><span class="w"> </span>..
 </pre></div>
 </div>
-<p>这里的 <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> 把程序的标准输出重定向到文件；<code class="docutils literal notranslate"><span class="pre">cat</span></code> 读取并显示文件；<code class="docutils literal notranslate"><span class="pre">grep</span></code> 查找包含指定字符串的行；
-<code class="docutils literal notranslate"><span class="pre">wc</span></code> 统计行数、单词数和字节数。xv6 的工具只实现了教学所需的基本功能，支持的参数远少于
-Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境里的所有命令和选项。</p>
+<p><code class="docutils literal notranslate"><span class="pre">&gt;</span></code> 将程序的标准输出重定向到文件；<code class="docutils literal notranslate"><span class="pre">cat</span></code> 读取并显示文件；<code class="docutils literal notranslate"><span class="pre">grep</span></code> 查找包含指定字符串的行；
+<code class="docutils literal notranslate"><span class="pre">wc</span></code> 统计行数、单词数和字节数。xv6 工具仅实现教学所需的基本功能，其参数和选项少于
+Ubuntu 中的 GNU 工具，不能替代日常 Linux 环境中的完整命令集。</p>
 <div class="admonition mytodo">
    <p class="admonition-title">完成 xv6 shell 基础操作</p>
    <p>按顺序完成本节的目录创建、输出重定向、文件查看、字符串查找、统计和删除操作。
-   在实验报告中附上完整操作及输出的截图，并用自己的语言说明
-   <code>|</code> 与 <code>&gt;</code> 分别完成了什么工作。</p>
+   在实验报告中附上完整操作及输出的截图，并结合命令执行结果说明
+   <code>|</code> 与 <code>&gt;</code> 的作用。</p>
 </div><div class="admonition myquestion">
-   <p class="admonition-title">两个 shell 是同一个程序吗？</p>
+   <p class="admonition-title">思考：Ubuntu shell 与 xv6 shell 是否相同？</p>
    <p>Ubuntu 和 xv6 中都能输入 <code>ls</code>、<code>echo</code> 等命令。
-   它们调用的是同一份可执行文件吗？这些文件分别为哪一种指令集编译？</p>
+   请比较两种环境中的可执行文件，并说明它们所对应的指令集。</p>
 </div></section>
 <section id="id11">
 <h3>宿主机与 xv6 文件系统<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <p>在 xv6 中创建的 <code class="docutils literal notranslate"><span class="pre">hello.txt</span></code> 不会直接出现在 Ubuntu 当前目录中。xv6 使用的是 QEMU 挂载的
 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 文件系统镜像。Ubuntu 负责保存这个镜像文件，而 xv6 内核负责解释镜像内部的目录、
-文件和数据块。后续文件系统实验会进一步研究它的实现。</p>
-<p>当你修改 <code class="docutils literal notranslate"><span class="pre">user/</span></code> 中的程序并重新执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code> 时，Makefile 会把相应程序重新编译并放入
+文件和数据块。后续文件系统实验将进一步分析其实现机制。</p>
+<p>修改 <code class="docutils literal notranslate"><span class="pre">user/</span></code> 中的程序并重新执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code> 时，Makefile 会将相应程序重新编译并写入
 文件系统镜像。修改 <code class="docutils literal notranslate"><span class="pre">kernel/</span></code> 中的代码则会改变下一次启动的 xv6 内核。</p>
 </section>
 </section>
 <section id="vs-code-xv6">
 <span id="lab1-gdb"></span><h2>VS Code 调试 xv6<a class="headerlink" href="#vs-code-xv6" title="Link to this heading"></a></h2>
-<p>直接使用 GDB 调试 xv6 内核和用户程序比较复杂，推荐使用 VS Code 调试，操作更简单，也更加直观。</p>
+<p>使用命令行 GDB 调试 xv6 内核和用户程序具有一定复杂度。本节采用 VS Code 组织调试流程，以便直观地
+观察源代码、断点、变量、寄存器和调用栈。</p>
 <section id="id12">
 <h3>安装插件<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <div class="tutorial-step docutils container">
 <p class="rubric">1. 安装 C/C++ 扩展</p>
 <p>在 VS Code 的扩展视图中搜索并安装由 Microsoft 发布的 <code class="docutils literal notranslate"><span class="pre">C/C++</span></code> 扩展。</p>
-<figure class="tutorial-figure tutorial-figure-wide align-center" id="id17">
+<figure class="tutorial-figure tutorial-figure-wide align-center" id="id22">
 <a class="reference internal image-reference" href="../_images/extension.png"><img alt="VS Code 中由 Microsoft 发布的 C/C++ 扩展详情页" src="../_images/extension.png" style="width: 92%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">确认发布者为 Microsoft，并完成扩展安装。</span><a class="headerlink" href="#id17" title="Link to this image"></a></p>
+<p><span class="caption-text">确认发布者为 Microsoft，并完成扩展安装。</span><a class="headerlink" href="#id22" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </div>
 <div class="mycomment tutorial-note admonition">
 <p class="admonition-title">远程环境安装</p>
-<p>如果通过 VS Code 远程连接 WSL 2 或虚拟机，需要在 <strong>远程环境</strong> 中安装扩展，而不是只安装在本地环境中。</p>
-<figure class="tutorial-figure tutorial-figure-compact align-center" id="id18">
+<p>通过 VS Code 远程连接 WSL 2 或虚拟机时，应在 <strong>远程环境</strong> 中安装扩展；仅在本地环境中安装并不能
+为远程工作区提供相应功能。</p>
+<figure class="tutorial-figure tutorial-figure-compact align-center" id="id23">
 <a class="reference internal image-reference" href="../_images/ssh-extension.png"><img alt="VS Code 远程环境中的 C/C++ 扩展安装入口" src="../_images/ssh-extension.png" style="width: 48%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">扩展面板中显示远程主机名称和 <code class="docutils literal notranslate"><span class="pre">Installed</span></code>，表示扩展已安装到当前远程环境。</span><a class="headerlink" href="#id18" title="Link to this image"></a></p>
+<p><span class="caption-text">扩展面板中显示远程主机名称和 <code class="docutils literal notranslate"><span class="pre">Installed</span></code>，表示扩展已安装到当前远程环境。</span><a class="headerlink" href="#id23" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </div>
 </section>
 <section id="id13">
 <h3>添加调试配置<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
-<p>在 VS Code 中打开 xv6-riscv 仓库根目录，创建 <code class="docutils literal notranslate"><span class="pre">.vscode</span></code> 目录，再创建 <code class="docutils literal notranslate"><span class="pre">launch.json</span></code> 和 <code class="docutils literal notranslate"><span class="pre">tasks.json</span></code> 文件，分别填入下面的配置。</p>
-<div class="literal-block-wrapper docutils container" id="id19">
-<div class="code-block-caption"><span class="caption-text">launch.json</span><a class="headerlink" href="#id19" title="Link to this code"></a></div>
+<p>在 VS Code 中打开 xv6-riscv 仓库根目录，创建 <code class="docutils literal notranslate"><span class="pre">.vscode</span></code> 目录，再创建 <code class="docutils literal notranslate"><span class="pre">launch.json</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">tasks.json</span></code> 文件，分别写入以下配置。</p>
+<div class="literal-block-wrapper docutils container" id="id24">
+<div class="code-block-caption"><span class="caption-text">launch.json</span><a class="headerlink" href="#id24" title="Link to this code"></a></div>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -434,9 +441,10 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 </pre></div>
 </div>
 </div>
-<p>其中第13行，调试器的路径需要根据你安装的 RISC-V 工具链实际位置修改。你可以通过 <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">riscv64-unknown-elf-gdb</span></code> 查看实际路径。</p>
-<div class="literal-block-wrapper docutils container" id="id20">
-<div class="code-block-caption"><span class="caption-text">tasks.json</span><a class="headerlink" href="#id20" title="Link to this code"></a></div>
+<p><code class="docutils literal notranslate"><span class="pre">miDebuggerPath</span></code> 应根据 RISC-V 工具链的实际安装位置进行修改。执行
+<code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">riscv64-unknown-elf-gdb</span></code> 可查询 GDB 的实际路径。</p>
+<div class="literal-block-wrapper docutils container" id="id25">
+<div class="code-block-caption"><span class="caption-text">tasks.json</span><a class="headerlink" href="#id25" title="Link to this code"></a></div>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -444,7 +452,7 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 <span class="w">         </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;shell&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;isBackground&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;make qemu-gdb&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;make qemu-gdb CPUS=1&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;problemMatcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -467,57 +475,267 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 </pre></div>
 </div>
 </div>
+<div class="myhint admonition">
+<p class="admonition-title">调试时建议使用单核配置</p>
+<p>xv6 默认可以启动多个 RISC-V hart。多核并发执行时，不同 hart 可能交替命中断点，调用栈和寄存器
+视图也会随当前选中的执行线程发生变化，从而增加初次调试时的观察难度。因此，调试阶段建议通过
+<code class="docutils literal notranslate"><span class="pre">CPUS=1</span></code> 将 QEMU 配置为单核模式：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>qemu-gdb<span class="w"> </span><span class="nv">CPUS</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+<p>上述 <code class="docutils literal notranslate"><span class="pre">tasks.json</span></code> 已采用该配置。单核模式仅用于降低调试过程的复杂度，不改变 xv6 的主要功能；
+分析多核启动、调度或锁机制时，应再恢复多核配置。</p>
+</div>
 <div class="tutorial-step docutils container">
 <p class="rubric">3. 允许在任意文件中设置断点</p>
 <p>为了在汇编代码中设置断点，在 VS Code 设置中搜索 <code class="docutils literal notranslate"><span class="pre">breakpoint</span></code>，然后勾选
-<code class="docutils literal notranslate"><span class="pre">Allow</span> <span class="pre">setting</span> <span class="pre">breakpoints</span> <span class="pre">in</span> <span class="pre">any</span> <span class="pre">file.</span></code>。完成后即可直接在 VS Code 中调试 xv6。</p>
-<figure class="tutorial-figure tutorial-figure-medium align-center" id="id21">
+<code class="docutils literal notranslate"><span class="pre">Allow</span> <span class="pre">setting</span> <span class="pre">breakpoints</span> <span class="pre">in</span> <span class="pre">any</span> <span class="pre">file.</span></code>。启用该选项后，即可在汇编源文件中设置断点。</p>
+<figure class="tutorial-figure tutorial-figure-medium align-center" id="id26">
 <a class="reference internal image-reference" href="../_images/breakpoint.png"><img alt="VS Code 中允许在任意文件内设置断点的选项" src="../_images/breakpoint.png" style="width: 72%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">启用允许在任意文件中设置断点的选项。</span><a class="headerlink" href="#id21" title="Link to this image"></a></p>
+<p><span class="caption-text">启用允许在任意文件中设置断点的选项。</span><a class="headerlink" href="#id26" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </div>
 </section>
+<section id="id14">
+<h3>启动调试与设置断点<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<p>调试前先在编辑器中打开 <code class="docutils literal notranslate"><span class="pre">kernel/main.c</span></code>。单击代码行号左侧的空白区域，出现红色圆点即表示已经设置断点；
+再次单击可以删除断点，也可以按 <code class="docutils literal notranslate"><span class="pre">F9</span></code> 切换当前行的断点。首次调试时，可在 <code class="docutils literal notranslate"><span class="pre">main</span></code> 函数内的第一条
+可执行语句处设置断点。</p>
+<p>可按 <code class="docutils literal notranslate"><span class="pre">F5</span></code> 启动调试，也可打开左侧的 <strong>运行和调试</strong> 视图并选择 <code class="docutils literal notranslate"><span class="pre">xv6debug</span></code>。VS Code 将依次完成以下操作：</p>
+<ol class="arabic simple">
+<li><p>执行 <code class="docutils literal notranslate"><span class="pre">preLaunchTask</span></code>，编译 xv6 并以 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu-gdb</span> <span class="pre">CPUS=1</span></code> 启动单核 QEMU；</p></li>
+<li><p>启动 RISC-V GDB，加载 <code class="docutils literal notranslate"><span class="pre">kernel/kernel</span></code> 中的符号和源代码行信息；</p></li>
+<li><p>根据生成的 <code class="docutils literal notranslate"><span class="pre">.gdbinit</span></code> 连接 QEMU GDB 服务器；</p></li>
+<li><p>恢复 xv6 的执行，并在命中断点时暂停。</p></li>
+</ol>
+<p>程序暂停后，VS Code 会用黄色箭头标出 <strong>下一条即将执行的语句</strong>。黄色箭头所在行尚未执行；完成单步操作后，
+箭头将移动到下一处暂停位置。如果断点显示为空心灰色圆点，通常表示符号尚未加载、文件路径不匹配，
+或者该行没有可以设置断点的机器指令。</p>
+<div class="myhint admonition">
+<p class="admonition-title">xv6 使用优化编译</p>
+<p>xv6 默认启用编译优化。调试时可能出现源代码行跳跃、执行顺序与源码不一致，或者变量显示
+<code class="docutils literal notranslate"><span class="pre">&lt;optimized</span> <span class="pre">out&gt;</span></code>。这通常并非调试器故障，而是源代码语句被合并、重排或优化所致。</p>
+</div>
+</section>
+<section id="id15">
+<h3>调试工具栏按钮<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<p>调试开始后，窗口上方会出现调试工具栏。该工具栏用于控制 <strong>被调试的 xv6</strong> 的执行状态。</p>
+<table class="docutils align-default" id="id27">
+<caption><span class="caption-text">VS Code 调试工具栏</span><a class="headerlink" href="#id27" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 18.0%" />
+<col style="width: 62.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>按钮</p></th>
+<th class="head"><p>快捷键</p></th>
+<th class="head"><p>作用与区别</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>继续 / 暂停（▶ / ‖）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">F5</span></code></p></td>
+<td><p>暂停时，<strong>继续</strong> 将使程序运行至下一个断点、异常或手动暂停位置。在部分 QEMU/GDB 组合中，暂停请求可能无法立即生效，此时可通过预先设置断点使程序暂停。</p></td>
+</tr>
+<tr class="row-odd"><td><p>单步跳过（Step Over）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">F10</span></code></p></td>
+<td><p>执行当前源代码行。如果该行包含函数调用，则将该函数调用作为一个整体执行，不进入函数内部。</p></td>
+</tr>
+<tr class="row-even"><td><p>单步进入（Step Into）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">F11</span></code></p></td>
+<td><p>执行当前行，并在可能时进入被调用函数内部，用于跟踪函数的具体实现。</p></td>
+</tr>
+<tr class="row-odd"><td><p>单步跳出（Step Out）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Shift+F11</span></code></p></td>
+<td><p>继续执行当前函数剩余部分，在当前函数返回到调用者后再次暂停。</p></td>
+</tr>
+<tr class="row-even"><td><p>重启（Restart）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Ctrl+Shift+F5</span></code></p></td>
+<td><p>结束当前调试会话并使用相同配置重新启动。对 xv6 而言通常也需要重新启动 QEMU。</p></td>
+</tr>
+<tr class="row-odd"><td><p>停止（Stop，■）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Shift+F5</span></code></p></td>
+<td><p>结束 GDB 调试会话。它与 <strong>暂停</strong> 不同：暂停后仍可继续调试，停止后需要重新启动调试会话。</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">F10</span></code> 与 <code class="docutils literal notranslate"><span class="pre">F11</span></code> 的主要区别在于是否进入被调用函数。例如，当前行为 <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">=</span> <span class="pre">allocproc();</span></code> 时，
+<code class="docutils literal notranslate"><span class="pre">F10</span></code> 会完整执行 <code class="docutils literal notranslate"><span class="pre">allocproc</span></code> 并停在调用者的下一行；<code class="docutils literal notranslate"><span class="pre">F11</span></code> 则会进入 <code class="docutils literal notranslate"><span class="pre">allocproc</span></code>，以便继续观察
+其内部语句。若进入无须分析的函数，可按 <code class="docutils literal notranslate"><span class="pre">Shift+F11</span></code> 返回调用者。</p>
+<div class="mycaution admonition">
+<p class="admonition-title">停止调试与退出 QEMU</p>
+<p>VS Code 的停止按钮主要用于结束 GDB 会话。xv6 正在运行时直接停止，QEMU 可能继续占用
+<code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 和 GDB 端口。建议先按 <strong>暂停</strong>，等待程序停下后再按 <strong>停止</strong>。如果 QEMU 仍未退出，
+应在 QEMU 终端中依次按 <code class="docutils literal notranslate"><span class="pre">Ctrl+a</span></code>、<code class="docutils literal notranslate"><span class="pre">x</span></code>，并确认 QEMU 已正常退出。</p>
+</div>
+</section>
+<section id="id16">
+<h3>认识调试侧栏<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<p>程序暂停后，左侧 <strong>运行和调试</strong> 视图中的主要区域如下：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">VARIABLES（变量）</span></code></dt><dd><p>显示当前栈帧中可见的局部变量、函数参数和部分全局变量。展开结构体或指针可以继续查看成员。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">WATCH（监视）</span></code></dt><dd><p>用于持续观察表达式。单击 <code class="docutils literal notranslate"><span class="pre">+</span></code> 后可以添加 <code class="docutils literal notranslate"><span class="pre">p-&gt;pid</span></code>、<code class="docutils literal notranslate"><span class="pre">mycpu()-&gt;noff</span></code> 或 <code class="docutils literal notranslate"><span class="pre">ticks</span></code> 等表达式；
+每次程序暂停时，VS Code 都会重新计算其值。表达式必须在当前栈帧中有效。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">CALL</span> <span class="pre">STACK（调用堆栈）</span></code></dt><dd><p>显示函数调用路径。选择不同栈帧，可以查看对应调用层级中的参数和局部变量。变量值、表达式求值
+和部分寄存器显示都与当前选中的栈帧有关。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">BREAKPOINTS（断点）</span></code></dt><dd><p>集中启用、禁用或删除断点。右键单击代码行左侧的断点并选择 <strong>编辑断点</strong>，还可以设置条件断点；例如
+<code class="docutils literal notranslate"><span class="pre">p-&gt;pid</span> <span class="pre">==</span> <span class="pre">2</span></code> 表示仅在条件成立时暂停。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DEBUG</span> <span class="pre">CONSOLE（调试控制台）</span></code></dt><dd><p>可以计算 C 表达式，也可以向底层 GDB 发送命令。直接输入 <code class="docutils literal notranslate"><span class="pre">p-&gt;pid</span></code> 会求表达式的值；执行原生
+GDB 命令时需要写成 <code class="docutils literal notranslate"><span class="pre">-exec</span> <span class="pre">&lt;GDB</span> <span class="pre">命令&gt;</span></code>，例如 <code class="docutils literal notranslate"><span class="pre">-exec</span> <span class="pre">info</span> <span class="pre">registers</span></code>。变量、寄存器和内存的
+检查应在程序暂停状态下进行。</p>
+</dd>
+</dl>
+</section>
+<section id="id17">
+<h3>查看变量值<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<p>程序暂停后，可将鼠标悬停在源代码中的变量上以查看其值。对于需要持续观察的表达式，应将其添加到
+<code class="docutils literal notranslate"><span class="pre">WATCH</span></code>。此外，还可以在 <code class="docutils literal notranslate"><span class="pre">DEBUG</span> <span class="pre">CONSOLE</span></code> 中输入表达式，或者使用 GDB 的 <code class="docutils literal notranslate"><span class="pre">print</span></code> 命令：</p>
+<div class="literal-block-wrapper docutils container" id="id28">
+<div class="code-block-caption"><span class="caption-text">在 VS Code 的 DEBUG CONSOLE 中查看变量</span><a class="headerlink" href="#id28" title="Link to this code"></a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>p-&gt;pid
+-exec print p-&gt;pid
+-exec print *p
+-exec p/x p
+-exec ptype struct proc
+</pre></div>
+</div>
+</div>
+<p>其中，<code class="docutils literal notranslate"><span class="pre">print``（可简写为</span> <span class="pre">``p</span></code>）按照变量类型打印值；<code class="docutils literal notranslate"><span class="pre">p/x</span></code> 用十六进制显示；<code class="docutils literal notranslate"><span class="pre">print</span> <span class="pre">*p</span></code> 对指针
+解引用并打印所指向的对象；<code class="docutils literal notranslate"><span class="pre">ptype</span></code> 查看类型定义。如果 GDB 提示 <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">symbol</span> <span class="pre">...</span> <span class="pre">in</span> <span class="pre">current</span> <span class="pre">context</span></code>，
+应先在 <code class="docutils literal notranslate"><span class="pre">CALL</span> <span class="pre">STACK</span></code> 中确认当前选中的栈帧是否包含该变量。</p>
+<p>地址和值是两个不同概念。以下命令分别打印变量 <code class="docutils literal notranslate"><span class="pre">ticks</span></code> 的地址、当前值，以及该地址处保存的原始内存：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-exec p/x &amp;ticks
+-exec p/x ticks
+-exec x/wx &amp;ticks
+</pre></div>
+</div>
+</section>
+<section id="risc-v">
+<h3>查看 RISC-V 寄存器<a class="headerlink" href="#risc-v" title="Link to this heading"></a></h3>
+<p>部分版本的 C/C++ 扩展会在变量区域中显示 <code class="docutils literal notranslate"><span class="pre">REGISTERS</span></code>。若当前界面未显示该区域，可以在
+<code class="docutils literal notranslate"><span class="pre">DEBUG</span> <span class="pre">CONSOLE</span></code> 中使用以下命令：</p>
+<div class="literal-block-wrapper docutils container" id="id29">
+<div class="code-block-caption"><span class="caption-text">常用寄存器查看命令</span><a class="headerlink" href="#id29" title="Link to this code"></a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-exec info registers
+-exec info registers pc sp ra s0 a0 a1 a7
+-exec p/x $pc
+-exec p/x $sp
+-exec x/i $pc
+</pre></div>
+</div>
+</div>
+<p>常用 RISC-V 寄存器含义如下：</p>
+<table class="docutils align-default" id="id30">
+<caption><span class="caption-text">xv6 调试中常见的 RISC-V 寄存器</span><a class="headerlink" href="#id30" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 18.0%" />
+<col style="width: 82.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>寄存器</p></th>
+<th class="head"><p>含义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pc</span></code></p></td>
+<td><p>程序计数器，保存下一条将要执行的机器指令地址。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sp</span></code></p></td>
+<td><p>栈指针，指向当前执行上下文的栈顶附近。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ra</span></code></p></td>
+<td><p>返回地址寄存器，函数返回时通常跳转到该地址。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">s0</span></code> / <code class="docutils literal notranslate"><span class="pre">fp</span></code></p></td>
+<td><p>保存寄存器，通常也被用作当前栈帧的帧指针。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">a0``～``a7</span></code></p></td>
+<td><p>参数/返回值寄存器；<code class="docutils literal notranslate"><span class="pre">a0</span></code>、<code class="docutils literal notranslate"><span class="pre">a1</span></code> 等传递参数，<code class="docutils literal notranslate"><span class="pre">a0</span></code> 通常也保存函数返回值，用户态系统调用号通常放在 <code class="docutils literal notranslate"><span class="pre">a7</span></code>。</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">$pc</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">$</span></code> 表示 GDB 寄存器变量。<code class="docutils literal notranslate"><span class="pre">x/i</span> <span class="pre">$pc</span></code> 会反汇编并显示 <code class="docutils literal notranslate"><span class="pre">pc</span></code> 指向的下一条指令，
+这在调试 <code class="docutils literal notranslate"><span class="pre">entry.S</span></code>、<code class="docutils literal notranslate"><span class="pre">swtch.S</span></code> 或陷阱入口代码时尤其有用。</p>
+</section>
+<section id="id18">
+<h3>查看内存地址处的值<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<p>GDB 使用 <code class="docutils literal notranslate"><span class="pre">x/nfu</span> <span class="pre">address</span></code> 检查原始内存，其中 <code class="docutils literal notranslate"><span class="pre">x</span></code> 表示 examine。各字段含义如下：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code> 是显示数量；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code> 是显示格式，例如 <code class="docutils literal notranslate"><span class="pre">x</span></code> 为十六进制、<code class="docutils literal notranslate"><span class="pre">d</span></code> 为有符号十进制、<code class="docutils literal notranslate"><span class="pre">u</span></code> 为无符号十进制、
+<code class="docutils literal notranslate"><span class="pre">i</span></code> 为机器指令、<code class="docutils literal notranslate"><span class="pre">s</span></code> 为字符串；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">u</span></code> 是每个单元的大小：<code class="docutils literal notranslate"><span class="pre">b</span></code> 为 1 字节、<code class="docutils literal notranslate"><span class="pre">h</span></code> 为 2 字节、<code class="docutils literal notranslate"><span class="pre">w</span></code> 为 4 字节、<code class="docutils literal notranslate"><span class="pre">g</span></code> 为 8 字节。</p></li>
+</ul>
+<p>在 64 位 RISC-V 中，常用命令如下：</p>
+<div class="literal-block-wrapper docutils container" id="id31">
+<div class="code-block-caption"><span class="caption-text">内存与指令查看示例</span><a class="headerlink" href="#id31" title="Link to this code"></a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-exec x/16gx $sp
+-exec x/16wx $sp
+-exec x/10i $pc
+-exec x/gx 0x80000000
+-exec x/s path
+</pre></div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">x/16gx</span> <span class="pre">$sp</span></code> 从栈指针开始，以十六进制显示 16 个 8 字节单元；<code class="docutils literal notranslate"><span class="pre">x/16wx</span> <span class="pre">$sp</span></code> 显示 16 个
+4 字节单元；<code class="docutils literal notranslate"><span class="pre">x/10i</span> <span class="pre">$pc</span></code> 显示接下来的 10 条机器指令；<code class="docutils literal notranslate"><span class="pre">x/gx</span> <span class="pre">0x80000000</span></code> 读取指定地址处的
+一个 8 字节值；如果 <code class="docutils literal notranslate"><span class="pre">path</span></code> 是有效的字符指针，<code class="docutils literal notranslate"><span class="pre">x/s</span> <span class="pre">path</span></code> 会将其指向的内存解释为字符串。</p>
+<div class="myquestion admonition">
+<p class="admonition-title">print 与 x 的区别</p>
+<p><code class="docutils literal notranslate"><span class="pre">print</span></code> 根据 C 类型解释表达式，适合查看变量、结构体和指针；<code class="docutils literal notranslate"><span class="pre">x</span></code> 不依赖变量类型，直接从指定
+地址读取原始内存。<code class="docutils literal notranslate"><span class="pre">p/x</span> <span class="pre">p</span></code> 显示指针 <code class="docutils literal notranslate"><span class="pre">p</span></code> 本身保存的地址，而 <code class="docutils literal notranslate"><span class="pre">x/gx</span> <span class="pre">p</span></code> 显示该地址处的
+8 字节内容。调试时应注意区分变量地址与该地址处保存的值。</p>
+</div>
+<p>相关内容可参阅 <a class="reference external" href="https://code.visualstudio.com/docs/editor/debugging">VS Code 官方调试文档</a>、
+<a class="reference external" href="https://code.visualstudio.com/docs/cpp/cpp-debug">VS Code C/C++ 调试文档</a> 和
+<a class="reference external" href="https://sourceware.org/gdb/current/onlinedocs/gdb.html/Memory.html">GDB 内存检查文档</a>。</p>
+</section>
 </section>
 <section id="lab1-faq">
-<span id="id14"></span><h2>常见问题<a class="headerlink" href="#lab1-faq" title="Link to this heading"></a></h2>
+<span id="id19"></span><h2>常见问题<a class="headerlink" href="#lab1-faq" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">Unable</span> <span class="pre">to</span> <span class="pre">locate</span> <span class="pre">package</span></code></dt><dd><p>先确认使用 Ubuntu 22.04/24.04，并已成功执行 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">update</span></code>。如果网络访问软件源失败，先检查
-Linux 环境的网络连接。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">Unable</span> <span class="pre">to</span> <span class="pre">locate</span> <span class="pre">package</span></code></dt><dd><p>确认系统版本为 Ubuntu 22.04/24.04，并确认 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">update</span></code> 已成功执行。如果无法访问软件源，
+应检查 Linux 环境的网络连接。</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">tar:</span> <span class="pre">...</span> <span class="pre">Cannot</span> <span class="pre">open:</span> <span class="pre">No</span> <span class="pre">such</span> <span class="pre">file</span> <span class="pre">or</span> <span class="pre">directory</span></code></dt><dd><p>压缩包不在命令指定的位置，或者版本号、Ubuntu 版本、宿主机架构与文件名不一致。执行
-<code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">~/Downloads</span></code> 查看实际文件名和位置，再修改解压命令；不要原样照抄与自己下载文件不同的示例名称。</p>
+<code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">~/Downloads</span></code> 查看实际文件名和位置，再修改解压命令；命令中的文件名必须与实际下载文件一致。</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">riscv64-unknown-elf-gcc:</span> <span class="pre">command</span> <span class="pre">not</span> <span class="pre">found</span></code></dt><dd><p>执行 <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">~/.local/riscv/bin</span></code> 检查工具链是否正确解压；确认 <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">PATH</span></code> 没有
 拼写错误，然后执行 <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">~/.bashrc</span></code> 和 <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">riscv64-unknown-elf-gcc</span></code>。</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">qemu-system-riscv64:</span> <span class="pre">command</span> <span class="pre">not</span> <span class="pre">found</span></code></dt><dd><p>执行 <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">~/.local/qemu-riscv/bin</span></code> 检查 QEMU 是否正确解压；确认 <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">PATH</span></code>
-配置已经生效，再执行 <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">qemu-system-riscv64</span></code>。</p>
+配置已生效，再执行 <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">qemu-system-riscv64</span></code>。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">cannot</span> <span class="pre">execute</span> <span class="pre">binary</span> <span class="pre">file:</span> <span class="pre">Exec</span> <span class="pre">format</span> <span class="pre">error</span></code></dt><dd><p>通常表示下载的预编译程序与宿主机架构不匹配。重新执行 <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-m</span></code>，并检查下载的是
+<dt><code class="docutils literal notranslate"><span class="pre">cannot</span> <span class="pre">execute</span> <span class="pre">binary</span> <span class="pre">file:</span> <span class="pre">Exec</span> <span class="pre">format</span> <span class="pre">error</span></code></dt><dd><p>通常表示下载的预编译程序与宿主机架构不匹配。重新执行 <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-m</span></code>，并核对下载文件是
 <code class="docutils literal notranslate"><span class="pre">linux-x64</span></code> 还是 <code class="docutils literal notranslate"><span class="pre">linux-arm64</span></code> 版本；RISC-V 工具链同样必须能够在当前宿主机架构上运行。</p>
 </dd>
-<dt>执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code> 后停在 <code class="docutils literal notranslate"><span class="pre">$</span></code></dt><dd><p>这不是卡死。<code class="docutils literal notranslate"><span class="pre">$</span></code> 表示 xv6 已经启动成功，正在等待你输入 xv6 shell 命令。</p>
+<dt>执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code> 后仅显示 <code class="docutils literal notranslate"><span class="pre">$</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">$</span></code> 是 xv6 shell 提示符，表示 xv6 已成功启动并正在等待命令输入，并非程序阻塞。</p>
 </dd>
-<dt>不知道自己在哪个 shell</dt><dd><p>xv6 shell 通常只有简单的 <code class="docutils literal notranslate"><span class="pre">$</span></code> 提示符，且可用命令很少；Ubuntu 的提示符通常包含用户名、主机名
-和当前路径。可以尝试 <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-a</span></code>：Ubuntu 支持该命令，而标准 xv6 通常没有这个程序。</p>
+<dt>无法判断当前 shell 环境</dt><dd><p>xv6 shell 通常仅显示简单的 <code class="docutils literal notranslate"><span class="pre">$</span></code> 提示符，且可用命令较少；Ubuntu shell 的提示符通常包含用户名、
+主机名和当前路径。可执行 <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-a</span></code> 进行判断：Ubuntu 提供该命令，而标准 xv6 通常不包含该程序。</p>
 </dd>
-<dt>重新编译后行为异常</dt><dd><p>退出 QEMU，在 xv6-riscv 根目录执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code>，再执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>。不要在 QEMU 仍在
-运行时删除构建产物。</p>
+<dt>重新编译后行为异常</dt><dd><p>退出 QEMU，在 xv6-riscv 根目录执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code>，再执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>。QEMU 运行期间不应
+删除构建产物。</p>
 </dd>
 </dl>
 </section>
-<section id="id15">
-<h2>扩展阅读<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<section id="id20">
+<h2>扩展阅读<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/mit-pdos/xv6-riscv">xv6-riscv 官方源码</a></p></li>
 <li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.1810/">MIT 6.1810 操作系统工程课程</a></p></li>
 <li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.1810/2024/xv6/book-riscv-rev4.pdf">xv6: a simple, Unix-like teaching operating system</a></p></li>
 </ul>
-<p>阅读源码时，遇到不熟悉的函数或机制，可以先阅读手册和对应源文件。操作系统实验尤其需要养成
-<strong>RTFM</strong> （阅读手册）和 <strong>RTFSC</strong> （阅读源代码）的习惯。</p>
+<p>阅读源码时，如遇不熟悉的函数或机制，应优先查阅相关手册和对应源文件。操作系统实验需要逐步形成
+RTFM（阅读手册）和 RTFSC（阅读源代码）的习惯。</p>
 </section>
 </section>
 

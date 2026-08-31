@@ -1,12 +1,12 @@
-实验一 搭建实验环境
+实验一：搭建实验环境
 ============================
 
-本课程使用 `xv6-riscv <https://github.com/mit-pdos/xv6-riscv>`_ 学习操作系统的基本原理。
-xv6 是一个面向教学的、类 Unix 的小型操作系统。它保留了进程、虚拟内存、系统调用、
-文件系统和设备驱动等操作系统的核心概念，同时代码规模远小于 Linux，适合阅读、修改和实验。
+本课程以 `xv6-riscv <https://github.com/mit-pdos/xv6-riscv>`_ 为教学平台，用于学习操作系统的基本原理。
+xv6 是一个面向教学的类 Unix 小型操作系统。它保留了进程、虚拟内存、系统调用、
+文件系统和设备驱动等操作系统的核心概念，同时代码规模远小于 Linux，适合阅读、修改和开展实验。
 
-本次实验不要求修改 xv6 内核。你需要搭建 Linux 实验环境，安装 RISC-V 交叉编译工具链和
-QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本操作。
+本次实验不要求修改 xv6 内核，主要任务包括搭建 Linux 实验环境、安装 RISC-V 交叉编译工具链和
+QEMU、编译并启动 xv6，以及在 xv6 shell 中完成若干基本操作。
 
 .. raw:: html
 
@@ -24,7 +24,7 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 实验目标
 ~~~~~~~~~~~~~~~~~~~~~
 
-完成本次实验后，你应该能够：
+完成本次实验后，应能够：
 
 * 使用 ``riscv64-unknown-elf`` 工具链交叉编译 RISC-V 程序；
 * 使用 ``qemu-system-riscv64`` 启动 xv6；
@@ -40,7 +40,6 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 
 #. 实验环境类型（Linux 真机、WSL 2 或虚拟机）、Ubuntu 版本和宿主机体系结构；
 #. RISC-V 交叉编译器与 QEMU 的版本信息；
-#. xv6-riscv 的 Git 提交短哈希；
 #. xv6 成功编译、启动并进入 shell 的截图；
 #. xv6 shell 基础操作的命令、输出截图和对管道、重定向的解释；
 #. 实验中遇到的问题、定位过程和解决方法；如果没有遇到问题，也应简要总结本次实验的收获。
@@ -50,10 +49,8 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
    <div class="admonition mycaution">
       <p class="admonition-title">提交前检查</p>
       <p>橙色提示框是实验必做内容。截图应包含命令和输出，文字应清晰可辨；
-      不要只放截图而不说明操作目的和结果。</p>
+      每幅截图均应配有操作目的和结果说明。</p>
    </div>
-
-
 
 
 .. _lab1-tools:
@@ -64,22 +61,21 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 系统环境
 ----------------------
 
-本课程优先推荐使用 **Ubuntu 22.04 LTS 或 Ubuntu 24.04 LTS**。你可以选择 Linux 真机、Windows Subsystem for Linux
-（WSL 2），或者 VMware 等虚拟机。三种方式完成实验的体验基本相同。
+本课程建议优先使用 **Ubuntu 22.04 LTS 或 Ubuntu 24.04 LTS**。实验环境可部署在 Linux 真机、
+Windows Subsystem for Linux（WSL 2）或 VMware 等虚拟机中，三种方式均可满足实验要求。
 
-如果你是初次配置 Ubuntu ，可以更换合适的国内源。
+首次配置 Ubuntu 时，可根据网络状况选择合适的软件镜像源。
 
 .. raw:: html
 
    <div class="admonition mydanger">
-      <p class="admonition-title">更换合适的国内源</p>
-      <p>更换了国内的软件镜像源后，通过包管理器安装软件会更快。Ubuntu 官方源在国内访问速度较慢，甚至可能无法访问。
-      在更换国内软件镜像源时，使用与系统不相符的源会导致工具包版本冲突, 强行安装将会损坏系统。
-      所以请你仔细核对 Ubuntu 版本和对应的国内镜像源版本，否则会损坏你的系统。</p>
+      <p class="admonition-title">正确配置软件镜像源</p>
+      <p>合适的软件镜像源能够提高软件包的下载速度。配置前必须核对 Ubuntu 版本、代号及宿主机架构；
+      使用与当前系统不匹配的软件源可能造成依赖冲突，强制安装不兼容的软件包还可能破坏系统环境。</p>
    </div>
 
 
-更换合适的国内源后，在 Ubuntu 中打开终端，执行：
+完成软件镜像源配置后，在 Ubuntu 终端中执行：
 
 .. code-block:: bash
 
@@ -91,25 +87,25 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 ----------------------------
 
 打开 `riscv-gnu-toolchain Releases
-<https://github.com/riscv-collab/riscv-gnu-toolchain/releases>`_，在一个较新的 Release 中展开
-``Assets``。按照自己的 Ubuntu 版本下载下面两个文件之一：
+<https://github.com/riscv-collab/riscv-gnu-toolchain/releases>`_，选择适用于当前系统的正式 Release 并展开
+``Assets``。根据所使用的 Ubuntu 版本下载下列文件之一：
 
 * Ubuntu 22.04：``riscv64-elf-ubuntu-22.04-gcc.tar.xz``
 * Ubuntu 24.04：``riscv64-elf-ubuntu-24.04-gcc.tar.xz``
 
-这里必须选择 ``riscv64``、``elf`` 和 ``gcc`` 的组合。``elf`` 表示面向裸机环境，符合 xv6
-内核和用户程序的构建需求；不要下载 ``riscv32``、``glibc``、``musl``、``picolibc`` 或
-``llvm`` 版本。Release 页面还会给出文件的 SHA-256 值，可以用来检查下载是否完整：
+必须选择 ``riscv64``、``elf`` 和 ``gcc`` 的组合。``elf`` 表示该工具链面向裸机环境，符合 xv6
+内核和用户程序的构建需求。``riscv32``、``glibc``、``musl``、``picolibc`` 或 ``llvm`` 版本
+不适用于本实验。Release 页面同时提供文件的 SHA-256 校验值，可用于检查下载文件的完整性：
 
 .. code-block:: bash
 
    cd ~/Downloads
    sha256sum riscv64-elf-ubuntu-24.04-gcc.tar.xz
 
-上面以 Ubuntu 24.04 为例；使用 Ubuntu 22.04 时替换文件名。将终端输出与发布页中对应文件下方的
+上述命令以 Ubuntu 24.04 为例；使用 Ubuntu 22.04 时应替换相应文件名。将终端输出与发布页中对应文件的
 ``sha256`` 值比较，两者应完全相同。
 
-创建安装目录，并把压缩包解压到 ``~/.local/riscv``：
+创建安装目录，并将压缩包解压到 ``~/.local/riscv``：
 
 .. code-block:: bash
 
@@ -128,10 +124,10 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 
 打开 `xPack QEMU RISC-V Releases
 <https://github.com/xpack-dev-tools/qemu-riscv-xpack/releases>`_，选择较新的正式版本，在 ``Assets``
-中下载与 **宿主机架构** 对应的 GNU/Linux 压缩包。以 9.2.4-1 为例：
+中下载与 **宿主机架构** 对应的 GNU/Linux 压缩包。
 
-发布页中的版本号可能已经更新，应以下载页面实际显示的最新正式版本为准。下面以
-``9.2.4-1-linux-x64`` 为例，将其解压到固定目录 ``~/.local/qemu-riscv``：
+发布页中的版本号可能已经更新，应以下载页面实际显示的最新正式版本为准。以下以
+``9.2.4-1-linux-x64`` 为例，将压缩包解压到固定目录 ``~/.local/qemu-riscv``：
 
 .. code-block:: bash
 
@@ -144,34 +140,34 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 添加 PATH 环境变量
 ----------------------------
 
-Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打开 Bash 配置文件：
+Linux shell 按照 ``PATH`` 中的目录顺序查找命令。使用文本编辑器打开 Bash 配置文件：
 
 .. code-block:: bash
 
    vim ~/.bashrc
 
-在文件末尾加入下面一行：
+在文件末尾添加以下内容：
 
 .. code-block:: bash
 
    export PATH="$HOME/.local/riscv/bin:$HOME/.local/qemu-riscv/bin:$PATH"
 
-保存配置文件，让配置在当前终端立即生效：
+保存配置文件后，执行以下命令使配置在当前终端立即生效：
 
 .. code-block:: bash
 
    source ~/.bashrc
 
-这项配置以后会在每次打开 Bash 时自动生效，只需添加一次。使用下面的命令检查实际找到的程序：
+该配置将在每次启动 Bash 时自动生效，无须重复添加。使用以下命令检查实际调用的程序：
 
 .. code-block:: bash
 
    which riscv64-unknown-elf-gcc
    which qemu-system-riscv64
 
-输出应分别位于 ``/home/你的用户名/.local/riscv/bin`` 和
-``/home/你的用户名/.local/qemu-riscv/bin``。如果系统中曾经安装过其他同名工具，``which`` 还可以
-确认当前优先使用的是本实验刚安装的版本。
+输出路径应分别位于 ``/home/<用户名>/.local/riscv/bin`` 和
+``/home/<用户名>/.local/qemu-riscv/bin``。如果系统中已经安装其他同名工具，``which`` 的输出还可用于
+确认当前优先调用的是否为本实验安装的版本。
 
 验证安装结果
 ----------------------------
@@ -186,8 +182,8 @@ Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打�
    riscv64-unknown-elf-ld --version
    qemu-system-riscv64 --version
 
-只要每条命令都能输出版本信息且没有出现 ``command not found``，就说明基本工具已经就绪。
-具体版本号可能随着发布页更新而变化，不必与讲义示例完全相同。
+若每条命令均能输出版本信息，且未出现 ``command not found``，则说明基本工具已经就绪。
+具体版本号可能随发布版本更新而变化，无须与讲义示例完全一致。
 
 .. raw:: html
 
@@ -196,7 +192,7 @@ Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打�
       <p>依次执行 <code>cat /etc/os-release</code>、<code>uname -m</code>、
       <code>which riscv64-unknown-elf-gcc</code>、<code>which qemu-system-riscv64</code>、
       <code>riscv64-unknown-elf-gcc --version</code> 和 <code>qemu-system-riscv64 --version</code>。
-      在实验报告中说明自己选择的是 Linux 真机、WSL 2 还是虚拟机，并附上能够看清上述信息的终端截图。</p>
+      在实验报告中说明所采用的环境类型（Linux 真机、WSL 2 或虚拟机），并附上上述信息清晰可辨的终端截图。</p>
    </div>
 
 .. _lab1-source:
@@ -215,7 +211,7 @@ Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打�
 初识源码目录
 -----------------------
 
-在 xv6-riscv 仓库中执行 ``ls``，可以看到几个重要部分：
+在 xv6-riscv 仓库中执行 ``ls``，可查看以下主要目录和文件：
 
 ``kernel/``
   xv6 内核源代码，包括进程管理、虚拟内存、文件系统、系统调用、陷阱处理和设备驱动等。
@@ -245,8 +241,8 @@ Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打�
 
    make qemu
 
-Make 会调用 ``riscv64-unknown-elf`` 工具链编译内核和用户程序，生成文件系统镜像，再启动
-``qemu-system-riscv64``。第一次编译会输出较多命令。成功启动后，可以看到类似下面的内容：
+Make 将调用 ``riscv64-unknown-elf`` 工具链编译内核和用户程序，生成文件系统镜像，再启动
+``qemu-system-riscv64``。首次编译会输出较多构建命令。成功启动后，终端将显示类似以下内容：
 
 .. code-block:: text
 
@@ -257,13 +253,13 @@ Make 会调用 ``riscv64-unknown-elf`` 工具链编译内核和用户程序，�
    init: starting sh
    $
 
-``hart`` 是 RISC-V 对硬件线程的称呼。最后的 ``$`` 是 xv6 shell 的提示符，表示 xv6 已经启动成功，
+``hart`` 是 RISC-V 对硬件线程的称呼。最后的 ``$`` 是 xv6 shell 的提示符，表示 xv6 已成功启动，
 正在等待命令。不同源码版本的启动信息可能略有差异。
 
 .. raw:: html
 
    <div class="admonition mytodo">
-      <p class="admonition-title">第一次启动 xv6</p>
+      <p class="admonition-title">首次启动 xv6</p>
       <p>执行 <code>make qemu</code>，等待 xv6 启动并出现 <code>$</code> 提示符。
       将包含 <code>xv6 kernel is booting</code> 和 shell 提示符的终端截图放入实验报告。</p>
    </div>
@@ -271,28 +267,28 @@ Make 会调用 ``riscv64-unknown-elf`` 工具链编译内核和用户程序，�
 退出 xv6 和 QEMU
 -----------------------
 
-xv6 默认没有 ``shutdown`` 命令。退出 QEMU 时，先按 ``Ctrl+a``，松开后再按 ``x``。
-这是两个依次完成的按键动作，不是同时按下三个键。退出后会重新退回到 shell。
+xv6 默认不提供 ``shutdown`` 命令。退出 QEMU 时，应先按 ``Ctrl+a``，松开后再按 ``x``。
+这两个按键操作需要依次完成，而非同时按下三个按键。退出后将返回宿主机 shell。
 
 .. raw:: html
 
    <div class="admonition mydanger">
-      <p class="admonition-title">不要直接关闭正在写入的虚拟机</p>
-      <p>本实验中的简单操作通常不会造成问题，但养成正确退出 QEMU 的习惯很重要。
-      如果终端没有响应，先确认自己当前处于 xv6 shell、QEMU 控制台还是 Ubuntu shell。</p>
+      <p class="admonition-title">避免强制关闭正在写入磁盘镜像的 QEMU</p>
+      <p>强制关闭 QEMU 可能导致文件系统镜像处于不一致状态，因此应按照上述按键顺序正常退出。
+      如果终端未响应，应先确认当前环境是 xv6 shell、QEMU 控制台还是 Ubuntu shell。</p>
    </div>
 
 
 初识 xv6 shell
 -----------------------------
 
-再次执行 ``make qemu`` 进入 xv6。先输入：
+重新执行 ``make qemu`` 进入 xv6，并在 shell 提示符后执行：
 
 .. code-block:: sh
 
    ls
 
-你看到的是 xv6 文件系统根目录的内容。目录中的 ``cat``、``echo``、``grep``、``ls``、``mkdir``、
+该命令显示 xv6 文件系统根目录的内容。目录中的 ``cat``、``echo``、``grep``、``ls``、``mkdir``、
 ``rm``、``sh`` 和 ``wc`` 等都是编译进 xv6 文件系统镜像的用户程序。
 
 命令、参数与进程
@@ -305,13 +301,13 @@ xv6 默认没有 ``shutdown`` 命令。退出 QEMU 时，先按 ``Ctrl+a``，松
    echo hello xv6
    echo one two three | wc
 
-第一条命令启动 ``echo`` 程序并传入两个参数。第二条命令使用管道 ``|``，shell 会创建管道并启动
-``echo`` 与 ``wc`` 两个进程，把前一个程序的输出连接到后一个程序的输入。
+第一条命令启动 ``echo`` 程序并传入两个参数。第二条命令使用管道 ``|``；shell 将创建管道并启动
+``echo`` 与 ``wc`` 两个进程，将前一个程序的输出连接至后一个程序的输入。
 
 文件与目录
 -----------------------
 
-继续完成下面的操作：
+继续执行以下操作：
 
 .. code-block:: sh
 
@@ -325,25 +321,25 @@ xv6 默认没有 ``shutdown`` 命令。退出 QEMU 时，先按 ``Ctrl+a``，松
    rm hello.txt
    cd ..
 
-这里的 ``>`` 把程序的标准输出重定向到文件；``cat`` 读取并显示文件；``grep`` 查找包含指定字符串的行；
-``wc`` 统计行数、单词数和字节数。xv6 的工具只实现了教学所需的基本功能，支持的参数远少于
-Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境里的所有命令和选项。
+``>`` 将程序的标准输出重定向到文件；``cat`` 读取并显示文件；``grep`` 查找包含指定字符串的行；
+``wc`` 统计行数、单词数和字节数。xv6 工具仅实现教学所需的基本功能，其参数和选项少于
+Ubuntu 中的 GNU 工具，不能替代日常 Linux 环境中的完整命令集。
 
 .. raw:: html
 
    <div class="admonition mytodo">
       <p class="admonition-title">完成 xv6 shell 基础操作</p>
       <p>按顺序完成本节的目录创建、输出重定向、文件查看、字符串查找、统计和删除操作。
-      在实验报告中附上完整操作及输出的截图，并用自己的语言说明
-      <code>|</code> 与 <code>&gt;</code> 分别完成了什么工作。</p>
+      在实验报告中附上完整操作及输出的截图，并结合命令执行结果说明
+      <code>|</code> 与 <code>&gt;</code> 的作用。</p>
    </div>
 
 .. raw:: html
 
    <div class="admonition myquestion">
-      <p class="admonition-title">两个 shell 是同一个程序吗？</p>
+      <p class="admonition-title">思考：Ubuntu shell 与 xv6 shell 是否相同？</p>
       <p>Ubuntu 和 xv6 中都能输入 <code>ls</code>、<code>echo</code> 等命令。
-      它们调用的是同一份可执行文件吗？这些文件分别为哪一种指令集编译？</p>
+      请比较两种环境中的可执行文件，并说明它们所对应的指令集。</p>
    </div>
 
 宿主机与 xv6 文件系统
@@ -351,9 +347,9 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 
 在 xv6 中创建的 ``hello.txt`` 不会直接出现在 Ubuntu 当前目录中。xv6 使用的是 QEMU 挂载的
 ``fs.img`` 文件系统镜像。Ubuntu 负责保存这个镜像文件，而 xv6 内核负责解释镜像内部的目录、
-文件和数据块。后续文件系统实验会进一步研究它的实现。
+文件和数据块。后续文件系统实验将进一步分析其实现机制。
 
-当你修改 ``user/`` 中的程序并重新执行 ``make qemu`` 时，Makefile 会把相应程序重新编译并放入
+修改 ``user/`` 中的程序并重新执行 ``make qemu`` 时，Makefile 会将相应程序重新编译并写入
 文件系统镜像。修改 ``kernel/`` 中的代码则会改变下一次启动的 xv6 内核。
 
 .. _lab1-gdb:
@@ -361,7 +357,8 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 VS Code 调试 xv6
 ~~~~~~~~~~~~~~~~~~~~~
 
-直接使用 GDB 调试 xv6 内核和用户程序比较复杂，推荐使用 VS Code 调试，操作更简单，也更加直观。
+使用命令行 GDB 调试 xv6 内核和用户程序具有一定复杂度。本节采用 VS Code 组织调试流程，以便直观地
+观察源代码、断点、变量、寄存器和调用栈。
 
 安装插件
 -----------------------
@@ -383,7 +380,8 @@ VS Code 调试 xv6
 .. admonition:: 远程环境安装
    :class: mycomment tutorial-note
 
-   如果通过 VS Code 远程连接 WSL 2 或虚拟机，需要在 **远程环境** 中安装扩展，而不是只安装在本地环境中。
+   通过 VS Code 远程连接 WSL 2 或虚拟机时，应在 **远程环境** 中安装扩展；仅在本地环境中安装并不能
+   为远程工作区提供相应功能。
 
    .. figure:: ../picture/lab1/ssh-extension.png
       :alt: VS Code 远程环境中的 C/C++ 扩展安装入口
@@ -397,7 +395,8 @@ VS Code 调试 xv6
 添加调试配置
 -----------------------
 
-在 VS Code 中打开 xv6-riscv 仓库根目录，创建 ``.vscode`` 目录，再创建 ``launch.json`` 和 ``tasks.json`` 文件，分别填入下面的配置。
+在 VS Code 中打开 xv6-riscv 仓库根目录，创建 ``.vscode`` 目录，再创建 ``launch.json`` 和
+``tasks.json`` 文件，分别写入以下配置。
 
 .. code-block:: json
    :caption: launch.json
@@ -442,7 +441,8 @@ VS Code 调试 xv6
    }
 
 
-其中第13行，调试器的路径需要根据你安装的 RISC-V 工具链实际位置修改。你可以通过 ``which riscv64-unknown-elf-gdb`` 查看实际路径。
+``miDebuggerPath`` 应根据 RISC-V 工具链的实际安装位置进行修改。执行
+``which riscv64-unknown-elf-gdb`` 可查询 GDB 的实际路径。
 
 .. code-block:: json
    :caption: tasks.json
@@ -454,7 +454,7 @@ VS Code 调试 xv6
             "label": "xv6build",
             "type": "shell",
             "isBackground": true,
-            "command": "make qemu-gdb",
+            "command": "make qemu-gdb CPUS=1",
             "problemMatcher": [
                {
                   "pattern": [
@@ -476,12 +476,27 @@ VS Code 调试 xv6
    }
 
 
+.. admonition:: 调试时建议使用单核配置
+   :class: myhint
+
+   xv6 默认可以启动多个 RISC-V hart。多核并发执行时，不同 hart 可能交替命中断点，调用栈和寄存器
+   视图也会随当前选中的执行线程发生变化，从而增加初次调试时的观察难度。因此，调试阶段建议通过
+   ``CPUS=1`` 将 QEMU 配置为单核模式：
+
+   .. code-block:: bash
+
+      make qemu-gdb CPUS=1
+
+   上述 ``tasks.json`` 已采用该配置。单核模式仅用于降低调试过程的复杂度，不改变 xv6 的主要功能；
+   分析多核启动、调度或锁机制时，应再恢复多核配置。
+
+
 .. container:: tutorial-step
 
    .. rubric:: 3. 允许在任意文件中设置断点
 
    为了在汇编代码中设置断点，在 VS Code 设置中搜索 ``breakpoint``，然后勾选
-   ``Allow setting breakpoints in any file.``。完成后即可直接在 VS Code 中调试 xv6。
+   ``Allow setting breakpoints in any file.``。启用该选项后，即可在汇编源文件中设置断点。
 
    .. figure:: ../picture/lab1/breakpoint.png
       :alt: VS Code 中允许在任意文件内设置断点的选项
@@ -492,18 +507,210 @@ VS Code 调试 xv6
       启用允许在任意文件中设置断点的选项。
 
 
+启动调试与设置断点
+-----------------------
+
+调试前先在编辑器中打开 ``kernel/main.c``。单击代码行号左侧的空白区域，出现红色圆点即表示已经设置断点；
+再次单击可以删除断点，也可以按 ``F9`` 切换当前行的断点。首次调试时，可在 ``main`` 函数内的第一条
+可执行语句处设置断点。
+
+可按 ``F5`` 启动调试，也可打开左侧的 **运行和调试** 视图并选择 ``xv6debug``。VS Code 将依次完成以下操作：
+
+#. 执行 ``preLaunchTask``，编译 xv6 并以 ``make qemu-gdb CPUS=1`` 启动单核 QEMU；
+#. 启动 RISC-V GDB，加载 ``kernel/kernel`` 中的符号和源代码行信息；
+#. 根据生成的 ``.gdbinit`` 连接 QEMU GDB 服务器；
+#. 恢复 xv6 的执行，并在命中断点时暂停。
+
+程序暂停后，VS Code 会用黄色箭头标出 **下一条即将执行的语句**。黄色箭头所在行尚未执行；完成单步操作后，
+箭头将移动到下一处暂停位置。如果断点显示为空心灰色圆点，通常表示符号尚未加载、文件路径不匹配，
+或者该行没有可以设置断点的机器指令。
+
+.. admonition:: xv6 使用优化编译
+   :class: myhint
+
+   xv6 默认启用编译优化。调试时可能出现源代码行跳跃、执行顺序与源码不一致，或者变量显示
+   ``<optimized out>``。这通常并非调试器故障，而是源代码语句被合并、重排或优化所致。
+
+调试工具栏按钮
+-----------------------
+
+调试开始后，窗口上方会出现调试工具栏。该工具栏用于控制 **被调试的 xv6** 的执行状态。
+
+.. list-table:: VS Code 调试工具栏
+   :header-rows: 1
+   :widths: 20 18 62
+
+   * - 按钮
+     - 快捷键
+     - 作用与区别
+   * - 继续 / 暂停（▶ / ‖）
+     - ``F5``
+     - 暂停时，**继续** 将使程序运行至下一个断点、异常或手动暂停位置。在部分 QEMU/GDB 组合中，暂停请求可能无法立即生效，此时可通过预先设置断点使程序暂停。
+   * - 单步跳过（Step Over）
+     - ``F10``
+     - 执行当前源代码行。如果该行包含函数调用，则将该函数调用作为一个整体执行，不进入函数内部。
+   * - 单步进入（Step Into）
+     - ``F11``
+     - 执行当前行，并在可能时进入被调用函数内部，用于跟踪函数的具体实现。
+   * - 单步跳出（Step Out）
+     - ``Shift+F11``
+     - 继续执行当前函数剩余部分，在当前函数返回到调用者后再次暂停。
+   * - 重启（Restart）
+     - ``Ctrl+Shift+F5``
+     - 结束当前调试会话并使用相同配置重新启动。对 xv6 而言通常也需要重新启动 QEMU。
+   * - 停止（Stop，■）
+     - ``Shift+F5``
+     - 结束 GDB 调试会话。它与 **暂停** 不同：暂停后仍可继续调试，停止后需要重新启动调试会话。
+
+``F10`` 与 ``F11`` 的主要区别在于是否进入被调用函数。例如，当前行为 ``p = allocproc();`` 时，
+``F10`` 会完整执行 ``allocproc`` 并停在调用者的下一行；``F11`` 则会进入 ``allocproc``，以便继续观察
+其内部语句。若进入无须分析的函数，可按 ``Shift+F11`` 返回调用者。
+
+.. admonition:: 停止调试与退出 QEMU
+   :class: mycaution
+
+   VS Code 的停止按钮主要用于结束 GDB 会话。xv6 正在运行时直接停止，QEMU 可能继续占用
+   ``fs.img`` 和 GDB 端口。建议先按 **暂停**，等待程序停下后再按 **停止**。如果 QEMU 仍未退出，
+   应在 QEMU 终端中依次按 ``Ctrl+a``、``x``，并确认 QEMU 已正常退出。
+
+认识调试侧栏
+-----------------------
+
+程序暂停后，左侧 **运行和调试** 视图中的主要区域如下：
+
+``VARIABLES（变量）``
+  显示当前栈帧中可见的局部变量、函数参数和部分全局变量。展开结构体或指针可以继续查看成员。
+
+``WATCH（监视）``
+  用于持续观察表达式。单击 ``+`` 后可以添加 ``p->pid``、``mycpu()->noff`` 或 ``ticks`` 等表达式；
+  每次程序暂停时，VS Code 都会重新计算其值。表达式必须在当前栈帧中有效。
+
+``CALL STACK（调用堆栈）``
+  显示函数调用路径。选择不同栈帧，可以查看对应调用层级中的参数和局部变量。变量值、表达式求值
+  和部分寄存器显示都与当前选中的栈帧有关。
+
+``BREAKPOINTS（断点）``
+  集中启用、禁用或删除断点。右键单击代码行左侧的断点并选择 **编辑断点**，还可以设置条件断点；例如
+  ``p->pid == 2`` 表示仅在条件成立时暂停。
+
+``DEBUG CONSOLE（调试控制台）``
+  可以计算 C 表达式，也可以向底层 GDB 发送命令。直接输入 ``p->pid`` 会求表达式的值；执行原生
+  GDB 命令时需要写成 ``-exec <GDB 命令>``，例如 ``-exec info registers``。变量、寄存器和内存的
+  检查应在程序暂停状态下进行。
+
+查看变量值
+-----------------------
+
+程序暂停后，可将鼠标悬停在源代码中的变量上以查看其值。对于需要持续观察的表达式，应将其添加到
+``WATCH``。此外，还可以在 ``DEBUG CONSOLE`` 中输入表达式，或者使用 GDB 的 ``print`` 命令：
+
+.. code-block:: text
+   :caption: 在 VS Code 的 DEBUG CONSOLE 中查看变量
+
+   p->pid
+   -exec print p->pid
+   -exec print *p
+   -exec p/x p
+   -exec ptype struct proc
+
+其中，``print``（可简写为 ``p``）按照变量类型打印值；``p/x`` 用十六进制显示；``print *p`` 对指针
+解引用并打印所指向的对象；``ptype`` 查看类型定义。如果 GDB 提示 ``No symbol ... in current context``，
+应先在 ``CALL STACK`` 中确认当前选中的栈帧是否包含该变量。
+
+地址和值是两个不同概念。以下命令分别打印变量 ``ticks`` 的地址、当前值，以及该地址处保存的原始内存：
+
+.. code-block:: text
+
+   -exec p/x &ticks
+   -exec p/x ticks
+   -exec x/wx &ticks
+
+查看 RISC-V 寄存器
+-----------------------
+
+部分版本的 C/C++ 扩展会在变量区域中显示 ``REGISTERS``。若当前界面未显示该区域，可以在
+``DEBUG CONSOLE`` 中使用以下命令：
+
+.. code-block:: text
+   :caption: 常用寄存器查看命令
+
+   -exec info registers
+   -exec info registers pc sp ra s0 a0 a1 a7
+   -exec p/x $pc
+   -exec p/x $sp
+   -exec x/i $pc
+
+常用 RISC-V 寄存器含义如下：
+
+.. list-table:: xv6 调试中常见的 RISC-V 寄存器
+   :header-rows: 1
+   :widths: 18 82
+
+   * - 寄存器
+     - 含义
+   * - ``pc``
+     - 程序计数器，保存下一条将要执行的机器指令地址。
+   * - ``sp``
+     - 栈指针，指向当前执行上下文的栈顶附近。
+   * - ``ra``
+     - 返回地址寄存器，函数返回时通常跳转到该地址。
+   * - ``s0`` / ``fp``
+     - 保存寄存器，通常也被用作当前栈帧的帧指针。
+   * - ``a0``～``a7``
+     - 参数/返回值寄存器；``a0``、``a1`` 等传递参数，``a0`` 通常也保存函数返回值，用户态系统调用号通常放在 ``a7``。
+
+``$pc`` 中的 ``$`` 表示 GDB 寄存器变量。``x/i $pc`` 会反汇编并显示 ``pc`` 指向的下一条指令，
+这在调试 ``entry.S``、``swtch.S`` 或陷阱入口代码时尤其有用。
+
+查看内存地址处的值
+-----------------------
+
+GDB 使用 ``x/nfu address`` 检查原始内存，其中 ``x`` 表示 examine。各字段含义如下：
+
+* ``n`` 是显示数量；
+* ``f`` 是显示格式，例如 ``x`` 为十六进制、``d`` 为有符号十进制、``u`` 为无符号十进制、
+  ``i`` 为机器指令、``s`` 为字符串；
+* ``u`` 是每个单元的大小：``b`` 为 1 字节、``h`` 为 2 字节、``w`` 为 4 字节、``g`` 为 8 字节。
+
+在 64 位 RISC-V 中，常用命令如下：
+
+.. code-block:: text
+   :caption: 内存与指令查看示例
+
+   -exec x/16gx $sp
+   -exec x/16wx $sp
+   -exec x/10i $pc
+   -exec x/gx 0x80000000
+   -exec x/s path
+
+``x/16gx $sp`` 从栈指针开始，以十六进制显示 16 个 8 字节单元；``x/16wx $sp`` 显示 16 个
+4 字节单元；``x/10i $pc`` 显示接下来的 10 条机器指令；``x/gx 0x80000000`` 读取指定地址处的
+一个 8 字节值；如果 ``path`` 是有效的字符指针，``x/s path`` 会将其指向的内存解释为字符串。
+
+.. admonition:: print 与 x 的区别
+   :class: myquestion
+
+   ``print`` 根据 C 类型解释表达式，适合查看变量、结构体和指针；``x`` 不依赖变量类型，直接从指定
+   地址读取原始内存。``p/x p`` 显示指针 ``p`` 本身保存的地址，而 ``x/gx p`` 显示该地址处的
+   8 字节内容。调试时应注意区分变量地址与该地址处保存的值。
+
+相关内容可参阅 `VS Code 官方调试文档 <https://code.visualstudio.com/docs/editor/debugging>`_、
+`VS Code C/C++ 调试文档 <https://code.visualstudio.com/docs/cpp/cpp-debug>`_ 和
+`GDB 内存检查文档 <https://sourceware.org/gdb/current/onlinedocs/gdb.html/Memory.html>`_。
+
+
 .. _lab1-faq:
 
 常见问题
 ~~~~~~~~~~~~~~~~~~~~~
 
 ``Unable to locate package``
-  先确认使用 Ubuntu 22.04/24.04，并已成功执行 ``sudo apt update``。如果网络访问软件源失败，先检查
-  Linux 环境的网络连接。
+  确认系统版本为 Ubuntu 22.04/24.04，并确认 ``sudo apt update`` 已成功执行。如果无法访问软件源，
+  应检查 Linux 环境的网络连接。
 
 ``tar: ... Cannot open: No such file or directory``
   压缩包不在命令指定的位置，或者版本号、Ubuntu 版本、宿主机架构与文件名不一致。执行
-  ``ls ~/Downloads`` 查看实际文件名和位置，再修改解压命令；不要原样照抄与自己下载文件不同的示例名称。
+  ``ls ~/Downloads`` 查看实际文件名和位置，再修改解压命令；命令中的文件名必须与实际下载文件一致。
 
 ``riscv64-unknown-elf-gcc: command not found``
   执行 ``ls ~/.local/riscv/bin`` 检查工具链是否正确解压；确认 ``~/.bashrc`` 中的 ``PATH`` 没有
@@ -511,22 +718,22 @@ VS Code 调试 xv6
 
 ``qemu-system-riscv64: command not found``
   执行 ``ls ~/.local/qemu-riscv/bin`` 检查 QEMU 是否正确解压；确认 ``~/.bashrc`` 中的 ``PATH``
-  配置已经生效，再执行 ``which qemu-system-riscv64``。
+  配置已生效，再执行 ``which qemu-system-riscv64``。
 
 ``cannot execute binary file: Exec format error``
-  通常表示下载的预编译程序与宿主机架构不匹配。重新执行 ``uname -m``，并检查下载的是
+  通常表示下载的预编译程序与宿主机架构不匹配。重新执行 ``uname -m``，并核对下载文件是
   ``linux-x64`` 还是 ``linux-arm64`` 版本；RISC-V 工具链同样必须能够在当前宿主机架构上运行。
 
-执行 ``make qemu`` 后停在 ``$``
-  这不是卡死。``$`` 表示 xv6 已经启动成功，正在等待你输入 xv6 shell 命令。
+执行 ``make qemu`` 后仅显示 ``$``
+  ``$`` 是 xv6 shell 提示符，表示 xv6 已成功启动并正在等待命令输入，并非程序阻塞。
 
-不知道自己在哪个 shell
-  xv6 shell 通常只有简单的 ``$`` 提示符，且可用命令很少；Ubuntu 的提示符通常包含用户名、主机名
-  和当前路径。可以尝试 ``uname -a``：Ubuntu 支持该命令，而标准 xv6 通常没有这个程序。
+无法判断当前 shell 环境
+  xv6 shell 通常仅显示简单的 ``$`` 提示符，且可用命令较少；Ubuntu shell 的提示符通常包含用户名、
+  主机名和当前路径。可执行 ``uname -a`` 进行判断：Ubuntu 提供该命令，而标准 xv6 通常不包含该程序。
 
 重新编译后行为异常
-  退出 QEMU，在 xv6-riscv 根目录执行 ``make clean``，再执行 ``make qemu``。不要在 QEMU 仍在
-  运行时删除构建产物。
+  退出 QEMU，在 xv6-riscv 根目录执行 ``make clean``，再执行 ``make qemu``。QEMU 运行期间不应
+  删除构建产物。
 
 扩展阅读
 ~~~~~~~~~~~~~~~~~~~~~
@@ -536,5 +743,5 @@ VS Code 调试 xv6
 * `xv6: a simple, Unix-like teaching operating system
   <https://pdos.csail.mit.edu/6.1810/2024/xv6/book-riscv-rev4.pdf>`_
 
-阅读源码时，遇到不熟悉的函数或机制，可以先阅读手册和对应源文件。操作系统实验尤其需要养成
-**RTFM** （阅读手册）和 **RTFSC** （阅读源代码）的习惯。
+阅读源码时，如遇不熟悉的函数或机制，应优先查阅相关手册和对应源文件。操作系统实验需要逐步形成
+RTFM（阅读手册）和 RTFSC（阅读源代码）的习惯。
