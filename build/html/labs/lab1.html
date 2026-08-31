@@ -9,7 +9,7 @@
   <title>实验一 搭建实验环境 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e50e972b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a35f3dd6" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -18,6 +18,7 @@
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/translations.js?v=beaddf03"></script>
+      <script src="../_static/copy-code.js?v=cd4aa76a"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
@@ -47,33 +48,37 @@
               <p class="caption" role="heading"><span class="caption-text">实验课程目录</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">实验一 搭建实验环境</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id2">实验目标</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">系统环境</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">安装基础工具</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id5">安装实验工具</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab1-goals">实验目标</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lab1-report">实验报告要求</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab1-tools">实验工具</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">系统环境</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#risc-v-gnu">安装 RISC-V GNU 工具链</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#xpack-qemu-risc-v">安装 xPack QEMU RISC-V</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#path">添加 PATH 环境变量</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id6">验证安装结果</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id7">获取 xv6-riscv</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab1-source">获取 xv6-riscv</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id8">初识源码目录</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#xv6">编译并启动 xv6</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#xv6-qemu">退出 xv6 和 QEMU</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#xv6-shell">在 xv6 shell 中操作</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#xv6-shell">初识 xv6 shell</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id9">命令、参数与进程</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id10">文件与目录</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id11">宿主机与 xv6 文件系统</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id12">常见问题</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id13">实验报告要求</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id14">扩展阅读</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vs-code-xv6">VS Code 调试 xv6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id12">安装插件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13">添加调试配置</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab1-faq">常见问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">扩展阅读</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
@@ -110,8 +115,15 @@ xv6 是一个面向教学的、类 Unix 的小型操作系统。它保留了进�
 文件系统和设备驱动等操作系统的核心概念，同时代码规模远小于 Linux，适合阅读、修改和实验。</p>
 <p>本次实验不要求修改 xv6 内核。你需要搭建 Linux 实验环境，安装 RISC-V 交叉编译工具链和
 QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本操作。</p>
-<section id="id2">
-<h2>实验目标<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<nav class="lab-progress" aria-label="实验流程">
+  <a href="#lab1-goals"><span>01</span>实验目标</a>
+  <a href="#lab1-tools"><span>02</span>实验工具</a>
+  <a href="#lab1-source"><span>03</span>获取源码</a>
+  <a href="#lab1-run"><span>04</span>启动 xv6</a>
+  <a href="#lab1-gdb"><span>05</span>调试 xv6</a>
+  <a href="#lab1-faq"><span>06</span>常见问题</a>
+</nav><section id="lab1-goals">
+<span id="id2"></span><h2>实验目标<a class="headerlink" href="#lab1-goals" title="Link to this heading"></a></h2>
 <p>完成本次实验后，你应该能够：</p>
 <ul class="simple">
 <li><p>使用 <code class="docutils literal notranslate"><span class="pre">riscv64-unknown-elf</span></code> 工具链交叉编译 RISC-V 程序；</p></li>
@@ -119,36 +131,41 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 <li><p>识别 xv6 源码仓库的主要目录；</p></li>
 <li><p>在 xv6 shell 中运行程序并进行简单的文件操作。</p></li>
 </ul>
+<section id="lab1-report">
+<span id="id3"></span><h3>实验报告要求<a class="headerlink" href="#lab1-report" title="Link to this heading"></a></h3>
+<p>实验报告至少应包含以下内容：</p>
+<ol class="arabic simple">
+<li><p>实验环境类型（Linux 真机、WSL 2 或虚拟机）、Ubuntu 版本和宿主机体系结构；</p></li>
+<li><p>RISC-V 交叉编译器与 QEMU 的版本信息；</p></li>
+<li><p>xv6-riscv 的 Git 提交短哈希；</p></li>
+<li><p>xv6 成功编译、启动并进入 shell 的截图；</p></li>
+<li><p>xv6 shell 基础操作的命令、输出截图和对管道、重定向的解释；</p></li>
+<li><p>实验中遇到的问题、定位过程和解决方法；如果没有遇到问题，也应简要总结本次实验的收获。</p></li>
+</ol>
+<div class="admonition mycaution">
+   <p class="admonition-title">提交前检查</p>
+   <p>橙色提示框是实验必做内容。截图应包含命令和输出，文字应清晰可辨；
+   不要只放截图而不说明操作目的和结果。</p>
+</div></section>
 </section>
-<section id="id3">
-<h2>系统环境<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="lab1-tools">
+<span id="id4"></span><h2>实验工具<a class="headerlink" href="#lab1-tools" title="Link to this heading"></a></h2>
+<section id="id5">
+<h3>系统环境<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <p>本课程优先推荐使用 <strong>Ubuntu 22.04 LTS 或 Ubuntu 24.04 LTS</strong>。你可以选择 Linux 真机、Windows Subsystem for Linux
 （WSL 2），或者 VMware 等虚拟机。三种方式完成实验的体验基本相同。</p>
-</section>
-<section id="id4">
-<h2>安装基础工具<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <p>如果你是初次配置 Ubuntu ，可以更换合适的国内源。</p>
 <div class="admonition mydanger">
    <p class="admonition-title">更换合适的国内源</p>
    <p>更换了国内的软件镜像源后，通过包管理器安装软件会更快。Ubuntu 官方源在国内访问速度较慢，甚至可能无法访问。
    在更换国内软件镜像源时，使用与系统不相符的源会导致工具包版本冲突, 强行安装将会损坏系统。
    所以请你仔细核对 Ubuntu 版本和对应的国内镜像源版本，否则会损坏你的系统。</p>
-</div><p>更换合适的国内源后，在 Ubuntu 中打开终端，执行：
-.. code-block:: bash</p>
-<blockquote>
-<div><p>sudo apt update
-sudo apt install git build-essential</p>
-</div></blockquote>
-</section>
-<section id="id5">
-<h2>安装实验工具<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
-<p>本课程直接使用预编译的 RISC-V GNU 工具链和 QEMU。下载、解压后即可使用，<strong>不要求从源码编译</strong>。
-完整编译工具链不仅耗时较长，还会占用大量磁盘空间，本身也不是本次操作系统实验的目标。</p>
-<p>以下操作都在终端中完成。先安装 Git、Make、调试器和解压工具等基础软件：</p>
+</div><p>更换合适的国内源后，在 Ubuntu 中打开终端，执行：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
-sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>build-essential<span class="w"> </span>gdb-multiarch<span class="w"> </span>xz-utils<span class="w"> </span>nano
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>build-essential
 </pre></div>
 </div>
+</section>
 <section id="risc-v-gnu">
 <h3>安装 RISC-V GNU 工具链<a class="headerlink" href="#risc-v-gnu" title="Link to this heading"></a></h3>
 <p>打开 <a class="reference external" href="https://github.com/riscv-collab/riscv-gnu-toolchain/releases">riscv-gnu-toolchain Releases</a>，在一个较新的 Release 中展开
@@ -233,24 +250,13 @@ qemu-system-riscv64<span class="w"> </span>--version
    在实验报告中说明自己选择的是 Linux 真机、WSL 2 还是虚拟机，并附上能够看清上述信息的终端截图。</p>
 </div></section>
 </section>
-<section id="id7">
-<h2>获取 xv6-riscv<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
-<p>在 Linux 主目录创建课程工作目录，并获取 MIT 官方 xv6-riscv 源码：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/os-lab
-<span class="nb">cd</span><span class="w"> </span>~/os-lab
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mit-pdos/xv6-riscv.git
+<section id="lab1-source">
+<span id="id7"></span><h2>获取 xv6-riscv<a class="headerlink" href="#lab1-source" title="Link to this heading"></a></h2>
+<p>获取 MIT 官方 xv6-riscv 源码：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mit-pdos/xv6-riscv.git
 <span class="nb">cd</span><span class="w"> </span>xv6-riscv
 </pre></div>
 </div>
-<p>如果课程另行提供了指定仓库或分支，应以课程通知为准，不要同时在多个仓库中修改代码。</p>
-<p>使用下面的命令确认当前位置和源码版本：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">pwd</span>
-git<span class="w"> </span>status
-git<span class="w"> </span>rev-parse<span class="w"> </span>--short<span class="w"> </span>HEAD
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">status</span></code> 可以显示当前分支和工作区是否有改动；最后一条命令输出当前提交的短哈希值。
-记录提交值有助于在出现差异时确认大家使用的源码是否一致。</p>
 <section id="id8">
 <h3>初识源码目录<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <p>在 xv6-riscv 仓库中执行 <code class="docutils literal notranslate"><span class="pre">ls</span></code>，可以看到几个重要部分：</p>
@@ -267,17 +273,10 @@ git<span class="w"> </span>rev-parse<span class="w"> </span>--short<span class="
 <dt><code class="docutils literal notranslate"><span class="pre">README</span></code></dt><dd><p>xv6 项目简介和构建说明。</p>
 </dd>
 </dl>
-<p>可以在 <strong>Linux shell</strong> 中执行下面的命令进行初步观察：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>kernel<span class="w"> </span><span class="p">|</span><span class="w"> </span>head
-ls<span class="w"> </span>user<span class="w"> </span><span class="p">|</span><span class="w"> </span>head
-less<span class="w"> </span>README
-</pre></div>
-</div>
-<p>按 <code class="docutils literal notranslate"><span class="pre">q</span></code> 可以退出 <code class="docutils literal notranslate"><span class="pre">less</span></code>。现在不要求读懂所有源代码，先建立“某类功能大致位于哪里”的印象。</p>
 </section>
 </section>
 <section id="xv6">
-<h2>编译并启动 xv6<a class="headerlink" href="#xv6" title="Link to this heading"></a></h2>
+<span id="lab1-run"></span><h2>编译并启动 xv6<a class="headerlink" href="#xv6" title="Link to this heading"></a></h2>
 <p>确认当前目录是 xv6-riscv 仓库根目录，然后执行：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>qemu
 </pre></div>
@@ -301,21 +300,21 @@ $
 </div><section id="xv6-qemu">
 <h3>退出 xv6 和 QEMU<a class="headerlink" href="#xv6-qemu" title="Link to this heading"></a></h3>
 <p>xv6 默认没有 <code class="docutils literal notranslate"><span class="pre">shutdown</span></code> 命令。退出 QEMU 时，先按 <code class="docutils literal notranslate"><span class="pre">Ctrl+a</span></code>，松开后再按 <code class="docutils literal notranslate"><span class="pre">x</span></code>。
-这是两个依次完成的按键动作，不是同时按下三个键。退出后会重新回到 Ubuntu shell。</p>
+这是两个依次完成的按键动作，不是同时按下三个键。退出后会重新退回到 shell。</p>
 <div class="admonition mydanger">
    <p class="admonition-title">不要直接关闭正在写入的虚拟机</p>
    <p>本实验中的简单操作通常不会造成问题，但养成正确退出 QEMU 的习惯很重要。
    如果终端没有响应，先确认自己当前处于 xv6 shell、QEMU 控制台还是 Ubuntu shell。</p>
 </div></section>
-</section>
 <section id="xv6-shell">
-<h2>在 xv6 shell 中操作<a class="headerlink" href="#xv6-shell" title="Link to this heading"></a></h2>
+<h3>初识 xv6 shell<a class="headerlink" href="#xv6-shell" title="Link to this heading"></a></h3>
 <p>再次执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code> 进入 xv6。先输入：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ls
 </pre></div>
 </div>
 <p>你看到的是 xv6 文件系统根目录的内容。目录中的 <code class="docutils literal notranslate"><span class="pre">cat</span></code>、<code class="docutils literal notranslate"><span class="pre">echo</span></code>、<code class="docutils literal notranslate"><span class="pre">grep</span></code>、<code class="docutils literal notranslate"><span class="pre">ls</span></code>、<code class="docutils literal notranslate"><span class="pre">mkdir</span></code>、
 <code class="docutils literal notranslate"><span class="pre">rm</span></code>、<code class="docutils literal notranslate"><span class="pre">sh</span></code> 和 <code class="docutils literal notranslate"><span class="pre">wc</span></code> 等都是编译进 xv6 文件系统镜像的用户程序。</p>
+</section>
 <section id="id9">
 <h3>命令、参数与进程<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <p>在提示符后执行：</p>
@@ -362,8 +361,128 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 文件系统镜像。修改 <code class="docutils literal notranslate"><span class="pre">kernel/</span></code> 中的代码则会改变下一次启动的 xv6 内核。</p>
 </section>
 </section>
+<section id="vs-code-xv6">
+<span id="lab1-gdb"></span><h2>VS Code 调试 xv6<a class="headerlink" href="#vs-code-xv6" title="Link to this heading"></a></h2>
+<p>直接使用 GDB 调试 xv6 内核和用户程序比较复杂，推荐使用 VS Code 调试，操作更简单，也更加直观。</p>
 <section id="id12">
-<h2>常见问题<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<h3>安装插件<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<div class="tutorial-step docutils container">
+<p class="rubric">1. 安装 C/C++ 扩展</p>
+<p>在 VS Code 的扩展视图中搜索并安装由 Microsoft 发布的 <code class="docutils literal notranslate"><span class="pre">C/C++</span></code> 扩展。</p>
+<figure class="tutorial-figure tutorial-figure-wide align-center" id="id17">
+<a class="reference internal image-reference" href="../_images/extension.png"><img alt="VS Code 中由 Microsoft 发布的 C/C++ 扩展详情页" src="../_images/extension.png" style="width: 92%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">确认发布者为 Microsoft，并完成扩展安装。</span><a class="headerlink" href="#id17" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</div>
+<div class="mycomment tutorial-note admonition">
+<p class="admonition-title">远程环境安装</p>
+<p>如果通过 VS Code 远程连接 WSL 2 或虚拟机，需要在 <strong>远程环境</strong> 中安装扩展，而不是只安装在本地环境中。</p>
+<figure class="tutorial-figure tutorial-figure-compact align-center" id="id18">
+<a class="reference internal image-reference" href="../_images/ssh-extension.png"><img alt="VS Code 远程环境中的 C/C++ 扩展安装入口" src="../_images/ssh-extension.png" style="width: 48%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">扩展面板中显示远程主机名称和 <code class="docutils literal notranslate"><span class="pre">Installed</span></code>，表示扩展已安装到当前远程环境。</span><a class="headerlink" href="#id18" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="id13">
+<h3>添加调试配置<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<p>在 VS Code 中打开 xv6-riscv 仓库根目录，创建 <code class="docutils literal notranslate"><span class="pre">.vscode</span></code> 目录，再创建 <code class="docutils literal notranslate"><span class="pre">launch.json</span></code> 和 <code class="docutils literal notranslate"><span class="pre">tasks.json</span></code> 文件，分别填入下面的配置。</p>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-text">launch.json</span><a class="headerlink" href="#id19" title="Link to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6debug&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cppdbg&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+
+<span class="w">            </span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/kernel/kernel&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
+
+<span class="w">            </span><span class="nt">&quot;MIMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gdb&quot;</span><span class="p">,</span>
+<span class="hll"><span class="w">            </span><span class="nt">&quot;miDebuggerPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/opt/riscv/bin/riscv64-unknown-elf-gdb&quot;</span><span class="p">,</span>
+</span>
+<span class="w">            </span><span class="nt">&quot;preLaunchTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
+
+<span class="w">            </span><span class="nt">&quot;setupCommands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">               </span><span class="p">{</span>
+<span class="w">                  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;切换到 xv6 根目录&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cd ${workspaceFolder}&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">               </span><span class="p">},</span>
+<span class="w">               </span><span class="p">{</span>
+<span class="w">                  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;加载 xv6 自动生成的 GDB 配置&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;source ${workspaceFolder}/.gdbinit&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">               </span><span class="p">}</span>
+<span class="w">            </span><span class="p">],</span>
+
+<span class="w">            </span><span class="nt">&quot;logging&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;engineLogging&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;trace&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;traceResponse&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>其中第13行，调试器的路径需要根据你安装的 RISC-V 工具链实际位置修改。你可以通过 <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">riscv64-unknown-elf-gdb</span></code> 查看实际路径。</p>
+<div class="literal-block-wrapper docutils container" id="id20">
+<div class="code-block-caption"><span class="caption-text">tasks.json</span><a class="headerlink" href="#id20" title="Link to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;shell&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;isBackground&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;make qemu-gdb&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;problemMatcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                     </span><span class="p">{</span>
+<span class="w">                        </span><span class="nt">&quot;regexp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                        </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">                        </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">                     </span><span class="p">}</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                     </span><span class="nt">&quot;beginsPattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.*Now run &#39;gdb&#39; in another window.&quot;</span><span class="p">,</span>
+<span class="w">                     </span><span class="nt">&quot;endsPattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span>
+<span class="w">               </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="tutorial-step docutils container">
+<p class="rubric">3. 允许在任意文件中设置断点</p>
+<p>为了在汇编代码中设置断点，在 VS Code 设置中搜索 <code class="docutils literal notranslate"><span class="pre">breakpoint</span></code>，然后勾选
+<code class="docutils literal notranslate"><span class="pre">Allow</span> <span class="pre">setting</span> <span class="pre">breakpoints</span> <span class="pre">in</span> <span class="pre">any</span> <span class="pre">file.</span></code>。完成后即可直接在 VS Code 中调试 xv6。</p>
+<figure class="tutorial-figure tutorial-figure-medium align-center" id="id21">
+<a class="reference internal image-reference" href="../_images/breakpoint.png"><img alt="VS Code 中允许在任意文件内设置断点的选项" src="../_images/breakpoint.png" style="width: 72%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">启用允许在任意文件中设置断点的选项。</span><a class="headerlink" href="#id21" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="lab1-faq">
+<span id="id14"></span><h2>常见问题<a class="headerlink" href="#lab1-faq" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">Unable</span> <span class="pre">to</span> <span class="pre">locate</span> <span class="pre">package</span></code></dt><dd><p>先确认使用 Ubuntu 22.04/24.04，并已成功执行 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">update</span></code>。如果网络访问软件源失败，先检查
 Linux 环境的网络连接。</p>
@@ -390,29 +509,11 @@ Linux 环境的网络连接。</p>
 </dd>
 </dl>
 </section>
-<section id="id13">
-<h2>实验报告要求<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
-<p>实验报告至少应包含以下内容：</p>
-<ol class="arabic simple">
-<li><p>实验环境类型（Linux 真机、WSL 2 或虚拟机）、Ubuntu 版本和宿主机体系结构；</p></li>
-<li><p>RISC-V 交叉编译器与 QEMU 的版本信息；</p></li>
-<li><p>xv6-riscv 的 Git 提交短哈希；</p></li>
-<li><p>xv6 成功编译、启动并进入 shell 的截图；</p></li>
-<li><p>xv6 shell 基础操作的命令、输出截图和对管道、重定向的解释；</p></li>
-<li><p>实验中遇到的问题、定位过程和解决方法；如果没有遇到问题，也应简要总结本次实验的收获。</p></li>
-</ol>
-<div class="admonition mycaution">
-   <p class="admonition-title">提交前检查</p>
-   <p>橙色提示框是实验必做内容。截图应包含命令和输出，文字应清晰可辨；
-   不要只放截图而不说明操作目的和结果。</p>
-</div></section>
-<section id="id14">
-<h2>扩展阅读<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<section id="id15">
+<h2>扩展阅读<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/mit-pdos/xv6-riscv">xv6-riscv 官方源码</a></p></li>
 <li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.1810/">MIT 6.1810 操作系统工程课程</a></p></li>
-<li><p><a class="reference external" href="https://github.com/riscv-collab/riscv-gnu-toolchain/releases">RISC-V GNU Toolchain 预编译版本</a></p></li>
-<li><p><a class="reference external" href="https://xpack-dev-tools.github.io/qemu-riscv-xpack/docs/install/">xPack QEMU RISC-V 安装文档</a></p></li>
 <li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.1810/2024/xv6/book-riscv-rev4.pdf">xv6: a simple, Unix-like teaching operating system</a></p></li>
 </ul>
 <p>阅读源码时，遇到不熟悉的函数或机制，可以先阅读手册和对应源文件。操作系统实验尤其需要养成

@@ -8,6 +8,19 @@ xv6 是一个面向教学的、类 Unix 的小型操作系统。它保留了进�
 本次实验不要求修改 xv6 内核。你需要搭建 Linux 实验环境，安装 RISC-V 交叉编译工具链和
 QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本操作。
 
+.. raw:: html
+
+   <nav class="lab-progress" aria-label="实验流程">
+     <a href="#lab1-goals"><span>01</span>实验目标</a>
+     <a href="#lab1-tools"><span>02</span>实验工具</a>
+     <a href="#lab1-source"><span>03</span>获取源码</a>
+     <a href="#lab1-run"><span>04</span>启动 xv6</a>
+     <a href="#lab1-gdb"><span>05</span>调试 xv6</a>
+     <a href="#lab1-faq"><span>06</span>常见问题</a>
+   </nav>
+
+.. _lab1-goals:
+
 实验目标
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -18,14 +31,41 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 * 识别 xv6 源码仓库的主要目录；
 * 在 xv6 shell 中运行程序并进行简单的文件操作。
 
-系统环境
+.. _lab1-report:
+
+实验报告要求
+----------------------
+
+实验报告至少应包含以下内容：
+
+#. 实验环境类型（Linux 真机、WSL 2 或虚拟机）、Ubuntu 版本和宿主机体系结构；
+#. RISC-V 交叉编译器与 QEMU 的版本信息；
+#. xv6-riscv 的 Git 提交短哈希；
+#. xv6 成功编译、启动并进入 shell 的截图；
+#. xv6 shell 基础操作的命令、输出截图和对管道、重定向的解释；
+#. 实验中遇到的问题、定位过程和解决方法；如果没有遇到问题，也应简要总结本次实验的收获。
+
+.. raw:: html
+
+   <div class="admonition mycaution">
+      <p class="admonition-title">提交前检查</p>
+      <p>橙色提示框是实验必做内容。截图应包含命令和输出，文字应清晰可辨；
+      不要只放截图而不说明操作目的和结果。</p>
+   </div>
+
+
+
+
+.. _lab1-tools:
+
+实验工具
 ~~~~~~~~~~~~~~~~~~~~~
+
+系统环境
+----------------------
 
 本课程优先推荐使用 **Ubuntu 22.04 LTS 或 Ubuntu 24.04 LTS**。你可以选择 Linux 真机、Windows Subsystem for Linux
 （WSL 2），或者 VMware 等虚拟机。三种方式完成实验的体验基本相同。
-
-安装基础工具
-~~~~~~~~~~~~~~~~~~~~~
 
 如果你是初次配置 Ubuntu ，可以更换合适的国内源。
 
@@ -40,24 +80,11 @@ QEMU，成功编译并启动 xv6，最后在 xv6 的 shell 中完成若干基本
 
 
 更换合适的国内源后，在 Ubuntu 中打开终端，执行：
+
 .. code-block:: bash
 
    sudo apt update
    sudo apt install git build-essential
-
-
-安装实验工具
-~~~~~~~~~~~~~~~~~~~~~
-
-本课程直接使用预编译的 RISC-V GNU 工具链和 QEMU。下载、解压后即可使用，**不要求从源码编译**。
-完整编译工具链不仅耗时较长，还会占用大量磁盘空间，本身也不是本次操作系统实验的目标。
-
-以下操作都在终端中完成。先安装 Git、Make、调试器和解压工具等基础软件：
-
-.. code-block:: bash
-
-   sudo apt update
-   sudo apt install git build-essential gdb-multiarch xz-utils nano
 
 
 安装 RISC-V GNU 工具链
@@ -172,30 +199,18 @@ Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打�
       在实验报告中说明自己选择的是 Linux 真机、WSL 2 还是虚拟机，并附上能够看清上述信息的终端截图。</p>
    </div>
 
+.. _lab1-source:
+
 获取 xv6-riscv
 ~~~~~~~~~~~~~~~~~~~~~
 
-在 Linux 主目录创建课程工作目录，并获取 MIT 官方 xv6-riscv 源码：
+获取 MIT 官方 xv6-riscv 源码：
 
 .. code-block:: bash
 
-   mkdir -p ~/os-lab
-   cd ~/os-lab
    git clone https://github.com/mit-pdos/xv6-riscv.git
    cd xv6-riscv
 
-如果课程另行提供了指定仓库或分支，应以课程通知为准，不要同时在多个仓库中修改代码。
-
-使用下面的命令确认当前位置和源码版本：
-
-.. code-block:: bash
-
-   pwd
-   git status
-   git rev-parse --short HEAD
-
-``git status`` 可以显示当前分支和工作区是否有改动；最后一条命令输出当前提交的短哈希值。
-记录提交值有助于在出现差异时确认大家使用的源码是否一致。
 
 初识源码目录
 -----------------------
@@ -218,15 +233,8 @@ Linux 只会在 ``PATH`` 所列目录中查找命令。使用文本编辑器打�
 ``README``
   xv6 项目简介和构建说明。
 
-可以在 **Linux shell** 中执行下面的命令进行初步观察：
 
-.. code-block:: bash
-
-   ls kernel | head
-   ls user | head
-   less README
-
-按 ``q`` 可以退出 ``less``。现在不要求读懂所有源代码，先建立“某类功能大致位于哪里”的印象。
+.. _lab1-run:
 
 编译并启动 xv6
 ~~~~~~~~~~~~~~~~~~~~~
@@ -264,7 +272,7 @@ Make 会调用 ``riscv64-unknown-elf`` 工具链编译内核和用户程序，�
 -----------------------
 
 xv6 默认没有 ``shutdown`` 命令。退出 QEMU 时，先按 ``Ctrl+a``，松开后再按 ``x``。
-这是两个依次完成的按键动作，不是同时按下三个键。退出后会重新回到 Ubuntu shell。
+这是两个依次完成的按键动作，不是同时按下三个键。退出后会重新退回到 shell。
 
 .. raw:: html
 
@@ -274,8 +282,9 @@ xv6 默认没有 ``shutdown`` 命令。退出 QEMU 时，先按 ``Ctrl+a``，松
       如果终端没有响应，先确认自己当前处于 xv6 shell、QEMU 控制台还是 Ubuntu shell。</p>
    </div>
 
-在 xv6 shell 中操作
-~~~~~~~~~~~~~~~~~~~~~
+
+初识 xv6 shell
+-----------------------------
 
 再次执行 ``make qemu`` 进入 xv6。先输入：
 
@@ -347,6 +356,144 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
 当你修改 ``user/`` 中的程序并重新执行 ``make qemu`` 时，Makefile 会把相应程序重新编译并放入
 文件系统镜像。修改 ``kernel/`` 中的代码则会改变下一次启动的 xv6 内核。
 
+.. _lab1-gdb:
+
+VS Code 调试 xv6
+~~~~~~~~~~~~~~~~~~~~~
+
+直接使用 GDB 调试 xv6 内核和用户程序比较复杂，推荐使用 VS Code 调试，操作更简单，也更加直观。
+
+安装插件
+-----------------------
+
+.. container:: tutorial-step
+
+   .. rubric:: 1. 安装 C/C++ 扩展
+
+   在 VS Code 的扩展视图中搜索并安装由 Microsoft 发布的 ``C/C++`` 扩展。
+
+   .. figure:: ../picture/lab1/extension.png
+      :alt: VS Code 中由 Microsoft 发布的 C/C++ 扩展详情页
+      :align: center
+      :width: 92%
+      :figclass: tutorial-figure tutorial-figure--wide
+
+      确认发布者为 Microsoft，并完成扩展安装。
+
+.. admonition:: 远程环境安装
+   :class: mycomment tutorial-note
+
+   如果通过 VS Code 远程连接 WSL 2 或虚拟机，需要在 **远程环境** 中安装扩展，而不是只安装在本地环境中。
+
+   .. figure:: ../picture/lab1/ssh-extension.png
+      :alt: VS Code 远程环境中的 C/C++ 扩展安装入口
+      :align: center
+      :width: 48%
+      :figclass: tutorial-figure tutorial-figure--compact
+
+      扩展面板中显示远程主机名称和 ``Installed``，表示扩展已安装到当前远程环境。
+
+
+添加调试配置
+-----------------------
+
+在 VS Code 中打开 xv6-riscv 仓库根目录，创建 ``.vscode`` 目录，再创建 ``launch.json`` 和 ``tasks.json`` 文件，分别填入下面的配置。
+
+.. code-block:: json
+   :caption: launch.json
+   :emphasize-lines: 13
+
+   {
+      "version": "0.2.0",
+      "configurations": [
+         {
+               "name": "xv6debug",
+               "type": "cppdbg",
+               "request": "launch",
+
+               "program": "${workspaceFolder}/kernel/kernel",
+               "cwd": "${workspaceFolder}",
+
+               "MIMode": "gdb",
+               "miDebuggerPath": "/opt/riscv/bin/riscv64-unknown-elf-gdb",
+
+               "preLaunchTask": "xv6build",
+
+               "setupCommands": [
+                  {
+                     "description": "切换到 xv6 根目录",
+                     "text": "cd ${workspaceFolder}",
+                     "ignoreFailures": false
+                  },
+                  {
+                     "description": "加载 xv6 自动生成的 GDB 配置",
+                     "text": "source ${workspaceFolder}/.gdbinit",
+                     "ignoreFailures": false
+                  }
+               ],
+
+               "logging": {
+                  "engineLogging": true,
+                  "trace": true,
+                  "traceResponse": true
+               }
+         }
+      ]
+   }
+
+
+其中第13行，调试器的路径需要根据你安装的 RISC-V 工具链实际位置修改。你可以通过 ``which riscv64-unknown-elf-gdb`` 查看实际路径。
+
+.. code-block:: json
+   :caption: tasks.json
+
+   {
+      "version": "2.0.0",
+      "tasks": [
+         {
+            "label": "xv6build",
+            "type": "shell",
+            "isBackground": true,
+            "command": "make qemu-gdb",
+            "problemMatcher": [
+               {
+                  "pattern": [
+                        {
+                           "regexp": ".",
+                           "file": 1,
+                           "location": 2,
+                           "message": 3
+                        }
+                  ],
+                  "background": {
+                        "beginsPattern": ".*Now run 'gdb' in another window.",
+                        "endsPattern": "."
+                  }
+               }
+            ]
+         }
+      ]
+   }
+
+
+.. container:: tutorial-step
+
+   .. rubric:: 3. 允许在任意文件中设置断点
+
+   为了在汇编代码中设置断点，在 VS Code 设置中搜索 ``breakpoint``，然后勾选
+   ``Allow setting breakpoints in any file.``。完成后即可直接在 VS Code 中调试 xv6。
+
+   .. figure:: ../picture/lab1/breakpoint.png
+      :alt: VS Code 中允许在任意文件内设置断点的选项
+      :align: center
+      :width: 72%
+      :figclass: tutorial-figure tutorial-figure--medium
+
+      启用允许在任意文件中设置断点的选项。
+
+
+.. _lab1-faq:
+
 常见问题
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -381,33 +528,11 @@ Ubuntu 中的 GNU 工具。例如，xv6 中没有完整实现日常 Linux 环境
   退出 QEMU，在 xv6-riscv 根目录执行 ``make clean``，再执行 ``make qemu``。不要在 QEMU 仍在
   运行时删除构建产物。
 
-实验报告要求
-~~~~~~~~~~~~~~~~~~~~~
-
-实验报告至少应包含以下内容：
-
-#. 实验环境类型（Linux 真机、WSL 2 或虚拟机）、Ubuntu 版本和宿主机体系结构；
-#. RISC-V 交叉编译器与 QEMU 的版本信息；
-#. xv6-riscv 的 Git 提交短哈希；
-#. xv6 成功编译、启动并进入 shell 的截图；
-#. xv6 shell 基础操作的命令、输出截图和对管道、重定向的解释；
-#. 实验中遇到的问题、定位过程和解决方法；如果没有遇到问题，也应简要总结本次实验的收获。
-
-.. raw:: html
-
-   <div class="admonition mycaution">
-      <p class="admonition-title">提交前检查</p>
-      <p>橙色提示框是实验必做内容。截图应包含命令和输出，文字应清晰可辨；
-      不要只放截图而不说明操作目的和结果。</p>
-   </div>
-
 扩展阅读
 ~~~~~~~~~~~~~~~~~~~~~
 
 * `xv6-riscv 官方源码 <https://github.com/mit-pdos/xv6-riscv>`_
 * `MIT 6.1810 操作系统工程课程 <https://pdos.csail.mit.edu/6.1810/>`_
-* `RISC-V GNU Toolchain 预编译版本 <https://github.com/riscv-collab/riscv-gnu-toolchain/releases>`_
-* `xPack QEMU RISC-V 安装文档 <https://xpack-dev-tools.github.io/qemu-riscv-xpack/docs/install/>`_
 * `xv6: a simple, Unix-like teaching operating system
   <https://pdos.csail.mit.edu/6.1810/2024/xv6/book-riscv-rev4.pdf>`_
 
