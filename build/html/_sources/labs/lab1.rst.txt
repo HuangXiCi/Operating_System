@@ -735,6 +735,33 @@ GDB 使用 ``x/nfu address`` 检查原始内存，其中 ``x`` 表示 examine。
   退出 QEMU，在 xv6-riscv 根目录执行 ``make clean``，再执行 ``make qemu``。QEMU 运行期间不应
   删除构建产物。
 
+编程作业
+~~~~~~~~~~~~~~~~~~~~~
+
+.. raw:: html
+
+   <div class="admonition mytodo">
+      <p class="admonition-title">printf</p>
+      <p>使用printf编写最简单的Hello World程序
+      <code>strace -o trace.log ./your_program</code> 使用strace找到与程序行为对应的系统调用，并尝试理解：</p>
+      <p>1. 程序中的 printf() 最终对应了哪个系统调用？</p>
+      <p>2. 文件描述符 0、1、2 分别通常代表什么？</p>
+      <p>3. 修改程序，打印 10 次字符串，观察 write() 调用了几次，如果printf时不加入'\n'，而是加入空格进行分隔，现在write() 调用了几次？为什么呢？查阅 stdout的缓冲机制。</p>
+      <p>4. 为什么printf函数支持有任意个参数，实现机制是怎样的？</p>
+   </div>
+
+
+.. raw:: html
+
+   <div class="admonition mytodo">
+      <p class="admonition-title">fork</p>
+      <p>使用 fork() 创建两个进程，让父进程和子进程分别对同一个变量 counter 执行100000次 ++ 操作，父进程使用 wait() 等待子进程结束，最后分别打印父进程和子进程中 counter 的值</p>
+      <p>1. 最终两个进程打印出的 counter 分别是多少？</p>
+      <p>2. 将本实验与之前的两个线程同时执行 counter++ 作业3进行比较。为什么多线程程序会产生数据竞争，而这里父进程和子进程却不会因为 counter++ 而互相干扰？</p>
+      <p>3. 如果两个进程确实需要共享数据，应该怎么办？自行查阅“进程间通信 IPC”，列举至少两种方法</p>
+   </div>
+
+
 扩展阅读
 ~~~~~~~~~~~~~~~~~~~~~
 
