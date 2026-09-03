@@ -333,15 +333,12 @@ $
 <section id="id10">
 <h3>文件与目录<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <p>继续执行以下操作：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>lab1
-<span class="nb">cd</span><span class="w"> </span>lab1
-<span class="nb">echo</span><span class="w"> </span>hello<span class="w"> </span>xv6<span class="w"> </span>&gt;<span class="w"> </span>hello.txt
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span>hello<span class="w"> </span>&gt;<span class="w"> </span>hello.txt
 cat<span class="w"> </span>hello.txt
-grep<span class="w"> </span>hello<span class="w"> </span>hello.txt
-wc<span class="w"> </span>hello.txt
-ls
-rm<span class="w"> </span>hello.txt
-<span class="nb">cd</span><span class="w"> </span>..
+cat<span class="w"> </span>README
+grep<span class="w"> </span>xv6<span class="w"> </span>README
+cat<span class="w"> </span>README<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>riscv
+wc<span class="w"> </span>README
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">&gt;</span></code> 将程序的标准输出重定向到文件；<code class="docutils literal notranslate"><span class="pre">cat</span></code> 读取并显示文件；<code class="docutils literal notranslate"><span class="pre">grep</span></code> 查找包含指定字符串的行；

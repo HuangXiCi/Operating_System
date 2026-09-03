@@ -311,15 +311,13 @@ xv6 默认不提供 ``shutdown`` 命令。退出 QEMU 时，应先按 ``Ctrl+a``
 
 .. code-block:: sh
 
-   mkdir lab1
-   cd lab1
-   echo hello xv6 > hello.txt
+   echo hello > hello.txt
    cat hello.txt
-   grep hello hello.txt
-   wc hello.txt
-   ls
-   rm hello.txt
-   cd ..
+   cat README
+   grep xv6 README
+   cat README | grep riscv
+   wc README
+
 
 ``>`` 将程序的标准输出重定向到文件；``cat`` 读取并显示文件；``grep`` 查找包含指定字符串的行；
 ``wc`` 统计行数、单词数和字节数。xv6 工具仅实现教学所需的基本功能，其参数和选项少于
