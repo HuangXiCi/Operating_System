@@ -4,6 +4,13 @@
 深圳理工大学 操作系统 实验课程
 =============================================================
 
+.. figure:: ./picture/index/logo.jpg
+   :alt: suat_logo
+   :align: center
+
+
+|
+
 .. toctree::
    :maxdepth: 2
    :caption: 实验课程目录
@@ -19,8 +26,8 @@
      <div class="course-hero__eyebrow">OPERATING SYSTEMS · LABS</div>
      <div class="course-hero__title">从“会用”到“理解”操作系统</div>
      <div class="course-hero__meta">
-       <span>计算机科学与技术</span>
-       <span>三年级本科生</span>
+       <span>RISC-V</span>
+       <span>xv6-riscv</span>
        <span>理论与实践结合</span>
      </div>
      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
