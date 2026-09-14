@@ -17,6 +17,7 @@
    :hidden:
 
    实验一 搭建实验环境 <labs/lab1>
+   实验二 xv6 文件管理与用户程序 <labs/lab2>
    敬请期待 <labs/TODO.rst>
 
 .. raw:: html
@@ -29,7 +30,10 @@
        <span>xv6-riscv</span>
        <span>理论与实践结合</span>
      </div>
-     <a class="course-hero__action" href="labs/lab1.html">开始实验一</a>
+     <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+       <a class="course-hero__action" href="labs/lab1.html">开始实验一</a>
+       <a class="course-hero__action" href="labs/lab2.html">开始实验二</a>
+     </div>
    </div>
 
 课程介绍
@@ -59,7 +63,9 @@
    * - Lab1 搭建实验环境
      - 2026-09-04  15:15-16:40
      - 2026-09-15  23:59
-
+   * - Lab2 xv6 文件管理与用户程序
+     - 2026-09-17  15:15-16:40
+     - 2026-09-30  23:59
 
 许可协议
 -----------------
