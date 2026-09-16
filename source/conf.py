@@ -25,6 +25,10 @@ extensions = ['recommonmark',
   'sphinx.ext.autosectionlabel'
 ]
 
+# Prefix automatic section labels with the document path so that common
+# headings such as “实验目标” can be reused across different lab pages.
+autosectionlabel_prefix_document = True
+
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 

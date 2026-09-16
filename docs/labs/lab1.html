@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>实验一：搭建实验环境 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a35f3dd6" />
 
   
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="实验二 xv6 文件管理与用户程序" href="lab2.html" />
+    <link rel="next" title="实验二：xv6 文件管理与用户程序" href="lab2.html" />
     <link rel="prev" title="深圳理工大学 操作系统 实验课程" href="../index.html" /> 
 </head>
 
@@ -220,7 +220,7 @@ ls<span class="w"> </span>~/.local/qemu-riscv/bin/qemu-system-riscv64
 </pre></div>
 </div>
 <p>在文件末尾添加以下内容：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.local/riscv/bin:</span><span class="nv">$HOME</span><span class="s2">/.local/qemu-riscv/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.local/riscv/bin:</span><span class="nv">$HOME</span><span class="s2">/.local/qemu-riscv/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 <p>保存配置文件后，执行以下命令使配置在当前终端立即生效：</p>
@@ -401,38 +401,38 @@ Ubuntu 中的 GNU 工具，不能替代日常 Linux 环境中的完整命令集�
 <div class="literal-block-wrapper docutils container" id="id25">
 <div class="code-block-caption"><span class="caption-text">launch.json</span><a class="headerlink" href="#id25" title="Link to this code"></a></div>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">   </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2.0"</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">"configurations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xv6debug"</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cppdbg"</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"launch"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6debug&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cppdbg&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
 
-<span class="w">            </span><span class="nt">"program"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/kernel/kernel"</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/kernel/kernel&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
 
-<span class="w">            </span><span class="nt">"MIMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gdb"</span><span class="p">,</span>
-<span class="hll"><span class="w">            </span><span class="nt">"miDebuggerPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/opt/riscv/bin/riscv64-unknown-elf-gdb"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;MIMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gdb&quot;</span><span class="p">,</span>
+<span class="hll"><span class="w">            </span><span class="nt">&quot;miDebuggerPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/opt/riscv/bin/riscv64-unknown-elf-gdb&quot;</span><span class="p">,</span>
 </span>
-<span class="w">            </span><span class="nt">"preLaunchTask"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xv6build"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;preLaunchTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
 
-<span class="w">            </span><span class="nt">"setupCommands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="nt">&quot;setupCommands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">               </span><span class="p">{</span>
-<span class="w">                  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"切换到 xv6 根目录"</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cd ${workspaceFolder}"</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">"ignoreFailures"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">                  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;切换到 xv6 根目录&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cd ${workspaceFolder}&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">},</span>
 <span class="w">               </span><span class="p">{</span>
-<span class="w">                  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"加载 xv6 自动生成的 GDB 配置"</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source ${workspaceFolder}/.gdbinit"</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">"ignoreFailures"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">                  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;加载 xv6 自动生成的 GDB 配置&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;source ${workspaceFolder}/.gdbinit&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">               </span><span class="p">}</span>
 <span class="w">            </span><span class="p">],</span>
 
-<span class="w">            </span><span class="nt">"logging"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">"engineLogging"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">"trace"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">"traceResponse"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">            </span><span class="nt">&quot;logging&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;engineLogging&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;trace&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;traceResponse&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">]</span>
@@ -445,26 +445,26 @@ Ubuntu 中的 GNU 工具，不能替代日常 Linux 环境中的完整命令集�
 <div class="literal-block-wrapper docutils container" id="id26">
 <div class="code-block-caption"><span class="caption-text">tasks.json</span><a class="headerlink" href="#id26" title="Link to this code"></a></div>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">   </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0.0"</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">"tasks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">      </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xv6build"</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shell"</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">"isBackground"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"make qemu-gdb CPUS=1"</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">"problemMatcher"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">         </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;shell&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;isBackground&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;make qemu-gdb CPUS=1&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;problemMatcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">               </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">                     </span><span class="p">{</span>
-<span class="w">                        </span><span class="nt">"regexp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"."</span><span class="p">,</span>
-<span class="w">                        </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">                        </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">                        </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">                        </span><span class="nt">&quot;regexp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                        </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">                        </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
 <span class="w">                     </span><span class="p">}</span>
 <span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">"background"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">"beginsPattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">".*Now run 'gdb' in another window."</span><span class="p">,</span>
-<span class="w">                     </span><span class="nt">"endsPattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"."</span>
+<span class="w">               </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                     </span><span class="nt">&quot;beginsPattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.*Now run &#39;gdb&#39; in another window.&quot;</span><span class="p">,</span>
+<span class="w">                     </span><span class="nt">&quot;endsPattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span>
 <span class="w">               </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">]</span>
@@ -760,13 +760,13 @@ RTFM（阅读手册）和 RTFSC（阅读源代码）的习惯。</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
         <a href="../index.html" class="btn btn-neutral float-left" title="深圳理工大学 操作系统 实验课程" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
-        <a href="lab2.html" class="btn btn-neutral float-right" title="实验二 xv6 文件管理与用户程序" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lab2.html" class="btn btn-neutral float-right" title="实验二：xv6 文件管理与用户程序" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷.</p>
+    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷。</p>
   </div>
 
   利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 

@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>实验二 xv6 文件管理与用户程序 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
+  <title>实验二：xv6 文件管理与用户程序 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a35f3dd6" />
 
   
@@ -49,57 +49,42 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="lab1.html">实验一 搭建实验环境</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">实验二 xv6 文件管理与用户程序</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#lab2-goals">实验目标</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#lab2-report">实验报告与提交要求</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#lab2-prepare">实验准备</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">复习源码目录</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">用户程序的构建过程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab2-goals">实验目标</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lab2-report">实验报告与提交要求</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#makefile">修改 Makefile</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id6">添加用户程序</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">添加测试文件</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id8">修改文件系统镜像构建规则</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id9">创建测试数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab2-prepare">实验准备</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-xv6">将 find 加入 xv6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab2-find">任务一：递归查找文件</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">递归查找要求</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">实现提示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">测试任务一</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#sixfive">任务一：sixfive</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id10">问题描述：筛选文本中的数字</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id11">实现要求</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id12">实现提示</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id13">测试要求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-exec">任务二：为 find 添加 -exec</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exec"><code class="docutils literal notranslate"><span class="pre">-exec</span></code> 要求</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">参数与进程</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">测试任务二</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#find">任务二：find</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id14">任务描述</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id15">准备测试目录</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id16">实现要求</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id17">实现提示</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id18">测试要求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">编译与调试</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id11">使用打印追踪执行路径</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">判断程序卡在哪里</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vs-code-gdb">使用 VS Code + GDB 调试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#find">添加 find 调试配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id13">设置断点并运行 find</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">观察递归查找</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#forkexec-wait">调试 fork、exec 和 wait</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15">断点未命中或显示为空心圆</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id19">编译与调试</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#find-exec">任务三：为 find 添加 -exec</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id20">问题描述：对查找到的文件执行命令</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id21">执行步骤：扩展 find</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id22">第 1 步：保留原有 find 功能</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id23">第 2 步：解析命令行参数</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#exec">第 3 步：构造 exec 参数</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id24">第 4 步：创建子进程</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id25">第 5 步：子进程调用 exec</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id26">第 6 步：父进程等待</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#id27">实验要求：find -exec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id28">实现提示：find -exec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id29">测试 find -exec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab2-faq">常见问题</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id17">思考题</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id30">常见问题</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id31">思考题</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#id32">扩展阅读</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id18">扩展阅读</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
@@ -119,7 +104,7 @@
           <div role="navigation" aria-label="页面导航">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">实验二 xv6 文件管理与用户程序</li>
+      <li class="breadcrumb-item active">实验二：xv6 文件管理与用户程序</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/labs/lab2.rst.txt" rel="nofollow"> 查看页面源码</a>
       </li>
@@ -130,382 +115,166 @@
            <div itemprop="articleBody">
              
   <section id="xv6">
-<h1>实验二 xv6 文件管理与用户程序<a class="headerlink" href="#xv6" title="Link to this heading"></a></h1>
-<p>本次实验继续使用实验一配置好的 <code class="docutils literal notranslate"><span class="pre">xv6-riscv</span></code> 环境。你将编写 <code class="docutils literal notranslate"><span class="pre">sixfive</span></code> 和 <code class="docutils literal notranslate"><span class="pre">find</span></code>
-两个用户程序，练习通过系统调用读取普通文件和目录，并理解用户程序如何被编译、写入
-<code class="docutils literal notranslate"><span class="pre">fs.img</span></code>，最终在 xv6 shell 中运行。</p>
-<p>本次实验不要求修改 xv6 内核。实验内容参考 <a class="reference external" href="https://pdos.csail.mit.edu/6.828/2026/labs/util.html">MIT 6.1810 Fall 2026: Xv6 and Unix utilities</a>，并根据本课程使用的
-<code class="docutils literal notranslate"><span class="pre">xv6-riscv</span></code> 仓库进行了调整。</p>
+<h1>实验二：xv6 文件管理与用户程序<a class="headerlink" href="#xv6" title="Link to this heading"></a></h1>
+<p>本次实验继续使用实验一配置好的 <code class="docutils literal notranslate"><span class="pre">xv6-riscv</span></code> 环境。主要任务是编写用户程序 <code class="docutils literal notranslate"><span class="pre">find</span></code>，
+递归查找文件，并使用 <code class="docutils literal notranslate"><span class="pre">fork</span></code>、<code class="docutils literal notranslate"><span class="pre">exec</span></code> 和 <code class="docutils literal notranslate"><span class="pre">wait</span></code> 对查找结果执行命令。</p>
+<p>本实验只修改用户态程序和 <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>，不添加系统调用，也不修改 <code class="docutils literal notranslate"><span class="pre">kernel/</span></code> 中的代码。</p>
 <nav class="lab-progress" aria-label="实验流程">
-  <a href="#lab2-goals"><span>01</span>了解目标</a>
-  <a href="#lab2-prepare"><span>02</span>准备源码</a>
-  <a href="#lab2-makefile"><span>03</span>修改构建</a>
-  <a href="#lab2-sixfive"><span>04</span>读取文件</a>
-  <a href="#lab2-find"><span>05</span>递归查找</a>
-  <a href="#lab2-exec"><span>06</span>执行命令</a>
-  <a href="#lab2-report"><span>07</span>检查提交</a>
+  <a href="#lab2-goals"><span>01</span>实验目标</a>
+  <a href="#lab2-prepare"><span>02</span>实验准备</a>
+  <a href="#lab2-makefile"><span>03</span>添加程序</a>
+  <a href="#lab2-find"><span>04</span>递归查找</a>
+  <a href="#lab2-exec"><span>05</span>执行命令</a>
+  <a href="#lab2-faq"><span>06</span>常见问题</a>
 </nav><section id="lab2-goals">
 <span id="id1"></span><h2>实验目标<a class="headerlink" href="#lab2-goals" title="Link to this heading"></a></h2>
-<p>完成本次实验后，你应该能够：</p>
+<p>完成本次实验后，应能够：</p>
 <ul class="simple">
-<li><p>说明 xv6 用户程序从源代码到 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 的构建过程；</p></li>
-<li><p>区分 Makefile 中 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code> 和 <code class="docutils literal notranslate"><span class="pre">UEXTRA</span></code> 的作用；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">open</span></code>、<code class="docutils literal notranslate"><span class="pre">read</span></code> 和 <code class="docutils literal notranslate"><span class="pre">close</span></code> 读取普通文件；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">fstat</span></code> 判断文件类型，并读取 xv6 目录项；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">fork</span></code>、<code class="docutils literal notranslate"><span class="pre">exec</span></code> 和 <code class="docutils literal notranslate"><span class="pre">wait</span></code> 对查找到的文件执行指定命令；</p></li>
-<li><p>使用 C 字符串处理文本、文件名和路径；</p></li>
-<li><p>使用递归遍历多层目录；</p></li>
-<li><p>对系统调用失败、参数错误和路径过长等情况进行基本处理。</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">open</span></code>、<code class="docutils literal notranslate"><span class="pre">read</span></code>、<code class="docutils literal notranslate"><span class="pre">fstat</span></code> 和 <code class="docutils literal notranslate"><span class="pre">close</span></code> 访问 xv6 文件系统；</p></li>
+<li><p>读取 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code> 并递归遍历目录；</p></li>
+<li><p>正确处理文件名、路径和 C 字符串；</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">fork</span></code>、<code class="docutils literal notranslate"><span class="pre">exec</span></code> 和 <code class="docutils literal notranslate"><span class="pre">wait</span></code> 运行其他用户程序；</p></li>
+<li><p>处理参数错误、系统调用失败和路径过长等情况。</p></li>
 </ul>
-<p>本次实验包含两个必做任务：</p>
-<ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sixfive</span></code>：读取文本文件，输出其中能被 5 或 6 整除的数字；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">find</span></code>：从指定路径开始，递归查找具有指定名称的文件。</p></li>
-</ol>
-<div class="admonition mycaution">
-  <p class="admonition-title">实验边界</p>
-  <p>本次实验只编写用户态程序，不添加新的系统调用，也不修改
-  <code>kernel/</code> 中的内核代码。程序必须使用 xv6 已经提供的接口完成。</p>
-</div></section>
 <section id="lab2-report">
-<span id="id2"></span><h2>实验报告与提交要求<a class="headerlink" href="#lab2-report" title="Link to this heading"></a></h2>
+<span id="id2"></span><h3>实验报告与提交要求<a class="headerlink" href="#lab2-report" title="Link to this heading"></a></h3>
 <p>实验报告至少应包含以下内容：</p>
 <ol class="arabic simple">
-<li><p>实验使用的 xv6-riscv Git 提交短哈希；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>、<code class="docutils literal notranslate"><span class="pre">UEXTRA</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 构建规则的修改；</p></li>
-<li><p>xv6 中执行 <code class="docutils literal notranslate"><span class="pre">ls</span></code> 后显示 <code class="docutils literal notranslate"><span class="pre">sixfive</span></code>、<code class="docutils literal notranslate"><span class="pre">find</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sixfive.txt</span></code> 的截图；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sixfive</span></code> 的文本解析思路和关键代码；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sixfive</span></code> 正常输入、边界输入和错误输入的测试结果；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">find</span></code> 的递归遍历思路和关键代码；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">-exec</span></code> 的参数构造过程以及 <code class="docutils literal notranslate"><span class="pre">fork</span></code>、<code class="docutils literal notranslate"><span class="pre">exec</span></code>、<code class="docutils literal notranslate"><span class="pre">wait</span></code> 的作用；</p></li>
-<li><p>普通 <code class="docutils literal notranslate"><span class="pre">find</span></code> 和 <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">-exec</span></code> 两种模式的运行结果；</p></li>
-<li><p>至少三层目录的创建过程及 <code class="docutils literal notranslate"><span class="pre">find</span></code> 输出；</p></li>
-<li><p>实验中遇到的问题、定位过程和解决方法；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Makefile</span></code> 中 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code> 的修改；</p></li>
+<li><p>xv6 中执行 <code class="docutils literal notranslate"><span class="pre">ls</span></code> 后显示 <code class="docutils literal notranslate"><span class="pre">find</span></code> 的截图；</p></li>
+<li><p>递归遍历目录的设计和关键代码；</p></li>
+<li><p>至少三层测试目录的结构、命令和运行结果；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">-exec</span></code> 的参数构造过程，以及 <code class="docutils literal notranslate"><span class="pre">fork</span></code>、 <code class="docutils literal notranslate"><span class="pre">exec</span></code>、 <code class="docutils literal notranslate"><span class="pre">wait</span></code> 的作用；</p></li>
+<li><p>普通查找和 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 模式的测试结果；</p></li>
+<li><p>实验中遇到的问题及解决方法；</p></li>
 <li><p>本页思考题的答案。</p></li>
 </ol>
 <p>需要提交的代码文件为：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Makefile
-user/sixfive.c
-user/sixfive.txt
 user/find.c
 </pre></div>
 </div>
-<p>如果实验一的 <code class="docutils literal notranslate"><span class="pre">user/hello.c</span></code> 仍在仓库中，可以保留，无需删除。</p>
-<p>提交前应在 Ubuntu shell 中检查：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status
-git<span class="w"> </span>diff
-make<span class="w"> </span>clean
-make<span class="w"> </span>qemu
-</pre></div>
-</div>
-<p>确认两个程序都能够从干净状态编译并运行后，再按照课程通知提交代码和实验报告。</p>
 <div class="admonition mycaution">
-  <p class="admonition-title">提交前检查</p>
-  <p>代码必须能够在课程提供的 xv6-riscv 环境中从干净状态编译。截图应同时包含命令和输出，
-  文字应清晰可辨；不要只放运行截图而不解释程序的设计和结果。</p>
+   <p class="admonition-title">提交前检查</p>
+   <p>执行 <code>git status</code> 和 <code>git diff</code> 检查修改，并确认代码能够从干净状态编译。
+   截图应同时包含命令和输出，每幅截图均应配有简要说明。</p>
 </div></section>
+</section>
 <section id="lab2-prepare">
 <span id="id3"></span><h2>实验准备<a class="headerlink" href="#lab2-prepare" title="Link to this heading"></a></h2>
-<p>进入实验一使用的 xv6-riscv 仓库：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/os-lab/xv6-riscv
-git<span class="w"> </span>status
-git<span class="w"> </span>rev-parse<span class="w"> </span>--short<span class="w"> </span>HEAD
+<p>进入 xv6-riscv 仓库，将 <code class="docutils literal notranslate"><span class="pre">.git*</span></code> 删除，并初始化新的 Git 仓库：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># cd xv6-riscv</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>.git*
+git<span class="w"> </span>init
+git<span class="w"> </span>branch<span class="w"> </span>-M<span class="w"> </span>main
+git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Initial commit&quot;</span>
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>lab2
 </pre></div>
 </div>
-<p>如果课程另行指定了仓库、分支或起始代码，应以课程通知为准。开始修改前，应确认实验一的
-代码已经妥善保存，并记录当前仓库版本，避免在多个 xv6-riscv 副本中混淆修改。</p>
-<section id="id4">
-<h3>复习源码目录<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
-<p>本次实验主要使用以下文件：</p>
+<p>本实验主要参考以下文件：</p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">user/ls.c</span></code></dt><dd><p>xv6 的 <code class="docutils literal notranslate"><span class="pre">ls</span></code> 用户程序。阅读它可以了解如何调用 <code class="docutils literal notranslate"><span class="pre">open</span></code>、<code class="docutils literal notranslate"><span class="pre">fstat</span></code> 和 <code class="docutils literal notranslate"><span class="pre">read</span></code>，
-以及如何处理 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code>。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">user/ls.c</span></code></dt><dd><p>展示如何打开路径、判断文件类型、读取目录项和拼接路径。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">user/cat.c</span></code></dt><dd><p>xv6 的 <code class="docutils literal notranslate"><span class="pre">cat</span></code> 用户程序。阅读它可以了解如何循环调用 <code class="docutils literal notranslate"><span class="pre">read</span></code> 读取普通文件。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">user/ulib.c</span></code></dt><dd><p>提供 <code class="docutils literal notranslate"><span class="pre">strcmp</span></code>、<code class="docutils literal notranslate"><span class="pre">strlen</span></code> 等字符串函数。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">user/ulib.c</span></code></dt><dd><p>xv6 用户库的一部分，可以查看 <code class="docutils literal notranslate"><span class="pre">atoi</span></code>、<code class="docutils literal notranslate"><span class="pre">strchr</span></code>、<code class="docutils literal notranslate"><span class="pre">strcmp</span></code> 和 <code class="docutils literal notranslate"><span class="pre">strlen</span></code> 等函数。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">user/user.h</span></code></dt><dd><p>声明用户程序可调用的系统调用和库函数。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">user/user.h</span></code></dt><dd><p>用户程序可调用的系统调用和用户库函数声明。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">kernel/fs.h</span></code></dt><dd><p>定义 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code> 和 <code class="docutils literal notranslate"><span class="pre">DIRSIZ</span></code>。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kernel/fs.h</span></code></dt><dd><p>文件系统相关数据结构，例如 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code> 和 <code class="docutils literal notranslate"><span class="pre">DIRSIZ</span></code>。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">kernel/stat.h</span></code></dt><dd><p>定义 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">stat</span></code>、<code class="docutils literal notranslate"><span class="pre">T_FILE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">T_DIR</span></code>。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kernel/stat.h</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">stat</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">T_FILE</span></code>、<code class="docutils literal notranslate"><span class="pre">T_DIR</span></code> 等文件类型定义。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">kernel/fcntl.h</span></code></dt><dd><p>定义 <code class="docutils literal notranslate"><span class="pre">O_RDONLY</span></code> 等文件打开标志。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kernel/fcntl.h</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">O_RDONLY</span></code>、<code class="docutils literal notranslate"><span class="pre">O_WRONLY</span></code> 等文件打开标志。</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></dt><dd><p>控制用户程序的编译以及 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 的生成。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">kernel/param.h</span></code></dt><dd><p>定义命令参数数量上限 <code class="docutils literal notranslate"><span class="pre">MAXARG</span></code>。</p>
 </dd>
 </dl>
-<p>先在 Ubuntu shell 中阅读相关代码：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'1,200p'</span><span class="w"> </span>user/cat.c
-sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'1,240p'</span><span class="w"> </span>user/ls.c
-sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'1,200p'</span><span class="w"> </span>user/user.h
-sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'1,160p'</span><span class="w"> </span>kernel/fs.h
-sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'1,160p'</span><span class="w"> </span>kernel/stat.h
+<p>用户程序需要经过 Makefile 编译和链接，再由 <code class="docutils literal notranslate"><span class="pre">mkfs</span></code> 写入 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code>：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>user/find.c  →  user/_find  →  fs.img  →  xv6 shell 中的 find
 </pre></div>
 </div>
-<div class="admonition myquestion">
-  <p class="admonition-title">用户程序为什么能够读取文件？</p>
-  <p><code>sixfive.c</code> 和 <code>find.c</code> 都运行在用户态，不能直接操作磁盘。
-  阅读 <code>user/user.h</code>，找出本次实验使用的系统调用，并思考这些调用如何把请求交给 xv6 内核。</p>
-</div></section>
-<section id="id5">
-<h3>用户程序的构建过程<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
-<p>用户程序不会因为放入 <code class="docutils literal notranslate"><span class="pre">user/</span></code> 目录就自动出现在 xv6 中。以实验一的 <code class="docutils literal notranslate"><span class="pre">hello</span></code> 为例，
-其构建过程可以概括为：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>user/hello.c
-      ↓ 由 Makefile 交叉编译和链接
-user/_hello
-      ↓ 由 mkfs 写入文件系统镜像
-fs.img
-      ↓ QEMU 启动 xv6
-在 xv6 shell 中执行 hello
-</pre></div>
-</div>
-<p>本次实验的 <code class="docutils literal notranslate"><span class="pre">sixfive.c</span></code> 和 <code class="docutils literal notranslate"><span class="pre">find.c</span></code> 也需要加入 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>。测试数据
-<code class="docutils literal notranslate"><span class="pre">sixfive.txt</span></code> 是普通文件，需要通过 <code class="docutils literal notranslate"><span class="pre">UEXTRA</span></code> 写入 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code>。</p>
 </section>
-</section>
-<section id="makefile">
-<span id="lab2-makefile"></span><h2>修改 Makefile<a class="headerlink" href="#makefile" title="Link to this heading"></a></h2>
-<section id="id6">
-<h3>添加用户程序<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
-<p>在 xv6-riscv 根目录的 <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> 中找到 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>。保留其中已有的所有程序，
-在程序列表中加入：</p>
-<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="err">$U/_sixfive\</span>
-<span class="err">$U/_find\</span>
+<section id="find-xv6">
+<span id="lab2-makefile"></span><h2>将 find 加入 xv6<a class="headerlink" href="#find-xv6" title="Link to this heading"></a></h2>
+<p>创建源文件：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>user/find.c
 </pre></div>
 </div>
-<p>如果实验一的 <code class="docutils literal notranslate"><span class="pre">hello</span></code> 仍然保留，相应部分可以写成：</p>
-<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="err">$U/_hello\</span>
-<span class="err">$U/_sixfive\</span>
-<span class="err">$U/_find\</span>
+<p>在 xv6-riscv 根目录的 <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> 中找到 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>，保留已有内容并加入：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$U/_find\
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">user/sixfive.c</span></code> 会被编译为主机文件系统中的 <code class="docutils literal notranslate"><span class="pre">user/_sixfive</span></code>，但是进入 xv6 后，
-运行命令仍然是 <code class="docutils literal notranslate"><span class="pre">sixfive</span></code>，不需要输入下划线。</p>
-</section>
-<section id="id7">
-<h3>添加测试文件<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
-<p>在 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code> 定义之后、<code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 构建规则之前加入：</p>
-<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nv">UEXTRA</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span>user/sixfive.txt
+<p><code class="docutils literal notranslate"><span class="pre">user/find.c</span></code> 会被编译为 <code class="docutils literal notranslate"><span class="pre">user/_find</span></code>；进入 xv6 后，命令名称仍然是 <code class="docutils literal notranslate"><span class="pre">find</span></code>。
+完成程序后，在 Ubuntu shell 中执行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>qemu
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">UPROGS</span></code> 保存需要交叉编译的用户程序；<code class="docutils literal notranslate"><span class="pre">UEXTRA</span></code> 保存直接写入文件系统镜像的普通文件。
-不要把 <code class="docutils literal notranslate"><span class="pre">sixfive.txt</span></code> 加入 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>。</p>
-</section>
-<section id="id8">
-<h3>修改文件系统镜像构建规则<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
-<p>找到 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 构建规则，将 <code class="docutils literal notranslate"><span class="pre">$(UEXTRA)</span></code> 同时加入依赖列表和 <code class="docutils literal notranslate"><span class="pre">mkfs</span></code> 命令：</p>
-<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="nf">fs.img</span><span class="o">:</span><span class="w"> </span><span class="n">mkfs</span>/<span class="n">mkfs</span> <span class="n">README</span> <span class="k">$(</span><span class="nv">UEXTRA</span><span class="k">)</span> <span class="k">$(</span><span class="nv">UPROGS</span><span class="k">)</span>
-<span class="w">   </span>mkfs/mkfs<span class="w"> </span>fs.img<span class="w"> </span>README<span class="w"> </span><span class="k">$(</span>UEXTRA<span class="k">)</span><span class="w"> </span><span class="k">$(</span>UPROGS<span class="k">)</span>
-</pre></div>
-</div>
-<p>第二行 <code class="docutils literal notranslate"><span class="pre">mkfs/mkfs</span></code> 前面必须是一个 Tab，不能使用普通空格。否则 Make 可能报告：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Makefile:...: *** missing separator.  Stop.
-</pre></div>
-</div>
-<p>如果当前 Makefile 已经定义了 <code class="docutils literal notranslate"><span class="pre">UEXTRA</span></code> 或者已经在 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 规则中使用了
-<code class="docutils literal notranslate"><span class="pre">$(UEXTRA)</span></code>，只需把 <code class="docutils literal notranslate"><span class="pre">user/sixfive.txt</span></code> 加入现有配置，不要重复覆盖其他文件。</p>
-</section>
-<section id="id9">
-<h3>创建测试数据<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
-<p>在 Ubuntu shell 中创建并编辑 <code class="docutils literal notranslate"><span class="pre">user/sixfive.txt</span></code>：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nano<span class="w"> </span>user/sixfive.txt
-</pre></div>
-</div>
-<p>写入以下内容：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>5
-3
-127
-100
-18-4
-06
-</pre></div>
-</div>
-<p>保存后检查文件：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sed<span class="w"> </span>-n<span class="w"> </span><span class="s1">'1,20p'</span><span class="w"> </span>user/sixfive.txt
-</pre></div>
-</div>
-<p>现在可以先创建两个程序的空文件：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>user/sixfive.c<span class="w"> </span>user/find.c
-</pre></div>
-</div>
-<p>完成程序后，使用下面的命令重新生成文件系统镜像：</p>
+<p>进入 xv6 后执行 <code class="docutils literal notranslate"><span class="pre">ls</span></code>，确认列表中包含 <code class="docutils literal notranslate"><span class="pre">find</span></code>。若程序没有更新，退出 QEMU 后执行：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>clean
 make<span class="w"> </span>qemu
 </pre></div>
 </div>
-<p>进入 xv6 后执行 <code class="docutils literal notranslate"><span class="pre">ls</span></code>，应当能够看到 <code class="docutils literal notranslate"><span class="pre">sixfive</span></code>、<code class="docutils literal notranslate"><span class="pre">find</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sixfive.txt</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code> 会重新生成 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code>，因此此前在 xv6 中临时创建的测试文件也会被删除。</p>
 <div class="admonition mytodo">
-  <p class="admonition-title">检查 Makefile 和 fs.img</p>
-  <p>完成 <code>UPROGS</code>、<code>UEXTRA</code> 和 <code>fs.img</code> 规则的修改。
-  重新编译并进入 xv6，执行 <code>ls</code>，确认两个用户程序和测试文件均已进入文件系统镜像。
-  在实验报告中附上 Makefile 修改和 xv6 中 <code>ls</code> 输出的截图。</p>
+   <p class="admonition-title">将 find 写入文件系统镜像</p>
+   <p>把 <code>$U/_find\</code> 加入 <code>UPROGS</code>，重新编译并进入 xv6，
+   执行 <code>ls</code> 确认 <code>find</code> 已经存在。</p>
 </div></section>
-</section>
-<section id="sixfive">
-<span id="lab2-sixfive"></span><h2>任务一：sixfive<a class="headerlink" href="#sixfive" title="Link to this heading"></a></h2>
-<section id="id10">
-<h3>问题描述：筛选文本中的数字<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
-<p>在 <code class="docutils literal notranslate"><span class="pre">user/sixfive.c</span></code> 中实现 <code class="docutils literal notranslate"><span class="pre">sixfive</span></code>。程序接收一个或多个文本文件作为命令行参数，
-按照参数顺序读取文件，并输出其中所有能被 5 或 6 整除的数字。</p>
-<p>运行方式：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sixfive<span class="w"> </span>file1<span class="w"> </span><span class="o">[</span>file2<span class="w"> </span>...<span class="o">]</span>
-</pre></div>
-</div>
-<p>数字由一个或多个连续的十进制数字组成。数字之间只能使用下列字符分隔：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="s">" -</span><span class="se">\r\t\n</span><span class="s">./,"</span>
-</pre></div>
-</div>
-<p>这些字符依次包括空格、连字符、回车、制表符、换行符、句点、斜杠和逗号。
-文件开头和文件结尾也视为分隔符。</p>
-<p>下表给出了一些边界情况，其中 <code class="docutils literal notranslate"><span class="pre">␠</span></code> 表示空格：</p>
-<table class="docutils align-default" id="id34">
-<caption><span class="caption-text">sixfive 输入识别规则</span><a class="headerlink" href="#id34" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 25.0%" />
-<col style="width: 20.0%" />
-<col style="width: 55.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>输入片段</p></th>
-<th class="head"><p>是否识别数字</p></th>
-<th class="head"><p>原因</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">6</span></code></p></td>
-<td><p>是</p></td>
-<td><p>文件开头和结尾是隐式分隔符</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/6,</span></code></p></td>
-<td><p>是</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">6</span></code> 两侧都是合法分隔符</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xv6</span></code></p></td>
-<td><p>否</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">6</span></code> 与字母相连，不是独立数字</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">25.36</span></code></p></td>
-<td><p>是</p></td>
-<td><p>句点是分隔符，得到 <code class="docutils literal notranslate"><span class="pre">25</span></code> 和 <code class="docutils literal notranslate"><span class="pre">36</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">a30␠</span></code></p></td>
-<td><p>否</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">30</span></code> 左侧不是合法分隔符</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">␠30b</span></code></p></td>
-<td><p>否</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">30</span></code> 右侧不是合法分隔符</p></td>
-</tr>
-</tbody>
-</table>
-<p>本实验提供的 <code class="docutils literal notranslate"><span class="pre">sixfive.txt</span></code> 内容如下：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>5
-3
-127
-100
-18-4
-06
-</pre></div>
-</div>
-<p>运行程序：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sixfive<span class="w"> </span>sixfive.txt
-<span class="m">5</span>
-<span class="m">100</span>
-<span class="m">18</span>
-<span class="m">6</span>
-$
-</pre></div>
-</div>
-<p>在该输入文件中：</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">5</span></code> 和 <code class="docutils literal notranslate"><span class="pre">100</span></code> 能被 5 整除，因此需要输出；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">127</span></code> 不能被 5 或 6 整除，因此不输出；</p></li>
-<li><p>连字符是合法分隔符，因此 <code class="docutils literal notranslate"><span class="pre">18-4</span></code> 被识别为数字 <code class="docutils literal notranslate"><span class="pre">18</span></code> 和 <code class="docutils literal notranslate"><span class="pre">4</span></code>。其中只有 <code class="docutils literal notranslate"><span class="pre">18</span></code> 能被 6 整除；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">06</span></code> 是合法的十进制数字，转换为整数后数值为 <code class="docutils literal notranslate"><span class="pre">6</span></code>，因此程序输出 <code class="docutils literal notranslate"><span class="pre">6</span></code>。</p></li>
-</ul>
-</section>
-<section id="id11">
-<h3>实现要求<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">sixfive</span></code> 必须满足以下要求：</p>
-<ol class="arabic simple">
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">open</span></code> 打开输入文件；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">read</span></code> 读取文件，建议每次读取一个字符；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">strchr</span></code> 判断一个字符是否属于分隔符集合；</p></li>
-<li><p>正确识别由连续十进制数字构成的数；</p></li>
-<li><p>只有当数字左右两侧均为合法分隔符、文件开头或文件结尾时，才把它视为有效数字；</p></li>
-<li><p>对有效数字判断 <code class="docutils literal notranslate"><span class="pre">number</span> <span class="pre">%</span> <span class="pre">5</span> <span class="pre">==</span> <span class="pre">0</span> <span class="pre">||</span> <span class="pre">number</span> <span class="pre">%</span> <span class="pre">6</span> <span class="pre">==</span> <span class="pre">0</span></code>；</p></li>
-<li><p>每个满足条件的数字单独输出一行；</p></li>
-<li><p>按顺序处理命令行给出的所有输入文件；</p></li>
-<li><p>文件处理结束后调用 <code class="docutils literal notranslate"><span class="pre">close</span></code>；</p></li>
-<li><p>缺少输入文件或者文件无法打开时，输出清楚的错误信息；</p></li>
-<li><p>程序结束前调用 <code class="docutils literal notranslate"><span class="pre">exit</span></code>；</p></li>
-<li><p>不得硬编码测试数据或预期输出。</p></li>
-</ol>
-<p>输入中的数字均处于普通 C <code class="docutils literal notranslate"><span class="pre">int</span></code> 的表示范围内，不要求处理任意精度整数。</p>
-</section>
-<section id="id12">
-<h3>实现提示<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
-<p>可以把文本解析设计成一个简单的状态机：</p>
-<ol class="arabic simple">
-<li><p>文件开始时允许读取一个新数字；</p></li>
-<li><p>遇到数字字符时，记录当前数字；</p></li>
-<li><p>遇到合法分隔符时，结束并检查当前的有效数字，然后准备读取下一个字段；</p></li>
-<li><p>遇到字母等非数字、非分隔符字符时，将当前字段标记为无效；</p></li>
-<li><p>无效字段只有在遇到下一个合法分隔符后才能结束；</p></li>
-<li><p>文件结束时执行一次与遇到分隔符相同的收尾检查。</p></li>
-</ol>
-<p>你可以在 <code class="docutils literal notranslate"><span class="pre">user/ulib.c</span></code> 中查看 <code class="docutils literal notranslate"><span class="pre">atoi</span></code> 和 <code class="docutils literal notranslate"><span class="pre">strchr</span></code> 的实现与使用方法。不要包含 Linux
-的 <code class="docutils literal notranslate"><span class="pre">stdio.h</span></code>，也不要使用 xv6 未提供的 <code class="docutils literal notranslate"><span class="pre">fopen</span></code>、<code class="docutils literal notranslate"><span class="pre">fscanf</span></code> 或 <code class="docutils literal notranslate"><span class="pre">strtol</span></code>。</p>
-<p>根据当前 xv6-riscv 版本，可以参考以下头文件：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"kernel/types.h"</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">"kernel/stat.h"</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">"kernel/fcntl.h"</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">"user/user.h"</span>
-</pre></div>
-</div>
-</section>
-<section id="id13">
-<h3>测试要求<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
-<p>至少完成以下测试：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sixfive<span class="w"> </span>sixfive.txt
-<span class="m">5</span>
-<span class="m">100</span>
-<span class="m">18</span>
-<span class="m">6</span>
-</pre></div>
-</div>
-<p>还需要测试缺少参数和文件不存在的情况：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sixfive
-sixfive:<span class="w"> </span>missing<span class="w"> </span>input<span class="w"> </span>file
-$<span class="w"> </span>sixfive<span class="w"> </span>nofile.txt
-sixfive:<span class="w"> </span>cannot<span class="w"> </span>open<span class="w"> </span>nofile.txt
-</pre></div>
-</div>
-<p>错误信息不要求与示例逐字相同，但必须说明错误原因，程序不能崩溃或无限循环。</p>
-<div class="admonition mytodo">
-  <p class="admonition-title">完成 sixfive</p>
-  <p>实现 <code>user/sixfive.c</code>，验证示例输出，并额外测试参数缺失、文件不存在、
-  数字位于文件边界以及数字与字母相连等情况。实验报告应说明你如何判断一个数字是否具有合法边界。</p>
-</div></section>
-</section>
-<section id="find">
-<span id="lab2-find"></span><h2>任务二：find<a class="headerlink" href="#find" title="Link to this heading"></a></h2>
-<section id="id14">
-<h3>任务描述<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
-<p>在 <code class="docutils literal notranslate"><span class="pre">user/find.c</span></code> 中实现一个简化版 UNIX <code class="docutils literal notranslate"><span class="pre">find</span></code> 程序。程序从指定路径开始递归查找，
-输出目录树中名称与目标名称完全相同的路径。</p>
-<p>运行方式：</p>
+<section id="lab2-find">
+<span id="id4"></span><h2>任务一：递归查找文件<a class="headerlink" href="#lab2-find" title="Link to this heading"></a></h2>
+<p>在 <code class="docutils literal notranslate"><span class="pre">user/find.c</span></code> 中实现简化版 <code class="docutils literal notranslate"><span class="pre">find</span></code>：从指定路径开始递归查找，输出名称与目标名称
+完全相同的文件或目录路径。</p>
+<p>运行格式为：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>find<span class="w"> </span>path<span class="w"> </span>target
 </pre></div>
 </div>
-<p>例如，<code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">.</span> <span class="pre">b</span></code> 表示从当前目录开始，递归查找名称为 <code class="docutils literal notranslate"><span class="pre">b</span></code> 的文件。</p>
+<p>例如，<code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">.</span> <span class="pre">b</span></code> 表示从当前目录开始查找名称为 <code class="docutils literal notranslate"><span class="pre">b</span></code> 的项目。</p>
+<section id="id5">
+<h3>递归查找要求<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>程序应满足以下要求：</p>
+<ol class="arabic simple">
+<li><p>接收起始路径和目标名称两个参数；</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">open</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fstat</span></code> 判断当前路径是普通文件还是目录；</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">read</span></code> 逐个读取目录中的 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code>；</p></li>
+<li><p>跳过 inode 编号为 0 的目录项，以及 <code class="docutils literal notranslate"><span class="pre">.</span></code> 和 <code class="docutils literal notranslate"><span class="pre">..</span></code>；</p></li>
+<li><p>递归遍历任意深度的子目录；</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">strcmp</span></code> 完整比较文件名；</p></li>
+<li><p>输出从起始路径开始的完整匹配路径；</p></li>
+<li><p>拼接路径前检查长度，并为 <code class="docutils literal notranslate"><span class="pre">/</span></code> 和 <code class="docutils literal notranslate"><span class="pre">\0</span></code> 预留空间；</p></li>
+<li><p>在所有返回路径上正确关闭文件描述符；</p></li>
+<li><p>参数或系统调用出错时输出错误信息并正常退出。</p></li>
+</ol>
+<p>不得硬编码目录层数、文件名或预期输出，也不得调用 Ubuntu/Linux 的 <code class="docutils literal notranslate"><span class="pre">find</span></code> 代替实现。</p>
 </section>
-<section id="id15">
-<h3>准备测试目录<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
-<p>进入 xv6 后执行：</p>
+<section id="id6">
+<h3>实现提示<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>先阅读 <code class="docutils literal notranslate"><span class="pre">user/ls.c</span></code>，重点关注 <code class="docutils literal notranslate"><span class="pre">open</span></code>、<code class="docutils literal notranslate"><span class="pre">fstat</span></code>、<code class="docutils literal notranslate"><span class="pre">read</span></code>、<code class="docutils literal notranslate"><span class="pre">DIRSIZ</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code> 的用法。递归函数可以组织为：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>处理流程如下：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>打开 path 并判断类型
+    ├─ 普通文件：比较名称，匹配则输出路径
+    └─ 目录：读取目录项
+               ├─ 跳过空目录项、. 和 ..
+               ├─ 拼接子路径
+               └─ 递归处理子路径
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code> 的名称字段长度固定，不一定以 <code class="docutils literal notranslate"><span class="pre">\0</span></code> 结尾。复制名称后必须手动构造合法的
+C 字符串，否则可能出现乱码或比较错误。</p>
+<div class="admonition mydanger">
+   <p class="admonition-title">避免无限递归</p>
+   <p>每个目录都包含指向自身的 <code>.</code> 和指向父目录的 <code>..</code>。
+   递归时必须跳过二者，否则路径中会不断出现 <code>/.</code> 或 <code>/..</code>，程序反复访问
+   相同目录。随着递归层数增加，调用栈和未关闭的文件描述符会持续增长，最终可能出现
+   <code>open</code> 失败、用户进程异常退出或控制台被重复输出占满；在 <code>-exec</code> 模式下，
+   还会反复创建子进程并执行命令。通常受影响的是当前用户进程，但终端可能表现得像“卡死”。</p>
+</div></section>
+<section id="id7">
+<h3>测试任务一<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>在 xv6 中创建三层测试目录：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span>&gt;<span class="w"> </span>b
 mkdir<span class="w"> </span>a
 <span class="nb">echo</span><span class="w"> </span>&gt;<span class="w"> </span>a/b
@@ -513,16 +282,16 @@ mkdir<span class="w"> </span>a/aa
 <span class="nb">echo</span><span class="w"> </span>&gt;<span class="w"> </span>a/aa/b
 </pre></div>
 </div>
-<p>得到的目录结构为：</p>
+<p>目录结构如下：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.
-|-- b
-`-- a
-    |-- b
-    `-- aa
-        `-- b
+├── b
+└── a
+    ├── b
+    └── aa
+        └── b
 </pre></div>
 </div>
-<p>运行：</p>
+<p>预期结果为：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>b
 ./b
 ./a/b
@@ -530,132 +299,29 @@ mkdir<span class="w"> </span>a/aa
 $
 </pre></div>
 </div>
-<p>程序输出顺序可以遵循目录项的读取顺序，但每条匹配路径必须正确、完整且只输出一次。</p>
-</section>
-<section id="id16">
-<h3>实现要求<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">find</span></code> 必须满足以下要求：</p>
-<ol class="arabic simple">
-<li><p>接收起始路径和目标名称两个参数；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">open</span></code> 打开当前路径；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">fstat</span></code> 判断当前路径是普通文件还是目录；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">read</span></code> 逐个读取目录中的 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code>；</p></li>
-<li><p>跳过 inode 编号为 0 的无效目录项；</p></li>
-<li><p>不得递归进入 <code class="docutils literal notranslate"><span class="pre">.</span></code> 和 <code class="docutils literal notranslate"><span class="pre">..</span></code>；</p></li>
-<li><p>使用递归遍历任意深度的子目录；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">strcmp</span></code> 进行完整文件名比较，不能使用 <code class="docutils literal notranslate"><span class="pre">==</span></code> 比较字符串；</p></li>
-<li><p>输出从起始路径出发的完整路径；</p></li>
-<li><p>在拼接路径前检查缓冲区长度，不能发生数组越界；</p></li>
-<li><p>路径处理完成后调用 <code class="docutils literal notranslate"><span class="pre">close</span></code>；</p></li>
-<li><p>参数数量错误或者路径无法打开时，输出清楚的错误信息；</p></li>
-<li><p>不得硬编码目录层数、测试路径、文件名或者预期结果；</p></li>
-<li><p>不得调用 Ubuntu/Linux 中的 <code class="docutils literal notranslate"><span class="pre">find</span></code> 命令代替程序实现。</p></li>
-</ol>
-</section>
-<section id="id17">
-<h3>实现提示<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
-<p>先阅读 <code class="docutils literal notranslate"><span class="pre">user/ls.c</span></code>，重点观察它如何：</p>
-<ul class="simple">
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">open</span></code> 打开路径；</p></li>
-<li><p>使用 <code class="docutils literal notranslate"><span class="pre">fstat</span></code> 获取文件类型；</p></li>
-<li><p>读取 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code>；</p></li>
-<li><p>根据 <code class="docutils literal notranslate"><span class="pre">DIRSIZ</span></code> 处理目录项名称；</p></li>
-<li><p>拼接父目录路径和子目录项名称。</p></li>
-</ul>
-<p>可以将递归部分组织成：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>其执行过程可以概括为：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>打开 path
-    |
-    v
-使用 fstat 判断类型
-    |-- 普通文件：比较名称，匹配则输出路径
-    `-- 目录：依次读取目录项
-                    |-- 跳过空目录项
-                    |-- 跳过 . 和 ..
-                    |-- 拼接新路径
-                    `-- 递归处理新路径
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code> 中的名称字段长度固定，不应假设它一定以 <code class="docutils literal notranslate"><span class="pre">\0</span></code> 结尾。复制目录项名称时，
-需要为 C 字符串预留结尾的空字符。路径拼接时还要为 <code class="docutils literal notranslate"><span class="pre">/</span></code> 和 <code class="docutils literal notranslate"><span class="pre">\0</span></code> 预留空间。</p>
-<div class="admonition mydanger">
-  <p class="admonition-title">避免无限递归</p>
-  <p>每个目录都包含指向自身的 <code>.</code> 和指向父目录的 <code>..</code>。
-  如果递归时不跳过它们，<code>find</code> 会不断访问相同目录，最终耗尽进程栈或文件描述符。</p>
-</div></section>
-<section id="id18">
-<h3>测试要求<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
-<p>完成基本示例后，还应测试以下情况。</p>
-<p>查找不存在的名称：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>not_exist
-$
-</pre></div>
-</div>
-<p>从子目录开始查找：</p>
+<p>输出顺序可以随目录项读取顺序变化，但路径必须完整，且每个结果只输出一次。还应测试：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>a<span class="w"> </span>b
 a/b
 a/aa/b
-</pre></div>
-</div>
-<p>查找其他名称：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>&gt;<span class="w"> </span>a/test
-$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span><span class="nb">test</span>
-./a/test
-</pre></div>
-</div>
-<p>参数数量错误：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>.
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>not_exist
+$<span class="w"> </span>find<span class="w"> </span>.
 find:<span class="w"> </span>usage:<span class="w"> </span>find<span class="w"> </span>path<span class="w"> </span>target
 </pre></div>
 </div>
-<p>错误信息不要求与示例逐字相同，但程序必须正常退出。</p>
+<p>错误信息不要求与示例完全相同，但必须说明原因，程序不能崩溃或无限循环。</p>
 <div class="admonition mytodo">
-  <p class="admonition-title">完成 find</p>
-  <p>实现 <code>user/find.c</code>，创建至少三层测试目录，验证从当前目录和子目录开始查找的结果。
-  实验报告中应展示目录结构、运行命令和完整输出，并说明为什么递归时必须跳过
-  <code>.</code> 和 <code>..</code>。</p>
+   <p class="admonition-title">完成递归查找</p>
+   <p>实现 <code>find path target</code>，使用至少三层目录测试从当前目录和子目录开始的查找，
+   并在实验报告中说明为什么必须跳过 <code>.</code> 和 <code>..</code>。</p>
 </div></section>
 </section>
-<section id="id19">
-<h2>编译与调试<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
-<p>修改源代码后，退出 QEMU，在 xv6-riscv 根目录重新编译：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>qemu
-</pre></div>
-</div>
-<p>如果新增程序或 <code class="docutils literal notranslate"><span class="pre">sixfive.txt</span></code> 没有出现在 xv6 中，执行：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>clean
-make<span class="w"> </span>qemu
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code> 会重新生成 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code>。此前在 xv6 shell 中临时创建的 <code class="docutils literal notranslate"><span class="pre">a</span></code>、<code class="docutils literal notranslate"><span class="pre">b</span></code> 等文件可能
-随之消失，需要重新执行测试目录的创建命令。通过 <code class="docutils literal notranslate"><span class="pre">UEXTRA</span></code> 加入的 <code class="docutils literal notranslate"><span class="pre">sixfive.txt</span></code> 会在重新生成
-<code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 时再次写入。</p>
-<p>如果课程仓库提供 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu-fs</span></code> 目标，可以使用它在不重新生成文件系统镜像的情况下启动；
-是否支持该命令以当前仓库的 Makefile 为准。</p>
-<p>建议在每完成一个小步骤后查看修改：</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status
-git<span class="w"> </span>diff<span class="w"> </span>--<span class="w"> </span>Makefile<span class="w"> </span>user/sixfive.c<span class="w"> </span>user/find.c
-</pre></div>
-</div>
-<p>不要在 QEMU 仍在运行时执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code>。退出 QEMU 时，先按 <code class="docutils literal notranslate"><span class="pre">Ctrl+a</span></code>，松开后再按 <code class="docutils literal notranslate"><span class="pre">x</span></code>。</p>
-</section>
 <section id="find-exec">
-<span id="lab2-exec"></span><h2>任务三：为 find 添加 -exec<a class="headerlink" href="#find-exec" title="Link to this heading"></a></h2>
-<section id="id20">
-<h3>问题描述：对查找到的文件执行命令<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
-<p>在任务二实现的 <code class="docutils literal notranslate"><span class="pre">find</span></code> 基础上增加 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 功能。</p>
-<p>普通模式下，<code class="docutils literal notranslate"><span class="pre">find</span></code> 输出所有名称匹配的文件路径：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>find<span class="w"> </span>path<span class="w"> </span>target
-</pre></div>
-</div>
-<p>增加 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 后，运行形式为：</p>
+<span id="lab2-exec"></span><h2>任务二：为 find 添加 -exec<a class="headerlink" href="#find-exec" title="Link to this heading"></a></h2>
+<p>在任务一的基础上增加以下运行方式：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>find<span class="w"> </span>path<span class="w"> </span>target<span class="w"> </span>-exec<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="o">[</span>arg<span class="w"> </span>...<span class="o">]</span>
 </pre></div>
 </div>
-<p>对于每个查找到的文件，程序不再直接输出文件路径，而是执行：</p>
+<p>每找到一个匹配路径，程序执行：</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>command [arg ...] matched_path
 </pre></div>
 </div>
@@ -665,274 +331,290 @@ hi<span class="w"> </span>./wc
 $
 </pre></div>
 </div>
-<p>这里需要查找名称为 <code class="docutils literal notranslate"><span class="pre">wc</span></code> 的文件。找到 <code class="docutils literal notranslate"><span class="pre">./wc</span></code> 后，程序实际执行的命令为：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span>hi<span class="w"> </span>./wc
-</pre></div>
-</div>
-<p>因此输出：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>hi ./wc
-</pre></div>
-</div>
-<p>本任务需要使用 <code class="docutils literal notranslate"><span class="pre">fork</span></code>、<code class="docutils literal notranslate"><span class="pre">exec</span></code> 和 <code class="docutils literal notranslate"><span class="pre">wait</span></code>。每找到一个匹配文件，父进程创建一个子进程，
-由子进程执行指定命令，父进程等待子进程结束后继续查找。</p>
-</section>
-<section id="id21">
-<h3>执行步骤：扩展 find<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
-<section id="id22">
-<h4>第 1 步：保留原有 find 功能<a class="headerlink" href="#id22" title="Link to this heading"></a></h4>
-<p>修改 <code class="docutils literal notranslate"><span class="pre">user/find.c</span></code>，使程序同时支持以下两种运行方式：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>find<span class="w"> </span>path<span class="w"> </span>target
-find<span class="w"> </span>path<span class="w"> </span>target<span class="w"> </span>-exec<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="o">[</span>arg<span class="w"> </span>...<span class="o">]</span>
-</pre></div>
-</div>
-<p>当没有 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 时，程序应保持任务二的行为，直接输出匹配路径。</p>
-<p>当给出 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 时，程序应对每个匹配路径执行指定命令，不再直接输出该路径。</p>
-</section>
-<section id="id23">
-<h4>第 2 步：解析命令行参数<a class="headerlink" href="#id23" title="Link to this heading"></a></h4>
-<p>程序需要判断第四个参数是否为 <code class="docutils literal notranslate"><span class="pre">-exec</span></code>。</p>
-<p>例如：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>find<span class="w"> </span>.<span class="w"> </span>wc<span class="w"> </span>-exec<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>hi
-</pre></div>
-</div>
-<p>对应的命令行参数为：</p>
-<table class="docutils align-default" id="id35">
-<caption><span class="caption-text">find -exec 参数</span><a class="headerlink" href="#id35" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 40.0%" />
-<col style="width: 60.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>参数</p></th>
-<th class="head"><p>内容</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">argv[0]</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">find</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">argv[1]</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">.</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">argv[2]</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">wc</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">argv[3]</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">-exec</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">argv[4]</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">echo</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">argv[5]</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">hi</span></code></p></td>
-</tr>
-</tbody>
-</table>
-<p>因此：</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">argv[1]</span></code> 是起始路径；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">argv[2]</span></code> 是需要查找的文件名；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">argv[4]</span></code> 及之后的参数组成需要执行的命令；</p></li>
-<li><p>查找到的文件路径需要追加到命令参数末尾。</p></li>
-</ul>
-<p>如果参数格式不正确，应输出用法提示：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: find path target [-exec command [arg ...]]
-</pre></div>
-</div>
-</section>
+<p>找到 <code class="docutils literal notranslate"><span class="pre">./wc</span></code> 后，程序实际执行的是 <code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">hi</span> <span class="pre">./wc</span></code>。在 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 模式下，<code class="docutils literal notranslate"><span class="pre">find</span></code>
+不再直接输出路径，而是将路径追加到命令参数末尾。</p>
 <section id="exec">
-<h4>第 3 步：构造 exec 参数<a class="headerlink" href="#exec" title="Link to this heading"></a></h4>
-<p>xv6 的 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 接收程序路径和参数数组：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">exec</span><span class="p">(</span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>参数数组最后必须以空指针 <code class="docutils literal notranslate"><span class="pre">0</span></code> 结束。</p>
-<p>假设用户执行：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>find<span class="w"> </span>.<span class="w"> </span>wc<span class="w"> </span>-exec<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>hi
-</pre></div>
-</div>
-<p>并且找到文件 <code class="docutils literal notranslate"><span class="pre">./wc</span></code>，传递给 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 的参数数组应当相当于：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"echo"</span><span class="p">;</span>
-<span class="n">exec_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"hi"</span><span class="p">;</span>
-<span class="n">exec_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"./wc"</span><span class="p">;</span>
-<span class="n">exec_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-</pre></div>
-</div>
-<p>然后调用：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">exec</span><span class="p">(</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">exec_argv</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>可以包含 <code class="docutils literal notranslate"><span class="pre">kernel/param.h</span></code>，使用其中定义的 <code class="docutils literal notranslate"><span class="pre">MAXARG</span></code> 限制参数数量：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"kernel/param.h"</span>
-</pre></div>
-</div>
-<p>构造参数数组时，必须为匹配文件路径和末尾的空指针预留位置，不能超过 <code class="docutils literal notranslate"><span class="pre">MAXARG</span></code>。</p>
-</section>
-<section id="id24">
-<h4>第 4 步：创建子进程<a class="headerlink" href="#id24" title="Link to this heading"></a></h4>
-<p>每找到一个匹配文件，调用 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 创建子进程。</p>
-<p>可以将执行命令的操作组织成单独的函数：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span>
-<span class="nf">run_command</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">command_argc</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="c1">// 构造 exec 使用的参数数组</span>
-<span class="w">  </span><span class="c1">// 调用 fork</span>
-<span class="w">  </span><span class="c1">// 子进程调用 exec</span>
-<span class="w">  </span><span class="c1">// 父进程调用 wait</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">fork</span></code> 的返回值含义如下：</p>
-<ul class="simple">
-<li><p>返回值小于 0：创建子进程失败；</p></li>
-<li><p>返回值等于 0：当前处于子进程；</p></li>
-<li><p>返回值大于 0：当前处于父进程。</p></li>
-</ul>
-</section>
-<section id="id25">
-<h4>第 5 步：子进程调用 exec<a class="headerlink" href="#id25" title="Link to this heading"></a></h4>
-<p>子进程构造好参数数组后调用：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">exec</span><span class="p">(</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">exec_argv</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>如果 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 成功，当前子进程将被指定程序替换，不会继续执行 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 后面的代码。</p>
-<p>如果 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 返回，说明执行失败。此时应输出错误信息并退出：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">"find: exec %s failed</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</pre></div>
-</div>
-</section>
-<section id="id26">
-<h4>第 6 步：父进程等待<a class="headerlink" href="#id26" title="Link to this heading"></a></h4>
-<p>父进程调用：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">wait</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>等待当前子进程执行结束，然后继续遍历目录。</p>
-<p>这样可以避免产生僵尸进程，同时使多个匹配文件按照查找顺序依次执行命令。</p>
-</section>
-</section>
-<section id="id27">
-<h3>实验要求：find -exec<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
-<p>扩展后的 <code class="docutils literal notranslate"><span class="pre">find</span></code> 必须满足以下要求：</p>
+<h3><code class="docutils literal notranslate"><span class="pre">-exec</span></code> 要求<a class="headerlink" href="#exec" title="Link to this heading"></a></h3>
+<p>扩展后的程序应满足以下要求：</p>
 <ol class="arabic simple">
-<li><p>保留任务二原有的递归查找功能；</p></li>
-<li><p>支持 <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">path</span> <span class="pre">target</span></code>，直接输出匹配路径；</p></li>
-<li><p>支持 <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">path</span> <span class="pre">target</span> <span class="pre">-exec</span> <span class="pre">command</span> <span class="pre">[arg</span> <span class="pre">...]</span></code>；</p></li>
-<li><p>对每个匹配路径创建一个子进程；</p></li>
-<li><p>子进程使用 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 执行指定命令；</p></li>
-<li><p>将匹配文件路径追加到命令参数末尾；</p></li>
-<li><p>父进程使用 <code class="docutils literal notranslate"><span class="pre">wait</span></code> 等待子进程结束；</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-exec</span></code> 模式下不再由 <code class="docutils literal notranslate"><span class="pre">find</span></code> 直接输出匹配路径；</p></li>
-<li><p>参数数组必须以空指针 <code class="docutils literal notranslate"><span class="pre">0</span></code> 结束；</p></li>
-<li><p>参数数量不能超过 <code class="docutils literal notranslate"><span class="pre">MAXARG</span></code>；</p></li>
-<li><p>正确处理 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 或 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 失败的情况；</p></li>
-<li><p>不得硬编码命令名称、文件名或运行结果。</p></li>
+<li><p>保留 <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">path</span> <span class="pre">target</span></code> 的原有行为；</p></li>
+<li><p>检查第四个参数是否为 <code class="docutils literal notranslate"><span class="pre">-exec</span></code>，并确保其后至少有一个命令；</p></li>
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 后的参数和匹配路径组成新的参数数组；</p></li>
+<li><p>参数数组以空指针 <code class="docutils literal notranslate"><span class="pre">0</span></code> 结束，且参数数量不超过 <code class="docutils literal notranslate"><span class="pre">MAXARG</span></code>；</p></li>
+<li><p>每个匹配结果由一个子进程调用 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 执行；</p></li>
+<li><p>父进程调用 <code class="docutils literal notranslate"><span class="pre">wait</span></code>，等待子进程结束后继续查找；</p></li>
+<li><p>正确处理 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 和 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 失败。</p></li>
 </ol>
+<p>不得硬编码命令名称、文件名或运行结果。</p>
 </section>
-<section id="id28">
-<h3>实现提示：find -exec<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
-<p>建议在 <code class="docutils literal notranslate"><span class="pre">find</span></code> 的递归函数中增加执行模式和命令参数，例如：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span>
-<span class="nf">find</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">,</span>
-<span class="w">     </span><span class="kt">int</span><span class="w"> </span><span class="n">exec_mode</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">command_argc</span><span class="p">);</span>
+<section id="id8">
+<h3>参数与进程<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>执行 <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">.</span> <span class="pre">wc</span> <span class="pre">-exec</span> <span class="pre">echo</span> <span class="pre">hi</span></code> 时，原始参数为：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>argv[0] = &quot;find&quot;
+argv[1] = &quot;.&quot;
+argv[2] = &quot;wc&quot;
+argv[3] = &quot;-exec&quot;
+argv[4] = &quot;echo&quot;
+argv[5] = &quot;hi&quot;
 </pre></div>
 </div>
-<p>找到匹配路径后，根据 <code class="docutils literal notranslate"><span class="pre">exec_mode</span></code> 决定下一步操作：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>找到匹配路径
-    |
-    |-- 普通模式：printf 输出路径
-    |
-    `-- -exec 模式：fork 创建子进程
-                         |
-                         |-- 子进程：exec 执行命令
-                         |
-                         `-- 父进程：wait 等待结束
+<p>若匹配路径为 <code class="docutils literal notranslate"><span class="pre">./wc</span></code>，传给 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 的参数数组应相当于：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;echo&quot;</span><span class="p">;</span>
+<span class="n">exec_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hi&quot;</span><span class="p">;</span>
+<span class="n">exec_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;./wc&quot;</span><span class="p">;</span>
+<span class="n">exec_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">exec</span><span class="p">(</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">exec_argv</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>命令参数已经由 xv6 shell 分割完成，不需要自行解析整条命令字符串。只需要将 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 后面的
-参数复制到新的参数数组，并在末尾追加匹配文件路径和空指针。</p>
+<p>可包含 <code class="docutils literal notranslate"><span class="pre">kernel/param.h</span></code> 并使用 <code class="docutils literal notranslate"><span class="pre">MAXARG</span></code> 检查参数数量。命令参数已经由 xv6 shell
+分割完成，不需要再次解析整条命令字符串。</p>
+<p>每次找到匹配路径后：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>fork
+ ├─ 子进程：构造参数并调用 exec
+ └─ 父进程：调用 wait，随后继续查找
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">exec</span></code> 成功后不会返回；若它返回，则说明执行失败，子进程应输出错误信息并退出。</p>
 </section>
-<section id="id29">
-<h3>测试 find -exec<a class="headerlink" href="#id29" title="Link to this heading"></a></h3>
-<p>首先确认任务二的普通查找功能没有被破坏：</p>
+<section id="id9">
+<h3>测试任务二<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<p>先确认普通模式仍然正确，再测试 <code class="docutils literal notranslate"><span class="pre">-exec</span></code>：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>b
 ./b
 ./a/b
 ./a/aa/b
-</pre></div>
-</div>
-<p>然后测试 <code class="docutils literal notranslate"><span class="pre">-exec</span></code>：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>wc<span class="w"> </span>-exec<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>hi
-hi<span class="w"> </span>./wc
-$
-</pre></div>
-</div>
-<p>继续使用任务二创建的测试目录：</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>b<span class="w"> </span>-exec<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>found
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>b<span class="w"> </span>-exec<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>found
 found<span class="w"> </span>./b
 found<span class="w"> </span>./a/b
 found<span class="w"> </span>./a/aa/b
-$
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>wc<span class="w"> </span>-exec<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>hi
+hi<span class="w"> </span>./wc
 </pre></div>
 </div>
-<p>还应测试不存在的命令：</p>
+<p>还应测试不存在的命令和错误参数：</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>b<span class="w"> </span>-exec<span class="w"> </span>no_such_command
 find:<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>no_such_command<span class="w"> </span>failed
+$<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>b<span class="w"> </span>-exec
+find:<span class="w"> </span>usage:<span class="w"> </span>find<span class="w"> </span>path<span class="w"> </span>target<span class="w"> </span><span class="o">[</span>-exec<span class="w"> </span><span class="nb">command</span><span class="w"> </span><span class="o">[</span>arg<span class="w"> </span>...<span class="o">]]</span>
 </pre></div>
 </div>
-<p>程序应输出错误信息，不能导致 xv6 崩溃。</p>
 <div class="admonition mytodo">
-  <p class="admonition-title">完成任务三</p>
-  <p>在任务二的 <code>find</code> 基础上实现 <code>-exec</code>，
-  使用 <code>fork</code>、<code>exec</code> 和 <code>wait</code>
-  对每个匹配文件执行指定命令。实验报告中应展示普通查找模式和
-  <code>-exec</code> 模式的运行结果，并说明父进程和子进程分别完成了什么工作。</p>
+   <p class="admonition-title">完成 find -exec</p>
+   <p>使用 <code>fork</code>、<code>exec</code> 和 <code>wait</code> 对每个匹配路径执行命令。
+   在实验报告中展示两种运行模式，并说明父进程和子进程各自完成的工作。</p>
 </div></section>
 </section>
-<section id="id30">
-<h2>常见问题<a class="headerlink" href="#id30" title="Link to this heading"></a></h2>
+<section id="id10">
+<h2>编译与调试<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<p>修改代码后，退出 QEMU 并在 xv6-riscv 根目录重新执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>。调试过程中可随时检查修改：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status
+git<span class="w"> </span>diff<span class="w"> </span>--<span class="w"> </span>Makefile<span class="w"> </span>user/find.c
+</pre></div>
+</div>
+<p>不要在 QEMU 运行时执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code>。退出 QEMU 时，先按 <code class="docutils literal notranslate"><span class="pre">Ctrl+a</span></code>，松开后再按 <code class="docutils literal notranslate"><span class="pre">x</span></code>。</p>
+<section id="id11">
+<h3>使用打印追踪执行路径<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>xv6 用户程序可以直接使用 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 或 <code class="docutils literal notranslate"><span class="pre">fprintf(2,</span> <span class="pre">...)</span></code> 输出调试信息。建议先用只有一、两层的
+目录复现问题，再在递归函数的关键位置打印状态：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[find] enter path=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
+<span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[find] type=%d path=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
+<span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[find] recurse child=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">child_path</span><span class="p">);</span>
+<span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[find] leave path=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>应重点检查：</p>
+<ul class="simple">
+<li><p>同一路径是否反复出现，或路径中是否不断增加 <code class="docutils literal notranslate"><span class="pre">/.</span></code>、<code class="docutils literal notranslate"><span class="pre">/..</span></code>；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">read</span></code> 返回值和目录项的 inode 编号是否正确；</p></li>
+<li><p>目录项名称复制后是否补上了 <code class="docutils literal notranslate"><span class="pre">\0</span></code>；不要直接用 <code class="docutils literal notranslate"><span class="pre">%s</span></code> 打印未终止的 <code class="docutils literal notranslate"><span class="pre">de.name</span></code>；</p></li>
+<li><p>每次 <code class="docutils literal notranslate"><span class="pre">open</span></code> 是否都有对应的 <code class="docutils literal notranslate"><span class="pre">close</span></code>，包括错误返回路径；</p></li>
+<li><p>拼接后的路径长度是否超过缓冲区；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fork</span></code> 的返回值、传给 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 的每个参数，以及参数数组末尾是否为 <code class="docutils literal notranslate"><span class="pre">0</span></code>。</p></li>
+</ul>
+<p>如果输出不断重复，可以临时给递归函数增加 <code class="docutils literal notranslate"><span class="pre">depth</span></code> 参数并打印递归深度。调试时也可以设置一个较小的
+深度上限，使程序在超过上限时输出路径并返回，从而找到形成环的位置；定位完成后应删除该限制，正式程序
+仍须支持任意合理深度的目录。</p>
+</section>
+<section id="id12">
+<h3>判断程序卡在哪里<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<p>可以根据最后一条调试信息缩小范围：</p>
+<ul class="simple">
+<li><p>只有 <code class="docutils literal notranslate"><span class="pre">enter</span></code>、没有 <code class="docutils literal notranslate"><span class="pre">type</span></code>：检查 <code class="docutils literal notranslate"><span class="pre">open</span></code> 或 <code class="docutils literal notranslate"><span class="pre">fstat</span></code>；</p></li>
+<li><p>反复输出相同的 <code class="docutils literal notranslate"><span class="pre">recurse</span></code>：检查 <code class="docutils literal notranslate"><span class="pre">.</span></code>、<code class="docutils literal notranslate"><span class="pre">..</span></code> 的比较和路径拼接；</p></li>
+<li><p>只有 <code class="docutils literal notranslate"><span class="pre">enter</span></code>、没有对应的 <code class="docutils literal notranslate"><span class="pre">leave</span></code>：检查递归调用、错误分支和 <code class="docutils literal notranslate"><span class="pre">close</span></code>；</p></li>
+<li><p>停在 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 之后：分别打印父、子进程分支，检查子进程是否退出、父进程是否调用 <code class="docutils literal notranslate"><span class="pre">wait</span></code>；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exec</span></code> 后仍出现下一行调试输出：<code class="docutils literal notranslate"><span class="pre">exec</span></code> 已失败，应检查命令名称和参数数组。</p></li>
+</ul>
+<p>程序运行时按 <code class="docutils literal notranslate"><span class="pre">Ctrl+p</span></code>，xv6 会打印进程列表和状态。这可以帮助判断 <code class="docutils literal notranslate"><span class="pre">find</span></code> 是仍在运行、等待子进程，
+还是已经退出。<code class="docutils literal notranslate"><span class="pre">Ctrl+p</span></code> 只显示状态，不会终止程序；若重复输出使控制台无法操作，可退出 QEMU，修正代码后
+重新启动。</p>
+</section>
+<section id="vs-code-gdb">
+<h3>使用 VS Code + GDB 调试<a class="headerlink" href="#vs-code-gdb" title="Link to this heading"></a></h3>
+<p>本节沿用实验一的 VS Code 调试环境。<code class="docutils literal notranslate"><span class="pre">launch.json</span></code> 仍以 <code class="docutils literal notranslate"><span class="pre">kernel/kernel</span></code> 启动调试器，
+并额外加载 <code class="docutils literal notranslate"><span class="pre">user/_find</span></code> 的符号，使 VS Code 能够识别 <code class="docutils literal notranslate"><span class="pre">user/find.c</span></code> 中的函数、变量和源代码行。</p>
+<section id="find">
+<h4>添加 find 调试配置<a class="headerlink" href="#find" title="Link to this heading"></a></h4>
+<p>保留实验一的 <code class="docutils literal notranslate"><span class="pre">.vscode/tasks.json</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">xv6build</span></code> 任务使用
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu-gdb</span> <span class="pre">CPUS=1</span></code> 启动 QEMU。在 <code class="docutils literal notranslate"><span class="pre">.vscode/launch.json</span></code> 的
+<code class="docutils literal notranslate"><span class="pre">configurations</span></code> 数组中增加一个用户程序配置；也可以复制实验一的 <code class="docutils literal notranslate"><span class="pre">xv6debug</span></code> 配置后修改：</p>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-text">launch.json 中用于调试 find 的配置</span><a class="headerlink" href="#id19" title="Link to this code"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6 user: find&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cppdbg&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/kernel/kernel&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;MIMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gdb&quot;</span><span class="p">,</span>
+<span class="hll"><span class="w">   </span><span class="nt">&quot;miDebuggerPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;你自己的riscv64-unknown-elf-gdb路径&quot;</span><span class="p">,</span>
+</span><span class="w">   </span><span class="nt">&quot;preLaunchTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;setupCommands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;切换到 xv6 根目录&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cd ${workspaceFolder}&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;连接 QEMU&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;source ${workspaceFolder}/.gdbinit&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="hll"><span class="w">      </span><span class="p">{</span>
+</span><span class="hll"><span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;加载 find 用户程序符号&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="w">         </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;add-symbol-file ${workspaceFolder}/user/_find 0x0&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="w">         </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span class="hll"><span class="w">      </span><span class="p">}</span>
+</span><span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>执行 <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">riscv64-unknown-elf-gdb</span></code>，并将 <code class="docutils literal notranslate"><span class="pre">miDebuggerPath</span></code> 改为实际路径。如果环境使用
+<code class="docutils literal notranslate"><span class="pre">riscv64-linux-gnu-gdb</span></code>，也应填写对应程序的路径。当前课程版本的用户程序从 <code class="docutils literal notranslate"><span class="pre">0x0</span></code> 开始，
+因此通过 <code class="docutils literal notranslate"><span class="pre">add-symbol-file</span> <span class="pre">user/_find</span> <span class="pre">0x0</span></code> 加载 <code class="docutils literal notranslate"><span class="pre">find</span></code> 的调试符号。</p>
+</section>
+<section id="id13">
+<h4>设置断点并运行 find<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">user/find.c</span></code> 的递归函数中选择一条可执行语句设置断点，例如 <code class="docutils literal notranslate"><span class="pre">open(path,</span> <span class="pre">0)</span></code> 所在行；</p></li>
+<li><p>在 VS Code 的“运行和调试”视图中选择 <code class="docutils literal notranslate"><span class="pre">xv6</span> <span class="pre">user:</span> <span class="pre">find</span></code>，按 <code class="docutils literal notranslate"><span class="pre">F5</span></code>；</p></li>
+<li><p>等待 QEMU 中出现 xv6 shell 的 <code class="docutils literal notranslate"><span class="pre">$</span></code> 提示符；</p></li>
+<li><p>在 QEMU 控制台创建测试目录，然后执行 <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">.</span> <span class="pre">b</span></code>；</p></li>
+<li><p>命中断点后，在 VS Code 中使用 <code class="docutils literal notranslate"><span class="pre">F10</span></code> 单步跳过、<code class="docutils literal notranslate"><span class="pre">F11</span></code> 单步进入、
+<code class="docutils literal notranslate"><span class="pre">Shift+F11</span></code> 单步跳出、<code class="docutils literal notranslate"><span class="pre">F5</span></code> 继续运行。</p></li>
+</ol>
+<p>不建议最初就在 <code class="docutils literal notranslate"><span class="pre">main</span></code> 设置断点。xv6 的 <code class="docutils literal notranslate"><span class="pre">sh</span></code>、<code class="docutils literal notranslate"><span class="pre">find</span></code>、<code class="docutils literal notranslate"><span class="pre">echo</span></code> 等用户程序拥有各自的
+地址空间，却可能使用相同的低虚拟地址。QEMU GDB 不理解 xv6 的进程语义，断点可能在其他用户程序的
+同一地址提前命中。优先选择 <code class="docutils literal notranslate"><span class="pre">find</span></code> 递归函数中具有代表性的代码行；若仍提前暂停，检查当前源码位置和
+调用栈，确认不是 <code class="docutils literal notranslate"><span class="pre">find</span></code> 后再继续运行。</p>
+</section>
+<section id="id14">
+<h4>观察递归查找<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<p>命中断点后，建议在 <code class="docutils literal notranslate"><span class="pre">WATCH</span></code> 中加入：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>path
+target
+fd
+st.type
+de.inum
+de.name
+buf
+p
+</pre></div>
+</div>
+<p>变量名称应按自己的实现调整。每次 <code class="docutils literal notranslate"><span class="pre">read</span></code> 后观察 <code class="docutils literal notranslate"><span class="pre">de.inum</span></code> 和 <code class="docutils literal notranslate"><span class="pre">de.name</span></code>，并在递归调用前检查
+拼接后的路径。进入多层目录后，<code class="docutils literal notranslate"><span class="pre">CALL</span> <span class="pre">STACK</span></code> 应显示多层递归，例如：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>find(&quot;./a/aa&quot;, &quot;b&quot;)
+find(&quot;./a&quot;, &quot;b&quot;)
+find(&quot;.&quot;, &quot;b&quot;)
+main(...)
+</pre></div>
+</div>
+<p>这可以直接判断程序是在正常向下遍历，还是因为没有跳过 <code class="docutils literal notranslate"><span class="pre">.</span></code>、<code class="docutils literal notranslate"><span class="pre">..</span></code> 而反复进入相同目录。
+<code class="docutils literal notranslate"><span class="pre">de.name</span></code> 是固定长度数组，可能没有 <code class="docutils literal notranslate"><span class="pre">\0</span></code> 结尾；如果变量窗口显示的字符串异常，应结合字节内容判断，
+不要仅依赖字符串预览。</p>
+</section>
+<section id="forkexec-wait">
+<h4>调试 fork、exec 和 wait<a class="headerlink" href="#forkexec-wait" title="Link to this heading"></a></h4>
+<p>调试 <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">-exec</span></code> 时，建议在用户程序的以下位置设置断点：</p>
+<ul class="simple">
+<li><p>调用 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 之前；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fork</span></code> 返回后的父、子进程分支；</p></li>
+<li><p>子进程调用 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 之前及其失败处理代码；</p></li>
+<li><p>父进程调用 <code class="docutils literal notranslate"><span class="pre">wait</span></code> 之前和之后。</p></li>
+</ul>
+<p>在 <code class="docutils literal notranslate"><span class="pre">WATCH</span></code> 中观察 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 返回值、匹配路径、命令参数数量和传给 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 的参数数组。
+父进程中 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 返回子进程 PID，子进程中返回 0；<code class="docutils literal notranslate"><span class="pre">exec</span></code> 成功后不会执行其下一行代码，
+只有失败时才会进入错误处理分支。</p>
+<p>GDB 控制的是 QEMU CPU，而不是绑定某个 xv6 PID。<code class="docutils literal notranslate"><span class="pre">fork</span></code> 后，调度器可能先运行父进程，也可能先运行
+子进程；断点也可能在两者中分别命中。使用 <code class="docutils literal notranslate"><span class="pre">CPUS=1</span></code> 可以减少多核交错，但不会固定进程调度顺序。
+应结合 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 返回值、当前调用栈和 QEMU 控制台输出判断正在观察哪个分支。</p>
+<p>子进程成功执行 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 后，其地址空间会替换为目标程序，例如 <code class="docutils literal notranslate"><span class="pre">echo</span></code>。此时已经加载的
+<code class="docutils literal notranslate"><span class="pre">user/_find</span></code> 符号不再描述子进程中的用户代码；本实验只需观察到 <code class="docutils literal notranslate"><span class="pre">find</span></code> 发起 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 即可。</p>
+</section>
+<section id="id15">
+<h4>断点未命中或显示为空心圆<a class="headerlink" href="#id15" title="Link to this heading"></a></h4>
+<p>在 VS Code 的 <code class="docutils literal notranslate"><span class="pre">DEBUG</span> <span class="pre">CONSOLE</span></code> 中可以执行：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-exec info files
+-exec info functions find
+-exec info address find
+-exec break find
+-exec bt
+</pre></div>
+</div>
+<p>按以下顺序排查：</p>
+<ol class="arabic simple">
+<li><p>确认 <code class="docutils literal notranslate"><span class="pre">user/_find</span></code> 已经重新编译，且时间戳晚于 <code class="docutils literal notranslate"><span class="pre">user/find.c</span></code>；</p></li>
+<li><p>确认 <code class="docutils literal notranslate"><span class="pre">add-symbol-file</span></code> 使用的是 <code class="docutils literal notranslate"><span class="pre">user/_find</span></code>，路径和加载地址正确；</p></li>
+<li><p>用 <code class="docutils literal notranslate"><span class="pre">info</span> <span class="pre">functions</span> <span class="pre">find</span></code> 检查 GDB 是否已经识别 <code class="docutils literal notranslate"><span class="pre">find</span></code> 函数；</p></li>
+<li><p>将断点移到确实会执行的语句，而不是声明、空行或被编译器优化掉的代码；</p></li>
+<li><p>确认已经在 xv6 shell 中实际运行 <code class="docutils literal notranslate"><span class="pre">find</span></code>，而不是宿主机上的同名命令；</p></li>
+<li><p>若断点在其他用户程序中提前命中，继续执行并结合调用栈判断当前地址空间；</p></li>
+<li><p>若变量显示 <code class="docutils literal notranslate"><span class="pre">&lt;optimized</span> <span class="pre">out&gt;</span></code> 或源码行发生跳跃，参照实验一关于编译优化的说明。</p></li>
+</ol>
+<p>打印调试与 GDB 并不冲突。可以先用少量日志确定问题发生在哪次递归或哪个进程分支，再在相应位置设置
+断点观察变量，这通常比从 <code class="docutils literal notranslate"><span class="pre">main</span></code> 开始逐行单步更高效。</p>
+<p>调试完成后删除临时打印和深度限制，并重新执行所有正常输入、错误输入和 <code class="docutils literal notranslate"><span class="pre">-exec</span></code> 测试。</p>
+</section>
+</section>
+</section>
+<section id="lab2-faq">
+<span id="id16"></span><h2>常见问题<a class="headerlink" href="#lab2-faq" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">make:</span> <span class="pre">***</span> <span class="pre">No</span> <span class="pre">rule</span> <span class="pre">to</span> <span class="pre">make</span> <span class="pre">target</span> <span class="pre">'user/sixfive.txt',</span> <span class="pre">needed</span> <span class="pre">by</span> <span class="pre">'fs.img'</span></code></dt><dd><p>检查文件是否确实位于 <code class="docutils literal notranslate"><span class="pre">user/sixfive.txt</span></code>，并确认文件名大小写与 Makefile 完全一致。</p>
+<dt>进入 xv6 后找不到 <code class="docutils literal notranslate"><span class="pre">find</span></code></dt><dd><p>检查 <code class="docutils literal notranslate"><span class="pre">find</span></code> 是否已加入 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>。退出 QEMU 后执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code> 和 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">make:</span> <span class="pre">***</span> <span class="pre">missing</span> <span class="pre">separator</span></code></dt><dd><p>检查 <code class="docutils literal notranslate"><span class="pre">mkfs/mkfs</span></code> 命令前是否使用了 Tab。Makefile 中命令行不能使用普通空格缩进。</p>
+<dt>编译提示 <code class="docutils literal notranslate"><span class="pre">implicit</span> <span class="pre">declaration</span> <span class="pre">of</span> <span class="pre">function</span></code></dt><dd><p>检查函数是否已在 <code class="docutils literal notranslate"><span class="pre">user/user.h</span></code> 或相应头文件中声明。xv6 不提供完整的 Linux C 标准库。</p>
 </dd>
-<dt>进入 xv6 后找不到 <code class="docutils literal notranslate"><span class="pre">sixfive</span></code> 或 <code class="docutils literal notranslate"><span class="pre">find</span></code></dt><dd><p>检查程序是否已加入 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>，然后退出 QEMU，执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code> 和 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">find</span></code> 输出乱码或文件名异常</dt><dd><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code> 的名称可能没有 <code class="docutils literal notranslate"><span class="pre">\0</span></code> 结尾。复制名称后应正确构造 C 字符串。</p>
 </dd>
-<dt>进入 xv6 后找不到 <code class="docutils literal notranslate"><span class="pre">sixfive.txt</span></code></dt><dd><p>检查 <code class="docutils literal notranslate"><span class="pre">UEXTRA</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code> 构建规则是否正确，并确认执行过 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code> 重新生成镜像。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">find</span></code> 一直运行或重复访问相同目录</dt><dd><p>检查是否跳过了 <code class="docutils literal notranslate"><span class="pre">.</span></code> 和 <code class="docutils literal notranslate"><span class="pre">..</span></code>，以及递归时拼接的路径是否正确。</p>
 </dd>
-<dt>编译提示 <code class="docutils literal notranslate"><span class="pre">implicit</span> <span class="pre">declaration</span> <span class="pre">of</span> <span class="pre">function</span></code></dt><dd><p>说明调用了没有声明的函数，或者使用了 xv6 用户库中不存在的 Linux C 库函数。检查
-<code class="docutils literal notranslate"><span class="pre">user/user.h</span></code> 和所包含的头文件。</p>
+<dt>运行一段时间后无法打开文件</dt><dd><p>检查每次 <code class="docutils literal notranslate"><span class="pre">open</span></code> 后是否在所有返回路径上调用了 <code class="docutils literal notranslate"><span class="pre">close</span></code>，避免耗尽文件描述符。</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">find</span></code> 输出乱码或者文件名异常</dt><dd><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dirent</span></code> 的名称长度固定，可能没有 <code class="docutils literal notranslate"><span class="pre">\0</span></code> 结尾。复制名称后需要正确构造 C 字符串。</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">find</span></code> 一直运行或反复输出相同目录</dt><dd><p>检查是否跳过了 <code class="docutils literal notranslate"><span class="pre">.</span></code> 和 <code class="docutils literal notranslate"><span class="pre">..</span></code>，以及递归调用使用的路径是否正确。</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">find</span></code> 运行一段时间后提示无法打开文件</dt><dd><p>检查每次 <code class="docutils literal notranslate"><span class="pre">open</span></code> 后是否在所有返回路径上执行了 <code class="docutils literal notranslate"><span class="pre">close</span></code>，避免耗尽文件描述符。</p>
+<dt><code class="docutils literal notranslate"><span class="pre">exec</span></code> 执行失败</dt><dd><p>检查命令是否存在、参数数组是否以 <code class="docutils literal notranslate"><span class="pre">0</span></code> 结束，以及参数数量是否超过 <code class="docutils literal notranslate"><span class="pre">MAXARG</span></code>。</p>
 </dd>
 </dl>
-<section id="id31">
-<h3>思考题<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
+<section id="id17">
+<h3>思考题<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">UPROGS</span></code> 与 <code class="docutils literal notranslate"><span class="pre">UEXTRA</span></code> 的作用有什么区别？</p></li>
-<li><p>为什么 <code class="docutils literal notranslate"><span class="pre">xv6</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">6</span></code> 不能被 <code class="docutils literal notranslate"><span class="pre">sixfive</span></code> 识别，而 <code class="docutils literal notranslate"><span class="pre">/6,</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">6</span></code> 可以？</p></li>
-<li><p>为什么文件结尾需要被当作一个隐式分隔符处理？</p></li>
-<li><p>为什么 C 语言中不能使用 <code class="docutils literal notranslate"><span class="pre">==</span></code> 比较两个文件名？</p></li>
-<li><p>为什么 <code class="docutils literal notranslate"><span class="pre">find</span></code> 递归读取目录时必须跳过 <code class="docutils literal notranslate"><span class="pre">.</span></code> 和 <code class="docutils literal notranslate"><span class="pre">..</span></code>？</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sixfive</span></code> 和 <code class="docutils literal notranslate"><span class="pre">find</span></code> 分别使用了哪些系统调用？这些系统调用完成了什么工作？</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">find.c</span></code> 位于用户态，为什么仍然能够读取 xv6 文件系统中的目录信息？</p></li>
+<li><p>为什么递归读取目录时必须跳过 <code class="docutils literal notranslate"><span class="pre">.</span></code> 和 <code class="docutils literal notranslate"><span class="pre">..</span></code>？</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">find</span></code> 使用了哪些系统调用？它们分别完成什么工作？</p></li>
+<li><p>用户态的 <code class="docutils literal notranslate"><span class="pre">find</span></code> 为什么能够读取 xv6 文件系统中的目录信息？</p></li>
+<li><p>为什么 <code class="docutils literal notranslate"><span class="pre">find</span></code> 需要使用 <code class="docutils literal notranslate"><span class="pre">fork</span></code> 创建子进程，而不是直接在父进程中调用 <code class="docutils literal notranslate"><span class="pre">exec</span></code>？</p></li>
+<li><p>为什么 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 成功后不会返回？父进程为什么需要调用 <code class="docutils literal notranslate"><span class="pre">wait</span></code>？</p></li>
 </ol>
 </section>
 </section>
-<section id="id32">
-<h2>扩展阅读<a class="headerlink" href="#id32" title="Link to this heading"></a></h2>
+<section id="id18">
+<h2>扩展阅读<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.828/2026/labs/util.html">MIT 6.1810 Fall 2026: Xv6 and Unix utilities</a></p></li>
+<li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.828/2026/labs/util.html">MIT 6.1810: Xv6 and Unix utilities</a></p></li>
 <li><p><a class="reference external" href="https://github.com/mit-pdos/xv6-riscv">xv6-riscv 官方源码</a></p></li>
 <li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.1810/2024/xv6/book-riscv-rev4.pdf">xv6: a simple, Unix-like teaching operating system</a></p></li>
 </ul>
-<p>阅读程序时，应优先查看 xv6 自带的 <code class="docutils literal notranslate"><span class="pre">user/cat.c</span></code>、<code class="docutils literal notranslate"><span class="pre">user/ls.c</span></code> 和 <code class="docutils literal notranslate"><span class="pre">user/ulib.c</span></code>。
-本次实验的目标不是记忆接口，而是通过编写和调试程序，理解用户程序如何通过系统调用使用文件系统。</p>
+<p>阅读程序时，应优先查看 xv6 自带的 <code class="docutils literal notranslate"><span class="pre">user/ls.c</span></code> 和 <code class="docutils literal notranslate"><span class="pre">user/ulib.c</span></code>。实验重点是理解用户程序
+如何通过系统调用访问文件系统和管理进程，而不是记忆接口。</p>
 </section>
 </section>
 
@@ -947,7 +629,7 @@ find:<span class="w"> </span><span class="nb">exec</span><span class="w"> </span
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷.</p>
+    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷。</p>
   </div>
 
   利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
