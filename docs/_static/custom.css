@@ -213,31 +213,99 @@
   letter-spacing: 0.05em;
 }
 
-/* 命令块 */
-.rst-content div[class^="highlight"],
+/* Code blocks use a VS Code-inspired editor palette. */
+.rst-content div[class^="highlight-"],
 .rst-content pre.literal-block {
+  overflow: hidden;
   margin: 1rem 0 1.5rem;
-  background: var(--os-code);
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.rst-content div[class^="highlight"] pre,
-.rst-content pre.literal-block {
-  padding: 1rem 1.15rem;
-  color: #334155;
-  font-size: 0.9rem;
-  line-height: 1.65;
+.rst-content div[class^="highlight-"] .highlight {
+  background: transparent;
 }
+
+.rst-content div[class^="highlight-"] pre,
+.rst-content pre.literal-block {
+  overflow-x: auto;
+  margin: 0;
+  padding: 1rem 1.15rem;
+  color: #d4d4d4;
+  background: transparent;
+  border: 0;
+  font-family: Consolas, "Cascadia Code", "SFMono-Regular", monospace;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  white-space: pre;
+  tab-size: 4;
+}
+
+.rst-content div[class^="highlight-"] pre .linenos {
+  display: inline-block;
+  box-sizing: content-box;
+  min-width: 3ch;
+  margin-right: 1rem;
+  padding: 0 0.8rem 0 0;
+  color: #858585;
+  text-align: right;
+  user-select: none;
+  border-right: 1px solid #454545;
+}
+
+.rst-content .literal-block-wrapper {
+  overflow: hidden;
+  margin: 1rem 0 1.5rem;
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 6px;
+}
+
+.rst-content .literal-block-wrapper .code-block-caption {
+  padding: 0.55rem 5rem;
+  color: #cccccc;
+  background: #252526;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.rst-content .literal-block-wrapper .code-copy-caption {
+  position: relative;
+}
+
+.rst-content .literal-block-wrapper .code-block-caption .headerlink {
+  color: #858585;
+}
+
+.rst-content .literal-block-wrapper div[class^="highlight-"] {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.rst-content div[class^="highlight-"] .highlight .hll { background: #264f78; }
+.rst-content div[class^="highlight-"] .highlight :is(.c, .c1, .cm, .ch, .cs) { color: #6a9955; font-style: normal; }
+.rst-content div[class^="highlight-"] .highlight :is(.k, .kc, .kd, .kn, .kp, .kr, .nt) { color: #569cd6; font-weight: normal; }
+.rst-content div[class^="highlight-"] .highlight :is(.kt, .nb, .bp, .nc) { color: #4ec9b0; font-weight: normal; }
+.rst-content div[class^="highlight-"] .highlight :is(.s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sr, .ss, .cpf) { color: #ce9178; font-style: normal; }
+.rst-content div[class^="highlight-"] .highlight :is(.m, .mi, .mf, .mh, .mo, .mb, .il) { color: #b5cea8; }
+.rst-content div[class^="highlight-"] .highlight :is(.nf, .fm) { color: #dcdcaa; }
+.rst-content div[class^="highlight-"] .highlight :is(.nv, .na, .vc, .vg, .vi, .vm) { color: #9cdcfe; }
+.rst-content div[class^="highlight-"] .highlight .cp { color: #c586c0; }
+.rst-content div[class^="highlight-"] .highlight :is(.o, .ow, .w) { color: #d4d4d4; font-weight: normal; }
+.rst-content div[class^="highlight-"] .highlight .gp { color: #858585; }
+.rst-content div[class^="highlight-"] .highlight .go { color: #d4d4d4; }
+.rst-content div[class^="highlight-"] .highlight .err { color: #f44747; border: 0; }
 
 /* Code block copy button */
 .rst-content .code-copy-container {
   position: relative;
 }
 
-.rst-content .code-copy-container pre {
-  padding-top: 2.65rem;
+.rst-content div[class^="highlight-"].code-copy-container:not(.has-code-caption) pre {
+  padding-right: 6rem;
 }
 
 .rst-content .code-copy-button {
@@ -247,37 +315,42 @@
   right: 0.7rem;
   min-width: 3.7rem;
   padding: 0.28rem 0.7rem;
-  color: #475569;
+  color: #cccccc;
   font-family: inherit;
   font-size: 0.78rem;
   font-weight: 600;
   line-height: 1.4;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid #cbd5e1;
+  background: #2d2d30;
+  border: 1px solid #454545;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  box-shadow: none;
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.rst-content .code-copy-caption .code-copy-button {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .rst-content .code-copy-button:hover,
 .rst-content .code-copy-button:focus-visible {
-  color: #1d4ed8;
-  background: #eff6ff;
-  border-color: #60a5fa;
+  color: #ffffff;
+  background: #3c3c3c;
+  border-color: #6b6b6b;
   outline: none;
 }
 
 .rst-content .code-copy-button.is-copied {
-  color: #166534;
-  background: #f0fdf4;
-  border-color: #86efac;
+  color: #4ec9b0;
+  background: #243630;
+  border-color: #386b5d;
 }
 
 .rst-content .code-copy-button.is-error {
-  color: #991b1b;
-  background: #fef2f2;
-  border-color: #fca5a5;
+  color: #f48771;
+  background: #3b2928;
+  border-color: #8b4540;
 }
 
 .rst-content code.literal {

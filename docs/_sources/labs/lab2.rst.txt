@@ -189,6 +189,7 @@
 ``struct dirent`` 的用法。递归函数可以组织为：
 
 .. code-block:: c
+   :linenos:
 
    void find(char *path, char *target);
 
@@ -332,6 +333,7 @@ C 字符串，否则可能出现乱码或比较错误。
 若匹配路径为 ``./wc``，传给 ``exec`` 的参数数组应相当于：
 
 .. code-block:: c
+   :linenos:
 
    exec_argv[0] = "echo";
    exec_argv[1] = "hi";
@@ -407,6 +409,7 @@ xv6 用户程序可以直接使用 ``printf`` 或 ``fprintf(2, ...)`` 输出调�
 目录复现问题，再在递归函数的关键位置打印状态：
 
 .. code-block:: c
+   :linenos:
 
    fprintf(2, "[find] enter path=%s\n", path);
    fprintf(2, "[find] type=%d path=%s\n", st.type, path);
@@ -455,6 +458,7 @@ xv6 用户程序可以直接使用 ``printf`` 或 ``fprintf(2, ...)`` 输出调�
 ``configurations`` 数组中增加一个用户程序配置；也可以复制实验一的 ``xv6debug`` 配置后修改：
 
 .. code-block:: json
+   :linenos:
    :caption: launch.json 中用于调试 find 的配置
    :emphasize-lines: 8, 21-25
 
