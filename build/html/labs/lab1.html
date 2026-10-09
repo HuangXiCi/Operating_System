@@ -9,7 +9,7 @@
   <title>实验一：搭建实验环境 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=a35f3dd6" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=4fea21f1" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -18,7 +18,7 @@
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/translations.js?v=beaddf03"></script>
-      <script src="../_static/copy-code.js?v=cd4aa76a"></script>
+      <script src="../_static/copy-code.js?v=e60ad841"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
@@ -89,6 +89,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lab2.html">实验二 xv6 文件管理与用户程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab3.html">实验三 系统调用、异常处理和中断</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
 </ul>
 
@@ -400,43 +401,43 @@ Ubuntu 中的 GNU 工具，不能替代日常 Linux 环境中的完整命令集�
 <code class="docutils literal notranslate"><span class="pre">tasks.json</span></code> 文件，分别写入以下配置。</p>
 <div class="literal-block-wrapper docutils container" id="id25">
 <div class="code-block-caption"><span class="caption-text">launch.json</span><a class="headerlink" href="#id25" title="Link to this code"></a></div>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6debug&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cppdbg&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
-
-<span class="w">            </span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/kernel/kernel&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
-
-<span class="w">            </span><span class="nt">&quot;MIMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gdb&quot;</span><span class="p">,</span>
-<span class="hll"><span class="w">            </span><span class="nt">&quot;miDebuggerPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/opt/riscv/bin/riscv64-unknown-elf-gdb&quot;</span><span class="p">,</span>
-</span>
-<span class="w">            </span><span class="nt">&quot;preLaunchTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
-
-<span class="w">            </span><span class="nt">&quot;setupCommands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">               </span><span class="p">{</span>
-<span class="w">                  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;切换到 xv6 根目录&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cd ${workspaceFolder}&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<span class="w">               </span><span class="p">},</span>
-<span class="w">               </span><span class="p">{</span>
-<span class="w">                  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;加载 xv6 自动生成的 GDB 配置&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;source ${workspaceFolder}/.gdbinit&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<span class="w">               </span><span class="p">}</span>
-<span class="w">            </span><span class="p">],</span>
-
-<span class="w">            </span><span class="nt">&quot;logging&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;engineLogging&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;trace&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">               </span><span class="nt">&quot;traceResponse&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">   </span><span class="p">]</span>
-<span class="p">}</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
+<span class="linenos"> 3</span><span class="w">   </span><span class="nt">&quot;configurations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos"> 4</span><span class="w">      </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6debug&quot;</span><span class="p">,</span>
+<span class="linenos"> 6</span><span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cppdbg&quot;</span><span class="p">,</span>
+<span class="linenos"> 7</span><span class="w">            </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="w">            </span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/kernel/kernel&quot;</span><span class="p">,</span>
+<span class="linenos">10</span><span class="w">            </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="w">            </span><span class="nt">&quot;MIMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gdb&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos">13</span><span class="w">            </span><span class="nt">&quot;miDebuggerPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/opt/riscv/bin/riscv64-unknown-elf-gdb&quot;</span><span class="p">,</span>
+</span><span class="linenos">14</span>
+<span class="linenos">15</span><span class="w">            </span><span class="nt">&quot;preLaunchTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="w">            </span><span class="nt">&quot;setupCommands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos">18</span><span class="w">               </span><span class="p">{</span>
+<span class="linenos">19</span><span class="w">                  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;切换到 xv6 根目录&quot;</span><span class="p">,</span>
+<span class="linenos">20</span><span class="w">                  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cd ${workspaceFolder}&quot;</span><span class="p">,</span>
+<span class="linenos">21</span><span class="w">                  </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="linenos">22</span><span class="w">               </span><span class="p">},</span>
+<span class="linenos">23</span><span class="w">               </span><span class="p">{</span>
+<span class="linenos">24</span><span class="w">                  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;加载 xv6 自动生成的 GDB 配置&quot;</span><span class="p">,</span>
+<span class="linenos">25</span><span class="w">                  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;source ${workspaceFolder}/.gdbinit&quot;</span><span class="p">,</span>
+<span class="linenos">26</span><span class="w">                  </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="linenos">27</span><span class="w">               </span><span class="p">}</span>
+<span class="linenos">28</span><span class="w">            </span><span class="p">],</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span><span class="w">            </span><span class="nt">&quot;logging&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">31</span><span class="w">               </span><span class="nt">&quot;engineLogging&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos">32</span><span class="w">               </span><span class="nt">&quot;trace&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos">33</span><span class="w">               </span><span class="nt">&quot;traceResponse&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="linenos">34</span><span class="w">            </span><span class="p">}</span>
+<span class="linenos">35</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">36</span><span class="w">   </span><span class="p">]</span>
+<span class="linenos">37</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -444,33 +445,33 @@ Ubuntu 中的 GNU 工具，不能替代日常 Linux 环境中的完整命令集�
 <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">riscv64-unknown-elf-gdb</span></code> 可查询 GDB 的实际路径。</p>
 <div class="literal-block-wrapper docutils container" id="id26">
 <div class="code-block-caption"><span class="caption-text">tasks.json</span><a class="headerlink" href="#id26" title="Link to this code"></a></div>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;shell&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;isBackground&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;make qemu-gdb CPUS=1&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;problemMatcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                     </span><span class="p">{</span>
-<span class="w">                        </span><span class="nt">&quot;regexp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
-<span class="w">                        </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">                        </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">                        </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
-<span class="w">                     </span><span class="p">}</span>
-<span class="w">               </span><span class="p">],</span>
-<span class="w">               </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                     </span><span class="nt">&quot;beginsPattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.*Now run &#39;gdb&#39; in another window.&quot;</span><span class="p">,</span>
-<span class="w">                     </span><span class="nt">&quot;endsPattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span>
-<span class="w">               </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">         </span><span class="p">]</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">   </span><span class="p">]</span>
-<span class="p">}</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.0.0&quot;</span><span class="p">,</span>
+<span class="linenos"> 3</span><span class="w">   </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos"> 4</span><span class="w">      </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">         </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
+<span class="linenos"> 6</span><span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;shell&quot;</span><span class="p">,</span>
+<span class="linenos"> 7</span><span class="w">         </span><span class="nt">&quot;isBackground&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="linenos"> 8</span><span class="w">         </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;make qemu-gdb CPUS=1&quot;</span><span class="p">,</span>
+<span class="linenos"> 9</span><span class="w">         </span><span class="nt">&quot;problemMatcher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos">10</span><span class="w">            </span><span class="p">{</span>
+<span class="linenos">11</span><span class="w">               </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos">12</span><span class="w">                     </span><span class="p">{</span>
+<span class="linenos">13</span><span class="w">                        </span><span class="nt">&quot;regexp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+<span class="linenos">14</span><span class="w">                        </span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="linenos">15</span><span class="w">                        </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos">16</span><span class="w">                        </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="linenos">17</span><span class="w">                     </span><span class="p">}</span>
+<span class="linenos">18</span><span class="w">               </span><span class="p">],</span>
+<span class="linenos">19</span><span class="w">               </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">20</span><span class="w">                     </span><span class="nt">&quot;beginsPattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.*Now run &#39;gdb&#39; in another window.&quot;</span><span class="p">,</span>
+<span class="linenos">21</span><span class="w">                     </span><span class="nt">&quot;endsPattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span>
+<span class="linenos">22</span><span class="w">               </span><span class="p">}</span>
+<span class="linenos">23</span><span class="w">            </span><span class="p">}</span>
+<span class="linenos">24</span><span class="w">         </span><span class="p">]</span>
+<span class="linenos">25</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">26</span><span class="w">   </span><span class="p">]</span>
+<span class="linenos">27</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>

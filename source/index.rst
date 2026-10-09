@@ -18,6 +18,7 @@
 
    实验一 搭建实验环境 <labs/lab1>
    实验二 xv6 文件管理与用户程序 <labs/lab2>
+   实验三 系统调用、异常处理和中断 <labs/lab3>
    敬请期待 <labs/TODO.rst>
 
 .. raw:: html
@@ -33,6 +34,7 @@
      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
        <a class="course-hero__action" href="labs/lab1.html">开始实验一</a>
        <a class="course-hero__action" href="labs/lab2.html">开始实验二</a>
+       <a class="course-hero__action" href="labs/lab3.html">开始实验三</a>
      </div>
    </div>
 
@@ -66,6 +68,9 @@
    * - Lab2 xv6 文件管理与用户程序
      - 2026-09-17  15:15-16:40
      - 2026-09-30  23:59
+   * - Lab3 系统调用、异常处理和中断
+     - 2026-10-10  15:15-16:40
+     - 2026-10-25  23:59
 
 许可协议
 -----------------

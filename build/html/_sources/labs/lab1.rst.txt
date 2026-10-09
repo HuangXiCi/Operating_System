@@ -397,6 +397,7 @@ VS Code 调试 xv6
 ``tasks.json`` 文件，分别写入以下配置。
 
 .. code-block:: json
+   :linenos:
    :caption: launch.json
    :emphasize-lines: 13
 
@@ -443,6 +444,7 @@ VS Code 调试 xv6
 ``which riscv64-unknown-elf-gdb`` 可查询 GDB 的实际路径。
 
 .. code-block:: json
+   :linenos:
    :caption: tasks.json
 
    {

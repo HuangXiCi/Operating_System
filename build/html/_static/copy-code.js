@@ -18,11 +18,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   codeBlocks.forEach((block) => {
     const code = block.querySelector("pre");
-    if (!code || block.querySelector(":scope > .code-copy-button")) {
+    const caption = block.closest(".literal-block-wrapper")?.querySelector(":scope > .code-block-caption");
+    const buttonContainer = caption || block;
+    if (!code || buttonContainer.querySelector(":scope > .code-copy-button")) {
       return;
     }
 
     block.classList.add("code-copy-container");
+    if (caption) {
+      block.classList.add("has-code-caption");
+      caption.classList.add("code-copy-caption");
+    }
+    code.querySelectorAll(".linenos").forEach((number) => {
+      number.setAttribute("aria-hidden", "true");
+    });
 
     const button = document.createElement("button");
     button.type = "button";
@@ -32,7 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
     button.setAttribute("aria-label", "复制代码到剪贴板");
 
     button.addEventListener("click", async () => {
-      const text = code.innerText.replace(/\n$/, "");
+      const copy = code.cloneNode(true);
+      copy.querySelectorAll(".linenos").forEach((number) => number.remove());
+      const text = copy.textContent.replace(/\n$/, "");
       let copied = false;
 
       try {
@@ -56,6 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 1600);
     });
 
-    block.appendChild(button);
+    buttonContainer.appendChild(button);
   });
 });
