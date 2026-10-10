@@ -497,6 +497,17 @@ U 模式执行一个用户程序。
    和返回值路径需要怎样变化？与通过非法指令异常模拟相比，哪一种更适合作为面向
    普通程序的长期接口？从硬件支持、可移植性和异常处理职责三个角度说明理由。
 
+
+.. raw:: html
+
+   <div class="admonition mydanger">
+      <p class="admonition-title">提交实验报告</p>
+      <p>每次实验都在创建新的git分支，在你完成实验后，
+      vscode会显示你修改过哪些文件，你需要将所有修改过的源文件
+      提交到作业中，以及你的实验报告，少交会酌情扣分。</p>
+   </div>
+
+
 参考：`xv6-riscv 源码 <https://github.com/mit-pdos/xv6-riscv>`_；
 `RISC-V 非特权级规范 <https://riscv.github.io/riscv-isa-manual/snapshot/spec/#vol:unpriv>`_；
 `RISC-V 特权级规范 <https://riscv.github.io/riscv-isa-manual/snapshot/spec/#vol:priv>`_；
