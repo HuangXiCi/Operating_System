@@ -1,0 +1,894 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>实验四：进程调度算法模拟 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=4fea21f1" />
+
+
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/copy-code.js?v=e60ad841"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="There&#39;s nothing here" href="TODO.html" />
+    <link rel="prev" title="实验三：系统调用、异常处理和中断" href="lab3.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            深圳理工大学-操作系统-实验课程
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">实验课程目录</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lab1.html">实验一 搭建实验环境</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab2.html">实验二 xv6 文件管理与用户程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab3.html">实验三 系统调用、异常处理和中断</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">实验四 进程调度模拟</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab4-goals">实验目标</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab4-prepare">实验准备</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab4-model">调度模型与程序要求</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">统一假设</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcb">PCB 与状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">整数表示小数时间</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">统计指标</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">输入与交互要求</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab4-tasks">算法实现任务</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fcfs">任务一：先来先服务 FCFS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sjf">任务二：最短作业优先 SJF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hrrn">任务三：最高响应比优先 HRRN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">任务四：基于最高优先数的循环轮转调度</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab4-tests">验证示例与作业测试</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id12">统一输入与输出格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lab4-examples">第一部分：验证示例（用于自检）</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fcfs-sjf">示例一：验证 FCFS 与 SJF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">示例二：验证最高响应比优先</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15">示例三：验证最高优先数循环轮转</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#lab4-homework">第二部分：作业测试（必须提交）</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cpu">作业测试一：CPU 空闲与非抢占调度</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id17">作业测试二：进程到达与调度边界</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id18">作业测试三：同优先数轮转与新进程到达</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id19">作业测试四：四种算法的统一比较</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id20">编译与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lab4-report">实验报告与提交要求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id22">常见问题</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id23">思考题</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id24">扩展阅读</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">深圳理工大学-操作系统-实验课程</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">实验四：进程调度算法模拟</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/labs/lab4.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="id1">
+<h1>实验四：进程调度算法模拟<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本次实验继续使用实验一配置好的 <code class="docutils literal notranslate"><span class="pre">xv6-riscv</span></code> 环境，在 xv6 中编写 C 用户程序 <code class="docutils literal notranslate"><span class="pre">schedsim</span></code>，
+模拟单处理机上的四种调度算法：先来先服务（FCFS）、最短作业优先（SJF）、
+最高响应比优先（HRRN）和基于最高优先数的循环轮转调度。</p>
+<p>本实验中的“进程”由程序内的 PCB 数据结构表示，时间由程序中的变量推进。
+四种算法决定的是 <strong>模拟进程的运行顺序</strong>。<code class="docutils literal notranslate"><span class="pre">schedsim</span></code> 本身是一个真实的 xv6 用户进程，
+仍由 xv6 内核调度。本实验只修改用户程序和 <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>，无需添加系统调用或修改内核调度器。</p>
+<nav class="lab-progress" aria-label="实验流程">
+  <a href="#lab4-goals"><span>01</span>实验目标</a>
+  <a href="#lab4-prepare"><span>02</span>实验准备</a>
+  <a href="#lab4-model"><span>03</span>调度模型</a>
+  <a href="#lab4-tasks"><span>04</span>算法实现</a>
+  <a href="#lab4-tests"><span>05</span>测试比较</a>
+  <a href="#lab4-report"><span>06</span>报告提交</a>
+</nav><section id="lab4-goals">
+<span id="id2"></span><h2>实验目标<a class="headerlink" href="#lab4-goals" title="Link to this heading"></a></h2>
+<p>完成本次实验后，应能够：</p>
+<ul class="simple">
+<li><p>使用 PCB 保存模拟进程的到达时间、服务时间、优先数和运行状态；</p></li>
+<li><p>根据当前就绪进程集合实现四种调度选择规则；</p></li>
+<li><p>区分非抢占式调度与按时间片重新选择进程的调度；</p></li>
+<li><p>正确处理 CPU 空闲、进程陆续到达、并列选择和多次运行；</p></li>
+<li><p>计算等待时间、周转时间和带权周转时间；</p></li>
+<li><p>使用同一组数据比较四种算法的平均周转时间和平均带权周转时间。</p></li>
+</ul>
+</section>
+<section id="lab4-prepare">
+<span id="id3"></span><h2>实验准备<a class="headerlink" href="#lab4-prepare" title="Link to this heading"></a></h2>
+<p>在 Ubuntu 或服务器终端进入已有 xv6-riscv 仓库。先检查已有修改，保存前面实验的工作，
+再建立本次实验分支。保留现有 Git 仓库，不要删除 <code class="docutils literal notranslate"><span class="pre">.git</span></code>。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status
+git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>lab4
+touch<span class="w"> </span>user/schedsim.c
+</pre></div>
+</div>
+<p>本实验主要参考以下文件：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">user/user.h</span></code></dt><dd><p>查看 <code class="docutils literal notranslate"><span class="pre">gets</span></code>、<code class="docutils literal notranslate"><span class="pre">read</span></code>、<code class="docutils literal notranslate"><span class="pre">atoi</span></code>、<code class="docutils literal notranslate"><span class="pre">printf</span></code> 和 <code class="docutils literal notranslate"><span class="pre">exit</span></code> 等接口。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">user/ulib.c</span></code></dt><dd><p>查看字符串处理和输入函数的实现。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">user/printf.c</span></code></dt><dd><p>查看 xv6 用户程序支持的格式化输出。本实验不使用 C++ 的 <code class="docutils literal notranslate"><span class="pre">cin</span></code>、<code class="docutils literal notranslate"><span class="pre">cout</span></code> 或 <code class="docutils literal notranslate"><span class="pre">std::sort</span></code>。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></dt><dd><p>将新增程序加入 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>，使其被编译并写入 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code>。</p>
+</dd>
+</dl>
+<p>在 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code> 中保留已有内容并加入：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$U/_schedsim\
+</pre></div>
+</div>
+<p>完成程序后，在宿主机终端执行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>qemu<span class="w"> </span><span class="nv">CPUS</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+<p>进入 xv6 后执行：</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ls
+schedsim
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">CPUS=1</span></code> 用于统一实验环境。模拟调度的结果由程序规则决定，不应依赖 QEMU 的实际运行速度。
+不要用 <code class="docutils literal notranslate"><span class="pre">sleep</span></code>、<code class="docutils literal notranslate"><span class="pre">pause</span></code> 或 <code class="docutils literal notranslate"><span class="pre">uptime</span></code> 代替模拟时间推进，也无需为每个模拟进程调用 <code class="docutils literal notranslate"><span class="pre">fork</span></code>。</p>
+</section>
+<section id="lab4-model">
+<span id="id4"></span><h2>调度模型与程序要求<a class="headerlink" href="#lab4-model" title="Link to this heading"></a></h2>
+<section id="id5">
+<h3>统一假设<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>系统只有一个模拟 CPU，不考虑切换开销。</p></li>
+<li><p>每个进程只有一个 CPU 服务段，无 I/O、阻塞或再次唤醒。</p></li>
+<li><p>输入服务时间已知，表示该进程完成所需的总 CPU 时间。</p></li>
+<li><p>FCFS、SJF 和 HRRN 均采用非抢占式调度：一旦被选中，就运行到完成。</p></li>
+<li><p>第四种算法每次最多运行一个时间片，时间片固定为 <code class="docutils literal notranslate"><span class="pre">1.0</span></code>。</p></li>
+<li><p>到达时间不大于当前时间、且尚未完成的进程才可以参与调度。</p></li>
+<li><p>没有就绪进程时，输出 <code class="docutils literal notranslate"><span class="pre">IDLE</span></code> 区间，将时间推进到下一个进程到达时刻。</p></li>
+<li><p>每次选择算法都从原始输入重新开始，不沿用上次运行后的剩余时间和优先数。</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>SJF 与 HRRN 使用的服务时间是本实验提供的已知输入。真实内核通常无法提前知道进程
+下一段 CPU 服务需要多长时间，所以本实验采用模拟方式学习算法。</p>
+</div>
+</section>
+<section id="pcb">
+<h3>PCB 与状态<a class="headerlink" href="#pcb" title="Link to this heading"></a></h3>
+<p>可采用以下结构，字段和函数名称可以自行调整：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"kernel/types.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"kernel/stat.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"user/user.h"</span>
+
+<span class="cp">#define MAX_PROC 32</span>
+<span class="cp">#define TIME_SCALE 10</span>
+<span class="cp">#define QUANTUM 10       </span><span class="c1">// 内部时间 10 对应显示时间 1.0</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">sim_proc</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w">               </span><span class="c1">// 模拟进程号，与真实 xv6 PID 无关</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">arrival</span><span class="p">;</span><span class="w">          </span><span class="c1">// 到达时间，放大 10 倍保存</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">service</span><span class="p">;</span><span class="w">          </span><span class="c1">// 原始服务时间，不得在运行时改写</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">remaining</span><span class="p">;</span><span class="w">        </span><span class="c1">// 剩余服务时间</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">initial_priority</span><span class="p">;</span><span class="w"> </span><span class="c1">// 原始优先数</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">priority</span><span class="p">;</span><span class="w">         </span><span class="c1">// 当前优先数，可递减为负数</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">first_start</span><span class="p">;</span><span class="w">      </span><span class="c1">// 首次运行时间，初值 -1</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">finish</span><span class="p">;</span><span class="w">           </span><span class="c1">// 完成时间，初值 -1</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">input_order</span><span class="p">;</span><span class="w">      </span><span class="c1">// 输入顺序，用于并列选择</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">enqueue_order</span><span class="p">;</span><span class="w">    </span><span class="c1">// 第四种算法的入队序号</span>
+<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">state</span><span class="p">;</span><span class="w">           </span><span class="c1">// N：未到达；W：就绪；R：运行；F：完成</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>注意区分 <code class="docutils literal notranslate"><span class="pre">service</span></code> 和 <code class="docutils literal notranslate"><span class="pre">remaining</span></code>。第四种算法会多次减少剩余时间，但带权周转时间的
+分母始终是原始服务时间。<code class="docutils literal notranslate"><span class="pre">first_start</span></code> 也只能在第一次运行时赋值。</p>
+</section>
+<section id="id6">
+<h3>整数表示小数时间<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>本实验的到达时间和服务时间支持一位小数。程序内部统一将时间乘以 10，
+使用整数保存和计算，输入与输出仍使用正常的时间单位。例如：</p>
+<ul class="simple">
+<li><p>到达时间 <code class="docutils literal notranslate"><span class="pre">8.5</span></code> 在程序内部保存为 <code class="docutils literal notranslate"><span class="pre">85</span></code>；</p></li>
+<li><p>服务时间 <code class="docutils literal notranslate"><span class="pre">0.2</span></code> 在程序内部保存为 <code class="docutils literal notranslate"><span class="pre">2</span></code>；</p></li>
+<li><p>时间片 <code class="docutils literal notranslate"><span class="pre">1.0</span></code> 在程序内部保存为 <code class="docutils literal notranslate"><span class="pre">10</span></code>。</p></li>
+</ul>
+<p>输入接受非负整数或一位小数，如 <code class="docutils literal notranslate"><span class="pre">0</span></code>、<code class="docutils literal notranslate"><span class="pre">9</span></code>、<code class="docutils literal notranslate"><span class="pre">8.5</span></code>。超过一位小数的输入应报错。
+解析时分别处理整数部分和小数部分；不能使用 <code class="docutils literal notranslate"><span class="pre">atoi(&quot;8.5&quot;)</span></code>，否则会丢失小数。</p>
+<p>时间字段可用 <code class="docutils literal notranslate"><span class="pre">printf(&quot;%d.%d&quot;,</span> <span class="pre">value</span> <span class="pre">/</span> <span class="pre">10,</span> <span class="pre">value</span> <span class="pre">%</span> <span class="pre">10)</span></code> 输出。
+平均值与带权周转时间输出三位小数，计算时使用 <code class="docutils literal notranslate"><span class="pre">uint64</span></code> 中间变量和整数除法，
+按四舍五入处理；不要写 <code class="docutils literal notranslate"><span class="pre">printf(&quot;%.3f&quot;,</span> <span class="pre">...)</span></code>。</p>
+</section>
+<section id="id7">
+<h3>统计指标<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>设进程的到达时间为 A、首次运行时间为 S、完成时间为 C、原始服务时间为 B：</p>
+<div class="math notranslate nohighlight">
+\[T = C - A, \qquad W = C - A - B, \qquad T_w = \frac{C-A}{B}\]</div>
+<p>其中 T 为周转时间，W 为累计等待时间，T_w 为带权周转时间。
+平均周转时间为所有 T 的算术平均，平均带权周转时间为所有 T_w 的算术平均。</p>
+<p>FCFS、SJF 和 HRRN 中，进程只有一次连续运行，所以也有 <code class="docutils literal notranslate"><span class="pre">W</span> <span class="pre">=</span> <span class="pre">S</span> <span class="pre">-</span> <span class="pre">A</span></code>。
+第四种算法中的进程可能多次等待，必须使用 <code class="docutils literal notranslate"><span class="pre">W</span> <span class="pre">=</span> <span class="pre">C</span> <span class="pre">-</span> <span class="pre">A</span> <span class="pre">-</span> <span class="pre">B</span></code>；
+<code class="docutils literal notranslate"><span class="pre">S</span> <span class="pre">-</span> <span class="pre">A</span></code> 只表示首次获得 CPU 前的等待，不能代表累计等待时间。</p>
+<p>平均带权周转时间应先对每个进程计算 <code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">/</span> <span class="pre">B</span></code>，再取平均，不能用“总周转时间／总服务时间”替代。
+整数实现可以将每个比值放大到百万分之一后求平均，最后舍入到三位小数。</p>
+</section>
+<section id="id8">
+<h3>输入与交互要求<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>统一采用“输入数据一次，再重复选择算法”的方式：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Please input the total number of processes:
+4
+Please input id, submit time, run time and priority:
+1 9.0 0.2 2
+2 8.5 0.5 3
+3 8.0 1.0 1
+4 9.1 0.1 4
+Select algorithm: 1=FCFS 2=SJF 3=HRRN 4=HPF-RR 0=Exit
+</pre></div>
+</div>
+<p>前三种算法忽略 <code class="docutils literal notranslate"><span class="pre">priority</span></code> 列；第四种算法使用它。<code class="docutils literal notranslate"><span class="pre">HPF-RR</span></code> 是本实验第四种规则的命令标签，
+不是对所有“优先级轮转算法”的统一定义。</p>
+<p>程序应满足：</p>
+<ul class="simple">
+<li><p>进程数为 <code class="docutils literal notranslate"><span class="pre">1～32</span></code>；进程号为正整数且不重复；</p></li>
+<li><p>到达时间为 <code class="docutils literal notranslate"><span class="pre">0～10000.0</span></code>；服务时间为 <code class="docutils literal notranslate"><span class="pre">0.1～100.0</span></code>；</p></li>
+<li><p>初始优先数为 <code class="docutils literal notranslate"><span class="pre">0～99</span></code>，运行后的优先数不设置零下限；</p></li>
+<li><p>每行必须恰好有四个字段，非法输入应说明原因并重新输入；</p></li>
+<li><p>输入行超过缓冲区时，拒绝该行并读完剩余内容，不能将后半行当作下一条记录；</p></li>
+<li><p>算法编号不是 <code class="docutils literal notranslate"><span class="pre">0～4</span></code> 时重新显示菜单；输入 <code class="docutils literal notranslate"><span class="pre">0</span></code> 正常退出；</p></li>
+<li><p>遇到输入 EOF 时正常退出，避免无限重复提示；</p></li>
+<li><p>输出执行区间、每个进程的统计数据和两项平均指标。</p></li>
+</ul>
+</section>
+</section>
+<section id="lab4-tasks">
+<span id="id9"></span><h2>算法实现任务<a class="headerlink" href="#lab4-tasks" title="Link to this heading"></a></h2>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p><strong>四个任务必须在同一个程序中完成，共用输入、PCB 初始化、结果输出和统计函数，
+只替换调度选择与运行规则。</strong> 不要分别编写四套独立的输入和统计模块。</p>
+<p>建议先用一到两个进程调通公共部分，再逐步实现四种算法。</p>
+</div>
+<section id="fcfs">
+<h3>任务一：先来先服务 FCFS<a class="headerlink" href="#fcfs" title="Link to this heading"></a></h3>
+<p><strong>任务要求：</strong> 每次从当前就绪进程中选择到达时间最早的进程；到达时间相同时，选择输入顺序
+更靠前的进程。选中后运行到完成，并记录首次运行时间、完成时间与执行区间。</p>
+<p><strong>执行步骤：</strong></p>
+<ol class="arabic simple">
+<li><p>从原始输入复制工作 PCB，初始化剩余时间和状态；</p></li>
+<li><p>将模拟时间设为 0，更新已经到达的进程；</p></li>
+<li><p>若无就绪进程，记录空闲区间并跳到下一个到达时刻；</p></li>
+<li><p>选择到达时间最早的就绪进程；</p></li>
+<li><p>记录开始时间，将当前时间增加该进程的服务时间；</p></li>
+<li><p>标记完成；重复直到全部进程完成，然后输出统计结果。</p></li>
+</ol>
+<figure class="align-center" id="id26">
+<a class="reference internal image-reference" href="../_images/fcfs.svg"><img alt="FCFS 调度模拟流程图" src="../_images/fcfs.svg" style="width: 560px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">FCFS：在就绪集合中选择最早到达者，运行到完成。</span><a class="headerlink" href="#id26" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="sjf">
+<h3>任务二：最短作业优先 SJF<a class="headerlink" href="#sjf" title="Link to this heading"></a></h3>
+<p><strong>任务要求：</strong> 每次从当前就绪进程中选择原始服务时间最短的进程。
+服务时间相同时，按到达时间、输入顺序依次决定。采用非抢占式调度。</p>
+<p><strong>执行步骤：</strong></p>
+<ol class="arabic simple">
+<li><p>复用任务一的初始化、空闲处理和统计函数；</p></li>
+<li><p>在当前已经到达、尚未完成的进程中寻找服务时间最短者；</p></li>
+<li><p>选中后运行到完成，再更新就绪集合并重新选择。</p></li>
+</ol>
+<p>不能直接将所有进程按服务时间全局排序：尚未到达的短进程不能提前运行。
+也不能在短进程到达时中断正在运行的长进程；那属于最短剩余时间优先，本实验不实现。</p>
+<figure class="align-center" id="id27">
+<a class="reference internal image-reference" href="../_images/sjf.svg"><img alt="非抢占式 SJF 调度模拟流程图" src="../_images/sjf.svg" style="width: 560px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">SJF：只比较已经到达的就绪进程。</span><a class="headerlink" href="#id27" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="hrrn">
+<h3>任务三：最高响应比优先 HRRN<a class="headerlink" href="#hrrn" title="Link to this heading"></a></h3>
+<p><strong>任务要求：</strong> 每次调度时重新计算当前就绪进程的响应比，选择响应比最高者运行到完成。
+响应比相同时，按到达时间、输入顺序依次决定。</p>
+<div class="math notranslate nohighlight">
+\[R_i(t) = \frac{t-A_i+B_i}{B_i} = 1+\frac{t-A_i}{B_i}\]</div>
+<p>这里的等待时间是在 <strong>当前调度时刻</strong> 计算的 <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-</span> <span class="pre">arrival</span></code>，
+不是预先计算的完成时间，也不是 <code class="docutils literal notranslate"><span class="pre">finish</span> <span class="pre">-</span> <span class="pre">first_start</span></code>。</p>
+<p><strong>执行步骤：</strong></p>
+<ol class="arabic simple">
+<li><p>更新当前就绪集合，排除未到达和已完成的进程；</p></li>
+<li><p>计算每个候选进程当前的响应比；</p></li>
+<li><p>选择最大响应比的进程，运行到完成；</p></li>
+<li><p>时间推进后，对剩余就绪进程重新计算响应比，不能只在开始时计算一次。</p></li>
+</ol>
+<p>为了避免浮点比较，对于候选进程 i、j，可以比较：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">uint64</span><span class="w"> </span><span class="n">left</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">arrival</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">service</span><span class="p">)</span>
+<span class="w">               </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">service</span><span class="p">;</span>
+<span class="n">uint64</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">uint64</span><span class="p">)(</span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">arrival</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">service</span><span class="p">)</span>
+<span class="w">               </span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">service</span><span class="p">;</span>
+<span class="c1">// left &gt; right 表示 i 的响应比大于 j。</span>
+<span class="c1">// 相等时继续比较 arrival 和 input_order。</span>
+</pre></div>
+</div>
+<p>转换必须发生在乘法之前，避免先发生 32 位溢出再转为 <code class="docutils literal notranslate"><span class="pre">uint64</span></code>。</p>
+<figure class="align-center" id="id28">
+<a class="reference internal image-reference" href="../_images/hrrn.svg"><img alt="HRRN 调度模拟流程图" src="../_images/hrrn.svg" style="width: 560px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">HRRN：每次选择前重新计算响应比。</span><a class="headerlink" href="#id28" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="id10">
+<h3>任务四：基于最高优先数的循环轮转调度<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<p><strong>任务要求：</strong> 优先数越大越优先；每次运行至多一个时间片，
+未完成时优先数减 1 并重新入队。相同优先数按入队先后顺序运行。</p>
+<p>本实验采用以下明确规则：</p>
+<ol class="arabic simple">
+<li><p>初次到达的进程按到达时间、输入顺序入队；</p></li>
+<li><p>每次选择当前优先数最大的就绪进程；相同优先数选择入队最早者；</p></li>
+<li><p>运行时长为 <code class="docutils literal notranslate"><span class="pre">min(QUANTUM,</span> <span class="pre">remaining)</span></code>；新进程到达不会中断当前时间片；</p></li>
+<li><p>时间片结束时，将截至该时刻的新到达进程先按到达时间、输入顺序入队；</p></li>
+<li><p>若当前进程已完成，记录完成时间并离开就绪队列；</p></li>
+<li><p>若尚未完成，将优先数减 1，赋予新的入队序号，再放回就绪队列；</p></li>
+<li><p>记录并输出运行前的选中进程，以及运行后的剩余时间、状态和就绪队列。</p></li>
+</ol>
+<p>同优先数的“轮转”依据是 <strong>入队顺序</strong>，不能每次都按进程号选择。
+重新入队的进程应排在已经处于相同优先数的进程之后。</p>
+<p>例如优先数为 5 的进程运行一个时间片后，若未完成，其优先数变为 4。
+此时队列中原有优先数为 4 的进程应先运行。</p>
+<p>可用数组加 <code class="docutils literal notranslate"><span class="pre">enqueue_order</span></code> 实现，也可使用显式就绪队列。数组实现应保证新到达进程只入队一次，
+运行后的重新入队必须更新序号。保持原始服务时间和原始优先数不变。</p>
+<figure class="align-center" id="id29">
+<a class="reference internal image-reference" href="../_images/hpf_rr.svg"><img alt="基于最高优先数的循环轮转调度模拟流程图" src="../_images/hpf_rr.svg" style="width: 560px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">每运行一个时间片，检查完成状态；未完成者降低优先数并重新入队。</span><a class="headerlink" href="#id29" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="lab4-tests">
+<span id="id11"></span><h2>验证示例与作业测试<a class="headerlink" href="#lab4-tests" title="Link to this heading"></a></h2>
+<p>本节分为两部分：</p>
+<ul class="simple">
+<li><p><strong>验证示例：</strong> 已给出输入和参考结果，用于调试程序、检查算法是否正确。
+请自行运行核对，<strong>不要求单独提交这三组示例的截图</strong>。</p></li>
+<li><p><strong>作业测试：</strong> 必须运行并写入实验报告。除说明测试目的外，不给出完整答案，
+需要自行输出调度轨迹、统计指标并分析结果。</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p><strong>完成示例核对后，还必须完成下方的作业测试一至五。</strong>
+实验报告中的运行结果以“作业测试”部分为准，不要只提交示例参考表。</p>
+</div>
+<section id="id12">
+<h3>统一输入与输出格式<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<p>以下每组输入的第一行为进程数；后续每行依次为：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>进程号  到达时间  服务时间  初始优先数
+</pre></div>
+</div>
+<p>输入完成后，在菜单中选择相应算法编号。每种算法均应输出：</p>
+<ul class="simple">
+<li><p><strong>执行轨迹：</strong> 每次运行的 <code class="docutils literal notranslate"><span class="pre">start</span></code>、<code class="docutils literal notranslate"><span class="pre">end</span></code>、<code class="docutils literal notranslate"><span class="pre">id</span></code>；无就绪进程时输出 <code class="docutils literal notranslate"><span class="pre">IDLE</span></code>；</p></li>
+<li><p><strong>汇总表：</strong> <code class="docutils literal notranslate"><span class="pre">id</span> <span class="pre">submit</span> <span class="pre">run</span> <span class="pre">starting</span> <span class="pre">final</span> <span class="pre">wait</span> <span class="pre">turnaround</span> <span class="pre">weighted</span></code>；</p></li>
+<li><p><strong>平均指标：</strong> 平均周转时间、平均带权周转时间。</p></li>
+</ul>
+<p>汇总表按原始输入顺序输出；执行轨迹表示实际调度顺序，同一进程在轮转调度中可以多次出现。
+时间字段保留一位小数，带权周转时间与平均指标保留三位小数。
+提示语及列间空格可以调整，但字段含义、数值、轨迹和算法编号必须符合要求。</p>
+</section>
+<section id="lab4-examples">
+<span id="id13"></span><h3>第一部分：验证示例（用于自检）<a class="headerlink" href="#lab4-examples" title="Link to this heading"></a></h3>
+<p>下面三组示例已提供参考结果。结果不一致时，应先检查程序，再进行作业测试。</p>
+<section id="fcfs-sjf">
+<h4>示例一：验证 FCFS 与 SJF<a class="headerlink" href="#fcfs-sjf" title="Link to this heading"></a></h4>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>4
+1 9.0 0.2 2
+2 8.5 0.5 3
+3 8.0 1.0 1
+4 9.1 0.1 4
+</pre></div>
+</div>
+<p><strong>验证方式：</strong> 输入以上数据，依次选择 FCFS 和 SJF，将程序输出与下列参考结果比较。
+两种算法均忽略优先数字段。</p>
+<p>FCFS 的有效运行顺序为 <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">→</span> <span class="pre">2</span> <span class="pre">→</span> <span class="pre">1</span> <span class="pre">→</span> <span class="pre">4</span></code>；SJF 为 <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">→</span> <span class="pre">1</span> <span class="pre">→</span> <span class="pre">4</span> <span class="pre">→</span> <span class="pre">2</span></code>。
+两者在 <code class="docutils literal notranslate"><span class="pre">0.0～8.0</span></code> 均应输出 <code class="docutils literal notranslate"><span class="pre">IDLE</span></code>。</p>
+<table class="docutils align-default" id="id30">
+<caption><span class="caption-text">FCFS 预期结果</span><a class="headerlink" href="#id30" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>starting</p></th>
+<th class="head"><p>final</p></th>
+<th class="head"><p>wait</p></th>
+<th class="head"><p>turnaround</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>9.5</p></td>
+<td><p>9.7</p></td>
+<td><p>0.5</p></td>
+<td><p>0.7</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>9.0</p></td>
+<td><p>9.5</p></td>
+<td><p>0.5</p></td>
+<td><p>1.0</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>8.0</p></td>
+<td><p>9.0</p></td>
+<td><p>0.0</p></td>
+<td><p>1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>9.7</p></td>
+<td><p>9.8</p></td>
+<td><p>0.6</p></td>
+<td><p>0.7</p></td>
+</tr>
+</tbody>
+</table>
+<p>平均周转时间：<code class="docutils literal notranslate"><span class="pre">0.850</span></code>。</p>
+<table class="docutils align-default" id="id31">
+<caption><span class="caption-text">SJF 预期结果</span><a class="headerlink" href="#id31" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>id</p></th>
+<th class="head"><p>starting</p></th>
+<th class="head"><p>final</p></th>
+<th class="head"><p>wait</p></th>
+<th class="head"><p>turnaround</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>9.0</p></td>
+<td><p>9.2</p></td>
+<td><p>0.0</p></td>
+<td><p>0.2</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>9.3</p></td>
+<td><p>9.8</p></td>
+<td><p>0.8</p></td>
+<td><p>1.3</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>8.0</p></td>
+<td><p>9.0</p></td>
+<td><p>0.0</p></td>
+<td><p>1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>9.2</p></td>
+<td><p>9.3</p></td>
+<td><p>0.1</p></td>
+<td><p>0.2</p></td>
+</tr>
+</tbody>
+</table>
+<p>平均周转时间：<code class="docutils literal notranslate"><span class="pre">0.675</span></code>。</p>
+</section>
+<section id="id14">
+<h4>示例二：验证最高响应比优先<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>5
+1 0.0 4.0 2
+2 1.0 3.0 3
+3 2.0 5.0 1
+4 3.0 2.0 4
+5 4.0 4.0 5
+</pre></div>
+</div>
+<p><strong>验证方式：</strong> 输入以上数据，选择 HRRN，核对每次调度的响应比与进程选择。
+HRRN 有效运行顺序为 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">→</span> <span class="pre">2</span> <span class="pre">→</span> <span class="pre">4</span> <span class="pre">→</span> <span class="pre">3</span> <span class="pre">→</span> <span class="pre">5</span></code>。</p>
+<table class="docutils align-default" id="id32">
+<caption><span class="caption-text">HRRN 每次调度的预期选择</span><a class="headerlink" href="#id32" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>调度时刻</p></th>
+<th class="head"><p>选中进程</p></th>
+<th class="head"><p>当次响应比</p></th>
+<th class="head"><p>完成时间</p></th>
+<th class="head"><p>周转时间</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0.0</p></td>
+<td><p>1</p></td>
+<td><p>1.000</p></td>
+<td><p>4.0</p></td>
+<td><p>4.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>4.0</p></td>
+<td><p>2</p></td>
+<td><p>2.000</p></td>
+<td><p>7.0</p></td>
+<td><p>6.0</p></td>
+</tr>
+<tr class="row-even"><td><p>7.0</p></td>
+<td><p>4</p></td>
+<td><p>3.000</p></td>
+<td><p>9.0</p></td>
+<td><p>6.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>9.0</p></td>
+<td><p>3</p></td>
+<td><p>2.400</p></td>
+<td><p>14.0</p></td>
+<td><p>12.0</p></td>
+</tr>
+<tr class="row-even"><td><p>14.0</p></td>
+<td><p>5</p></td>
+<td><p>3.500</p></td>
+<td><p>18.0</p></td>
+<td><p>14.0</p></td>
+</tr>
+</tbody>
+</table>
+<p>平均周转时间为 <code class="docutils literal notranslate"><span class="pre">8.400</span></code>，平均带权周转时间为 <code class="docutils literal notranslate"><span class="pre">2.380</span></code>。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>在 t=14 时，进程 5 的等待时间为 14-4=10，响应比为 1+10/4=3.50。
+日志中的完成时间只能在进程实际完成后记入最终统计，不能将预测值当作已经完成。</p>
+</div>
+</section>
+<section id="id15">
+<h4>示例三：验证最高优先数循环轮转<a class="headerlink" href="#id15" title="Link to this heading"></a></h4>
+<p>输入以下数据，选择最高优先数循环轮转调度：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>5
+1 0.0 2.0 2
+2 0.0 1.0 3
+3 0.0 1.0 1
+4 0.0 1.0 4
+5 0.0 2.0 5
+</pre></div>
+</div>
+<p>时间片为 <code class="docutils literal notranslate"><span class="pre">1.0</span></code>，预期轨迹如下：</p>
+<table class="docutils align-default" id="id33">
+<caption><span class="caption-text">最高优先数循环轮转预期轨迹</span><a class="headerlink" href="#id33" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>次数</p></th>
+<th class="head"><p>运行区间</p></th>
+<th class="head"><p>id</p></th>
+<th class="head"><p>运行前优先数</p></th>
+<th class="head"><p>运行后剩余时间</p></th>
+<th class="head"><p>后续状态</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0.0～1.0</p></td>
+<td><p>5</p></td>
+<td><p>5</p></td>
+<td><p>1.0</p></td>
+<td><p>优先数降为 4，重新入队</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>1.0～2.0</p></td>
+<td><p>4</p></td>
+<td><p>4</p></td>
+<td><p>0.0</p></td>
+<td><p>完成</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>2.0～3.0</p></td>
+<td><p>5</p></td>
+<td><p>4</p></td>
+<td><p>0.0</p></td>
+<td><p>完成</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>3.0～4.0</p></td>
+<td><p>2</p></td>
+<td><p>3</p></td>
+<td><p>0.0</p></td>
+<td><p>完成</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>4.0～5.0</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>1.0</p></td>
+<td><p>优先数降为 1，重新入队</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>5.0～6.0</p></td>
+<td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>0.0</p></td>
+<td><p>完成</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>6.0～7.0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0.0</p></td>
+<td><p>完成</p></td>
+</tr>
+</tbody>
+</table>
+<p>有效运行顺序为 <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">→</span> <span class="pre">4</span> <span class="pre">→</span> <span class="pre">5</span> <span class="pre">→</span> <span class="pre">2</span> <span class="pre">→</span> <span class="pre">1</span> <span class="pre">→</span> <span class="pre">3</span> <span class="pre">→</span> <span class="pre">1</span></code>。
+平均周转时间为 <code class="docutils literal notranslate"><span class="pre">4.400</span></code>，平均带权周转时间为 <code class="docutils literal notranslate"><span class="pre">3.400</span></code>。
+进程 1 的首次运行时间为 <code class="docutils literal notranslate"><span class="pre">4.0</span></code>，累计等待时间为 <code class="docutils literal notranslate"><span class="pre">5.0</span></code>，二者不能混淆。</p>
+</section>
+</section>
+<section id="lab4-homework">
+<span id="id16"></span><h3>第二部分：作业测试（必须提交）<a class="headerlink" href="#lab4-homework" title="Link to this heading"></a></h3>
+<p>每项作业请在报告中单独编号，记录输入数据、选择的算法、运行输出和简要分析。
+同一项中有多个算法时，须提供每个算法的执行轨迹和统计结果。</p>
+<section id="cpu">
+<h4>作业测试一：CPU 空闲与非抢占调度<a class="headerlink" href="#cpu" title="Link to this heading"></a></h4>
+<p>输入数据：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>3
+1 6.0 0.5 2
+2 5.0 0.9 3
+3 6.3 0.1 1
+</pre></div>
+</div>
+<p><strong>需要完成：</strong></p>
+<ol class="arabic simple">
+<li><p>分别运行 FCFS 和 SJF，提交两种算法的完整输出；</p></li>
+<li><p>在执行轨迹中标出所有 <code class="docutils literal notranslate"><span class="pre">IDLE</span></code> 区间；</p></li>
+<li><p>说明两种算法的执行顺序是否相同，以及原因；</p></li>
+<li><p>说明进程 3 到达时，是否会中断正在运行的进程。</p></li>
+</ol>
+</section>
+<section id="id17">
+<h4>作业测试二：进程到达与调度边界<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
+<p>输入数据：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>4
+1 5.0 0.2 2
+2 4.2 0.3 3
+3 5.1 0.3 1
+4 5.2 0.1 4
+</pre></div>
+</div>
+<p><strong>需要完成：</strong></p>
+<ol class="arabic simple">
+<li><p>分别运行 FCFS 和 SJF，提交两种算法的完整输出；</p></li>
+<li><p>说明在 <code class="docutils literal notranslate"><span class="pre">t=5.2</span></code> 时，哪些进程可以参加调度；</p></li>
+<li><p>对比两种算法在该时刻选择的进程，并解释选择依据；</p></li>
+<li><p>对比两种算法的平均周转时间。</p></li>
+</ol>
+</section>
+<section id="id18">
+<h4>作业测试三：同优先数轮转与新进程到达<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
+<p>输入数据：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>3
+1 0.0 2.0 3
+2 0.0 2.0 3
+3 1.0 1.0 3
+</pre></div>
+</div>
+<p><strong>需要完成：</strong></p>
+<ol class="arabic simple">
+<li><p>运行最高优先数循环轮转算法，时间片为 <code class="docutils literal notranslate"><span class="pre">1.0</span></code>；</p></li>
+<li><p>提交每个时间片的运行进程、运行前优先数、运行后剩余时间及就绪队列；</p></li>
+<li><p>提交各进程统计数据和两项平均指标；</p></li>
+<li><p>解释 <code class="docutils literal notranslate"><span class="pre">t=1.0</span></code> 时的队列顺序，以及同优先数如何决定下次运行对象。</p></li>
+</ol>
+</section>
+<section id="id19">
+<h4>作业测试四：四种算法的统一比较<a class="headerlink" href="#id19" title="Link to this heading"></a></h4>
+<p>使用 <strong>示例二的同一组五个进程</strong>，依次运行 FCFS、SJF、HRRN 和最高优先数循环轮转。
+进程号、到达时间、服务时间和初始优先数均保持不变，轮转时间片为 <code class="docutils literal notranslate"><span class="pre">1.0</span></code>。</p>
+<p><strong>需要完成：</strong></p>
+<ol class="arabic simple">
+<li><p>提交四种算法各自的执行轨迹和汇总结果；</p></li>
+<li><p>根据实际输出填写下表；</p></li>
+<li><p>分别对两项平均指标从小到大排序，允许并列；</p></li>
+<li><p>结合进程选择和完成顺序解释差异。结论应限定于本组数据。</p></li>
+</ol>
+<table class="docutils align-default" id="id34">
+<caption><span class="caption-text">四种算法比较（填写实际运行结果）</span><a class="headerlink" href="#id34" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>算法</p></th>
+<th class="head"><p>平均周转时间</p></th>
+<th class="head"><p>平均带权周转时间</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>FCFS</p></td>
+<td><p>待填写</p></td>
+<td><p>待填写</p></td>
+</tr>
+<tr class="row-odd"><td><p>SJF</p></td>
+<td><p>待填写</p></td>
+<td><p>待填写</p></td>
+</tr>
+<tr class="row-even"><td><p>HRRN</p></td>
+<td><p>待填写</p></td>
+<td><p>待填写</p></td>
+</tr>
+<tr class="row-odd"><td><p>最高优先数循环轮转</p></td>
+<td><p>待填写</p></td>
+<td><p>待填写</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="id20">
+<h2>编译与调试<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
+<p>修改后退出 QEMU，在 xv6-riscv 根目录重新执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span> <span class="pre">CPUS=1</span></code>。
+退出方式为先按 <code class="docutils literal notranslate"><span class="pre">Ctrl+a</span></code>，松开后再按 <code class="docutils literal notranslate"><span class="pre">x</span></code>。调试时可检查：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status
+git<span class="w"> </span>diff<span class="w"> </span>--<span class="w"> </span>Makefile<span class="w"> </span>user/schedsim.c
+</pre></div>
+</div>
+<p>若程序未更新，退出 QEMU 后执行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code> 再重新编译。
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code> 会重新生成文件系统镜像，xv6 内临时创建的数据文件也会被删除。</p>
+<p>建议在每次选择前输出当前时间、候选进程和选择依据，在每次运行后输出剩余时间与状态。
+先用少量进程验证，再运行给定测试。日志应保证：</p>
+<ul class="simple">
+<li><p>同一时刻最多有一个模拟运行进程；</p></li>
+<li><p>未到达进程不能运行，已完成进程不能再次进入就绪队列；</p></li>
+<li><p>时间单调前进，每段运行时长均为正数；</p></li>
+<li><p>所有有效运行区间的长度之和等于输入服务时间之和；</p></li>
+<li><p>每个进程的累计运行时间等于原始服务时间；</p></li>
+<li><p>剩余时间不为负，完成时剩余时间为 0；</p></li>
+<li><p>不同算法以及同一算法重复运行互不影响。</p></li>
+</ul>
+</section>
+<section id="lab4-report">
+<span id="id21"></span><h2>实验报告与提交要求<a class="headerlink" href="#lab4-report" title="Link to this heading"></a></h2>
+<p>本实验为设计型实验。<strong>验证示例无需单独提交截图；作业测试一至四必须写入报告。</strong>
+报告至少包括：</p>
+<ol class="arabic simple">
+<li><p><strong>实验方案：</strong> 四种算法的选择规则、流程图、并列处理规则和主要数据结构说明；</p></li>
+<li><p><strong>实现过程：</strong> 公共模块与四种调度函数的设计，附关键代码和必要注释；</p></li>
+<li><p><strong>作业测试一至三：</strong> 各项要求的输入、算法选择、执行轨迹、统计结果和分析；</p></li>
+<li><p><strong>作业测试四：</strong> 四种算法的输出、比较表、两项指标排序和原因说明；</p></li>
+<li><p><strong>实验小结：</strong> 遇到的问题、错误原因、解决过程和本次实验的收获；</p></li>
+<li><p><strong>思考题：</strong> 回答本页思考题。</p></li>
+</ol>
+<p>提交文件建议组织为：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SUATxxxxxxxx-张三-操作系统-第4次实验作业/
+    实验报告.pdf
+    Makefile
+    user/schedsim.c
+    tests/                 # 如有自定义输入文件，一并提交
+</pre></div>
+</div>
+<p>如程序拆分为多个源文件或头文件，须提交所有自行添加／修改的文件，保证可以重新编译。
+报告截图可用 PNG 或 JPG；截图同时包含命令、输入和输出，
+并配简要说明。将报告和代码统一打包为同名压缩包，按课程统一渠道提交。
+不必提交 <code class="docutils literal notranslate"><span class="pre">fs.img</span></code>、<code class="docutils literal notranslate"><span class="pre">kernel/kernel</span></code> 等编译生成物。</p>
+<div class="admonition mycaution">
+  <p class="admonition-title">提交前检查</p>
+  <p>确认四种算法都能运行；同一组输入连续选择不同算法不会互相污染。
+  检查 Makefile 和全部新增源码是否已放入压缩包，确认从干净状态能够重新编译。</p>
+</div></section>
+<section id="id22">
+<h2>常见问题<a class="headerlink" href="#id22" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>在 xv6 中找不到 schedsim</dt><dd><p>检查 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code> 中是否加入 <code class="docutils literal notranslate"><span class="pre">$U/_schedsim\</span></code>，退出 QEMU 后重新编译。</p>
+</dd>
+<dt>编译找不到 iostream、scanf 或 C++ 库</dt><dd><p>本实验编写 xv6 C 用户程序，使用 xv6 自带接口。输入可用 <code class="docutils literal notranslate"><span class="pre">gets</span></code> 或 <code class="docutils literal notranslate"><span class="pre">read</span></code>，
+再自行按空白字符拆分和解析；不使用依赖 C++ 标准库的代码。</p>
+</dd>
+<dt>8.5 被解析成了 8</dt><dd><p><code class="docutils literal notranslate"><span class="pre">atoi</span></code> 只解析整数。应自行解析一位小数，并以十倍整数保存。</p>
+</dd>
+<dt>平均带权周转时间始终是整数</dt><dd><p>检查是否过早执行了整数除法；先放大分子，使用宽整数求比值，再求平均和显示。</p>
+</dd>
+<dt>SJF 选择了尚未到达的短进程</dt><dd><p>每次调度都先筛选 <code class="docutils literal notranslate"><span class="pre">arrival</span> <span class="pre">&lt;=</span> <span class="pre">now</span></code> 且未完成的进程，再比较服务时间。</p>
+</dd>
+<dt>HRRN 出现负等待时间或选择已完成进程</dt><dd><p>排除未到达、已完成的进程；响应比必须基于当前时间重新计算。</p>
+</dd>
+<dt>第四种算法同优先数时始终运行同一个进程</dt><dd><p>检查入队序号是否在重新入队时更新，不要固定按进程号或数组下标选择。</p>
+</dd>
+<dt>第四种算法计算出的等待时间偏小</dt><dd><p>不要使用 <code class="docutils literal notranslate"><span class="pre">first_start</span> <span class="pre">-</span> <span class="pre">arrival</span></code>；累计等待时间应为 <code class="docutils literal notranslate"><span class="pre">finish</span> <span class="pre">-</span> <span class="pre">arrival</span> <span class="pre">-</span> <span class="pre">service</span></code>。</p>
+</dd>
+<dt>第二次运行算法结果变化</dt><dd><p>使用原始输入重新复制工作 PCB，重置时间、状态、剩余时间、优先数和入队序号。</p>
+</dd>
+</dl>
+<section id="id23">
+<h3>思考题<a class="headerlink" href="#id23" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>为什么 SJF 不能将所有进程直接按服务时间排序后依次执行？</p></li>
+<li><p>进程到达时刻与另一进程完成时刻相同，应如何处理？</p></li>
+<li><p>HRRN 为什么必须在每次调度前重新计算响应比？</p></li>
+<li><p>为什么轮转调度中首次等待时间与累计等待时间不同？</p></li>
+<li><p>第四种算法为什么需要同时保存原始服务时间、剩余时间和入队顺序？</p></li>
+<li><p>本次模拟调度与修改 xv6 内核的 <code class="docutils literal notranslate"><span class="pre">scheduler</span></code> 有什么区别？</p></li>
+</ol>
+</section>
+</section>
+<section id="id24">
+<h2>扩展阅读<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="lab2.html">本课程实验二：xv6 文件管理与用户程序</a></p></li>
+<li><p><a class="reference external" href="https://github.com/mit-pdos/xv6-riscv">xv6-riscv 官方源码</a></p></li>
+<li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.1810/2024/xv6/book-riscv-rev4.pdf">xv6 教材</a></p></li>
+</ul>
+<p>本次实验重点是通过确定的输入、调度轨迹和统计指标理解四种算法的区别。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="lab3.html" class="btn btn-neutral float-left" title="实验三：系统调用、异常处理和中断" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="TODO.html" class="btn btn-neutral float-right" title="There&#39;s nothing here" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

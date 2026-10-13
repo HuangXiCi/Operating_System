@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>实验二：xv6 文件管理与用户程序 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=4fea21f1" />
 
   
@@ -88,6 +88,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lab3.html">实验三 系统调用、异常处理和中断</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab4.html">实验四 进程调度模拟</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
 </ul>
 
@@ -169,7 +170,7 @@ rm<span class="w"> </span>-rf<span class="w"> </span>.git*
 git<span class="w"> </span>init
 git<span class="w"> </span>branch<span class="w"> </span>-M<span class="w"> </span>main
 git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Initial commit&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Initial commit"</span>
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>lab2
 </pre></div>
 </div>
@@ -351,18 +352,18 @@ $
 <section id="id8">
 <h3>参数与进程<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <p>执行 <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">.</span> <span class="pre">wc</span> <span class="pre">-exec</span> <span class="pre">echo</span> <span class="pre">hi</span></code> 时，原始参数为：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>argv[0] = &quot;find&quot;
-argv[1] = &quot;.&quot;
-argv[2] = &quot;wc&quot;
-argv[3] = &quot;-exec&quot;
-argv[4] = &quot;echo&quot;
-argv[5] = &quot;hi&quot;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>argv[0] = "find"
+argv[1] = "."
+argv[2] = "wc"
+argv[3] = "-exec"
+argv[4] = "echo"
+argv[5] = "hi"
 </pre></div>
 </div>
 <p>若匹配路径为 <code class="docutils literal notranslate"><span class="pre">./wc</span></code>，传给 <code class="docutils literal notranslate"><span class="pre">exec</span></code> 的参数数组应相当于：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;echo&quot;</span><span class="p">;</span>
-<span class="linenos">2</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hi&quot;</span><span class="p">;</span>
-<span class="linenos">3</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;./wc&quot;</span><span class="p">;</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"echo"</span><span class="p">;</span>
+<span class="linenos">2</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"hi"</span><span class="p">;</span>
+<span class="linenos">3</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"./wc"</span><span class="p">;</span>
 <span class="linenos">4</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="linenos">5</span>
 <span class="linenos">6</span><span class="n">exec</span><span class="p">(</span><span class="n">exec_argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">exec_argv</span><span class="p">);</span>
@@ -418,10 +419,10 @@ git<span class="w"> </span>diff<span class="w"> </span>--<span class="w"> </span
 <h3>使用打印追踪执行路径<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <p>xv6 用户程序可以直接使用 <code class="docutils literal notranslate"><span class="pre">printf</span></code> 或 <code class="docutils literal notranslate"><span class="pre">fprintf(2,</span> <span class="pre">...)</span></code> 输出调试信息。建议先用只有一、两层的
 目录复现问题，再在递归函数的关键位置打印状态：</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[find] enter path=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
-<span class="linenos">2</span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[find] type=%d path=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
-<span class="linenos">3</span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[find] recurse child=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">child_path</span><span class="p">);</span>
-<span class="linenos">4</span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[find] leave path=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">"[find] enter path=%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
+<span class="linenos">2</span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">"[find] type=%d path=%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
+<span class="linenos">3</span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">"[find] recurse child=%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">child_path</span><span class="p">);</span>
+<span class="linenos">4</span><span class="n">fprintf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">"[find] leave path=%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>应重点检查：</p>
@@ -463,29 +464,29 @@ git<span class="w"> </span>diff<span class="w"> </span>--<span class="w"> </span
 <div class="literal-block-wrapper docutils container" id="id19">
 <div class="code-block-caption"><span class="caption-text">launch.json 中用于调试 find 的配置</span><a class="headerlink" href="#id19" title="Link to this code"></a></div>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span>
-<span class="linenos"> 2</span><span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6 user: find&quot;</span><span class="p">,</span>
-<span class="linenos"> 3</span><span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cppdbg&quot;</span><span class="p">,</span>
-<span class="linenos"> 4</span><span class="w">   </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;launch&quot;</span><span class="p">,</span>
-<span class="linenos"> 5</span><span class="w">   </span><span class="nt">&quot;program&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}/kernel/kernel&quot;</span><span class="p">,</span>
-<span class="linenos"> 6</span><span class="w">   </span><span class="nt">&quot;cwd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;${workspaceFolder}&quot;</span><span class="p">,</span>
-<span class="linenos"> 7</span><span class="w">   </span><span class="nt">&quot;MIMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gdb&quot;</span><span class="p">,</span>
-<span class="hll"><span class="linenos"> 8</span><span class="w">   </span><span class="nt">&quot;miDebuggerPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;你自己的riscv64-unknown-elf-gdb路径&quot;</span><span class="p">,</span>
-</span><span class="linenos"> 9</span><span class="w">   </span><span class="nt">&quot;preLaunchTask&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xv6build&quot;</span><span class="p">,</span>
-<span class="linenos">10</span><span class="w">   </span><span class="nt">&quot;setupCommands&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="linenos"> 2</span><span class="w">   </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xv6 user: find"</span><span class="p">,</span>
+<span class="linenos"> 3</span><span class="w">   </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cppdbg"</span><span class="p">,</span>
+<span class="linenos"> 4</span><span class="w">   </span><span class="nt">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"launch"</span><span class="p">,</span>
+<span class="linenos"> 5</span><span class="w">   </span><span class="nt">"program"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/kernel/kernel"</span><span class="p">,</span>
+<span class="linenos"> 6</span><span class="w">   </span><span class="nt">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}"</span><span class="p">,</span>
+<span class="linenos"> 7</span><span class="w">   </span><span class="nt">"MIMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gdb"</span><span class="p">,</span>
+<span class="hll"><span class="linenos"> 8</span><span class="w">   </span><span class="nt">"miDebuggerPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"你自己的riscv64-unknown-elf-gdb路径"</span><span class="p">,</span>
+</span><span class="linenos"> 9</span><span class="w">   </span><span class="nt">"preLaunchTask"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xv6build"</span><span class="p">,</span>
+<span class="linenos">10</span><span class="w">   </span><span class="nt">"setupCommands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="linenos">11</span><span class="w">      </span><span class="p">{</span>
-<span class="linenos">12</span><span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;切换到 xv6 根目录&quot;</span><span class="p">,</span>
-<span class="linenos">13</span><span class="w">         </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cd ${workspaceFolder}&quot;</span><span class="p">,</span>
-<span class="linenos">14</span><span class="w">         </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="linenos">12</span><span class="w">         </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"切换到 xv6 根目录"</span><span class="p">,</span>
+<span class="linenos">13</span><span class="w">         </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cd ${workspaceFolder}"</span><span class="p">,</span>
+<span class="linenos">14</span><span class="w">         </span><span class="nt">"ignoreFailures"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="linenos">15</span><span class="w">      </span><span class="p">},</span>
 <span class="linenos">16</span><span class="w">      </span><span class="p">{</span>
-<span class="linenos">17</span><span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;连接 QEMU&quot;</span><span class="p">,</span>
-<span class="linenos">18</span><span class="w">         </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;source ${workspaceFolder}/.gdbinit&quot;</span><span class="p">,</span>
-<span class="linenos">19</span><span class="w">         </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="linenos">17</span><span class="w">         </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"连接 QEMU"</span><span class="p">,</span>
+<span class="linenos">18</span><span class="w">         </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source ${workspaceFolder}/.gdbinit"</span><span class="p">,</span>
+<span class="linenos">19</span><span class="w">         </span><span class="nt">"ignoreFailures"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="linenos">20</span><span class="w">      </span><span class="p">},</span>
 <span class="hll"><span class="linenos">21</span><span class="w">      </span><span class="p">{</span>
-</span><span class="hll"><span class="linenos">22</span><span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;加载 find 用户程序符号&quot;</span><span class="p">,</span>
-</span><span class="hll"><span class="linenos">23</span><span class="w">         </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;add-symbol-file ${workspaceFolder}/user/_find 0x0&quot;</span><span class="p">,</span>
-</span><span class="hll"><span class="linenos">24</span><span class="w">         </span><span class="nt">&quot;ignoreFailures&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span class="hll"><span class="linenos">22</span><span class="w">         </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"加载 find 用户程序符号"</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">23</span><span class="w">         </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add-symbol-file ${workspaceFolder}/user/_find 0x0"</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">24</span><span class="w">         </span><span class="nt">"ignoreFailures"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 </span><span class="hll"><span class="linenos">25</span><span class="w">      </span><span class="p">}</span>
 </span><span class="linenos">26</span><span class="w">   </span><span class="p">]</span>
 <span class="linenos">27</span><span class="p">}</span>
@@ -526,9 +527,9 @@ p
 </div>
 <p>变量名称应按自己的实现调整。每次 <code class="docutils literal notranslate"><span class="pre">read</span></code> 后观察 <code class="docutils literal notranslate"><span class="pre">de.inum</span></code> 和 <code class="docutils literal notranslate"><span class="pre">de.name</span></code>，并在递归调用前检查
 拼接后的路径。进入多层目录后，<code class="docutils literal notranslate"><span class="pre">CALL</span> <span class="pre">STACK</span></code> 应显示多层递归，例如：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>find(&quot;./a/aa&quot;, &quot;b&quot;)
-find(&quot;./a&quot;, &quot;b&quot;)
-find(&quot;.&quot;, &quot;b&quot;)
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>find("./a/aa", "b")
+find("./a", "b")
+find(".", "b")
 main(...)
 </pre></div>
 </div>
@@ -630,7 +631,7 @@ main(...)
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷。</p>
+    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷.</p>
   </div>
 
   利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
