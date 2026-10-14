@@ -62,13 +62,42 @@
 ``Makefile``
   将新增程序加入 ``UPROGS``，使其被编译并写入 ``fs.img``。
 
-在 ``UPROGS`` 中保留已有内容并加入：
+创建程序并验证编译环境
+------------------------------------------------------------
+
+先在 xv6-riscv 根目录创建用户程序源文件。如果此前已经创建，直接编辑即可，
+不要覆盖已经完成的代码。
+
+.. code-block:: bash
+
+   touch user/schedsim.c
+
+在 ``user/schedsim.c`` 中写入以下最小程序，先验证程序能够编译并在 xv6 中运行：
+
+.. code-block:: c
+
+   #include "kernel/types.h"
+   #include "user/user.h"
+
+   int
+   main(void)
+   {
+     printf("schedsim is ready\n");
+     exit(0);
+   }
+
+在根目录的 ``Makefile`` 中找到 ``UPROGS``，保留已有内容并加入下面一行。
+如果已经添加，不要重复添加：
 
 .. code-block:: text
 
    $U/_schedsim\
 
-完成程序后，在宿主机终端执行：
+``user/schedsim.c`` 是源文件，``user/_schedsim`` 是编译生成的可执行文件。
+Makefile 会将可执行文件写入 ``fs.img``，进入 xv6 后使用的命令名称为 ``schedsim``。
+不需要手动创建 ``user/_schedsim``。
+
+在宿主机终端中执行：
 
 .. code-block:: bash
 
@@ -80,6 +109,21 @@
 
    ls
    schedsim
+
+``ls`` 的输出中应包含 ``schedsim``，运行程序后应看到：
+
+.. code-block:: text
+
+   schedsim is ready
+
+完成以上验证后，再按照后续任务逐步扩展 ``user/schedsim.c``，实现输入、
+PCB 初始化、四种调度算法和结果统计。
+
+.. note::
+
+   仅创建空的 ``schedsim.c`` 还不能正常编译，需要先写入包含 ``main`` 函数的程序。
+   如果出现 ``No rule to make target 'user/_schedsim'``，请检查
+   ``user/schedsim.c`` 是否存在，以及文件名和 ``UPROGS`` 中的名称是否一致。
 
 ``CPUS=1`` 用于统一实验环境。模拟调度的结果由程序规则决定，不应依赖 QEMU 的实际运行速度。
 不要用 ``sleep``、``pause`` 或 ``uptime`` 代替模拟时间推进，也无需为每个模拟进程调用 ``fork``。
