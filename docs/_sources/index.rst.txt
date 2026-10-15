@@ -19,7 +19,7 @@
    实验一 搭建实验环境 <labs/lab1>
    实验二 xv6 文件管理与用户程序 <labs/lab2>
    实验三 系统调用、异常处理和中断 <labs/lab3>
-   实验四 进程调度模拟 <labs/lab4>
+   实验四 xv6进程调度 <labs/lab4>
    敬请期待 <labs/TODO.rst>
 
 .. raw:: html
