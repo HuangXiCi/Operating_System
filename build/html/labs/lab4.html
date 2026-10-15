@@ -437,7 +437,7 @@ P3 最短，因此它排在 P2 前面。这里讨论的是**非抢占式</strong
 </section>
 <section id="hrrn">
 <h3>最高响应比优先 HRRN<a class="headerlink" href="#hrrn" title="Link to this heading"></a></h3>
-<p>每次选择前重新计算就绪进程的 <strong>响应比</strong>，取最大者运行到完成：</p>
+<p>每次选择前重新计算就绪进程的 <strong>响应比Ri(t)</strong>，取最大者运行到完成：</p>
 <div class="math notranslate nohighlight">
 \[R_i(t) = \frac{t-A_i+B_i}{B_i} = 1+\frac{t-A_i}{B_i}\]</div>
 <p>其中 <code class="docutils literal notranslate"><span class="pre">A_i</span></code> 是到达时间， <code class="docutils literal notranslate"><span class="pre">B_i</span></code> 是运行时间， <code class="docutils literal notranslate"><span class="pre">t-A_i</span></code> 是在 <strong>当前选择时刻</strong>
