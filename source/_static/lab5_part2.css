@@ -1,0 +1,6 @@
+/* Only adjust the second part of Lab5. */
+.rst-content #lab5-part2-cow h4 { margin:1.75rem 0 .8rem; color:#334155; font-size:1.02rem; }
+.rst-content #lab5-part2-cow .admonition.mytodo > .admonition-title::before { content:none; }
+.rst-content #lab5-part2-cow .admonition.mytodo > .admonition-title { color:#422006; }
+.rst-content #lab5-part2-cow .wy-table-responsive table td { white-space:normal; }
+.rst-content #lab5-part2-cow table.docutils td p { white-space:normal; }

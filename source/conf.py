@@ -67,3 +67,6 @@ html_static_path = ['_static']
 html_css_files = ['custom.css']
 
 html_js_files = ['copy-code.js']
+
+exclude_patterns.append('labs/lab5_part2.rst')
+html_css_files.append('lab5_part2.css')
