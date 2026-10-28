@@ -7,7 +7,7 @@
 
 在开始实验之前，提交 lab2 分支，合并到 master 分支，并创建新的 lab3 分支：
 
-.. code-block:: sh
+.. code-block:: bash
 
    git add .
    git commit -m "lab2 done"

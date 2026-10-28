@@ -1,40 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="700" height="760" viewBox="0 0 700 760" role="img">
-<title>FCFS 流程图</title>
-<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#466784"/></marker></defs>
-<rect width="700" height="760" fill="#fff"/>
-<g font-family="Noto Sans CJK SC,Microsoft YaHei,sans-serif" font-size="16" fill="#18354b">
-<path d="M195 74 V108" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M300 141 H410" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="350" y="131" font-size="14">是</text>
-<path d="M195 174 V218" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="207" y="197" font-size="14">否</text>
-<path d="M195 264 V304" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M300 337 H410" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="350" y="327" font-size="14">是</text>
-<path d="M195 370 V418" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="207" y="398" font-size="14">否</text>
-<path d="M195 476 V515" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M195 573 V614" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M530 370 V393 H375 V242 H345" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<path d="M195 686 V716 H20 V95 H195 V108" fill="none" stroke="#466784" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="35" y="708" font-size="14">下一次选择</text>
-<rect x="45" y="28" width="300" height="46" rx="22" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="195.0" y="57.0" text-anchor="middle">开始：复制原始输入，t = 0</text>
-<polygon points="195.0,108 300,141.0 195.0,174 90,141.0" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="195.0" y="147.0" text-anchor="middle">全部进程完成？</text>
-<rect x="45" y="218" width="300" height="46" rx="7" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="195.0" y="247.0" text-anchor="middle">更新就绪集合</text>
-<polygon points="195.0,304 300,337.0 195.0,370 90,337.0" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="195.0" y="343.0" text-anchor="middle">就绪集合为空？</text>
-<rect x="45" y="418" width="300" height="58" rx="7" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="195.0" y="453.0" text-anchor="middle">选择最早到达的就绪进程</text>
-<rect x="45" y="515" width="300" height="58" rx="7" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="195.0" y="550.0" text-anchor="middle">记录开始时间，运行到完成</text>
-<rect x="45" y="614" width="300" height="72" rx="7" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="195.0" y="644.5" text-anchor="middle">记录完成时间、标记 F</text>
-<text x="195.0" y="667.5" text-anchor="middle">推进时间</text>
-<rect x="410" y="308" width="240" height="62" rx="7" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="530.0" y="345.0" text-anchor="middle">记录 IDLE，跳到下次到达</text>
-<rect x="410" y="110" width="240" height="62" rx="22" fill="#edf4fa" stroke="#466784" stroke-width="2"/>
-<text x="530.0" y="147.0" text-anchor="middle">输出统计结果，结束</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="580" viewBox="0 0 900 580" role="img" aria-labelledby="title desc">
+<title id="title">FCFS · 先来先服务</title>
+<desc id="desc">规则：每次选择最早到达的就绪进程，运行到完成 顺序：P1 → P2 → P3 → P4；按到达先后，不比较运行时长。</desc>
+<rect x="0" y="0" width="900" height="580" rx="0" fill="#f8fafc" stroke="#f8fafc" stroke-width="1.5"/>
+<rect x="18" y="18" width="864" height="544" rx="18" fill="#ffffff" stroke="#d7e3ef" stroke-width="1.5"/>
+<g font-family="Microsoft YaHei,Noto Sans CJK SC,Arial,sans-serif">
+<text x="42" y="56" font-size="27" fill="#0f2740" font-weight="700" text-anchor="start">FCFS · 先来先服务</text>
+<text x="42" y="82" font-size="15" fill="#52677b" font-weight="400" text-anchor="start">规则：每次选择最早到达的就绪进程，运行到完成</text>
+<rect x="42" y="103" width="194" height="62" rx="10" fill="#f9fbfd" stroke="#d8e2ec" stroke-width="1.5"/>
+<rect x="42" y="103" width="6" height="62" rx="3" fill="#2563eb"/>
+<text x="58" y="129" font-size="19" fill="#2563eb" font-weight="700" text-anchor="start">P1</text>
+<text x="100" y="127" font-size="15" fill="#244158" font-weight="400" text-anchor="start">到达 0 · 运行 3</text>
+<text x="58" y="151" font-size="13" fill="#6a7e91" font-weight="400" text-anchor="start">单 CPU · 已到达才可选择</text>
+<rect x="246" y="103" width="194" height="62" rx="10" fill="#f9fbfd" stroke="#d8e2ec" stroke-width="1.5"/>
+<rect x="246" y="103" width="6" height="62" rx="3" fill="#b45309"/>
+<text x="262" y="129" font-size="19" fill="#b45309" font-weight="700" text-anchor="start">P2</text>
+<text x="304" y="127" font-size="15" fill="#244158" font-weight="400" text-anchor="start">到达 1 · 运行 6</text>
+<text x="262" y="151" font-size="13" fill="#6a7e91" font-weight="400" text-anchor="start">单 CPU · 已到达才可选择</text>
+<rect x="450" y="103" width="194" height="62" rx="10" fill="#f9fbfd" stroke="#d8e2ec" stroke-width="1.5"/>
+<rect x="450" y="103" width="6" height="62" rx="3" fill="#059669"/>
+<text x="466" y="129" font-size="19" fill="#059669" font-weight="700" text-anchor="start">P3</text>
+<text x="508" y="127" font-size="15" fill="#244158" font-weight="400" text-anchor="start">到达 2 · 运行 2</text>
+<text x="466" y="151" font-size="13" fill="#6a7e91" font-weight="400" text-anchor="start">单 CPU · 已到达才可选择</text>
+<rect x="654" y="103" width="194" height="62" rx="10" fill="#f9fbfd" stroke="#d8e2ec" stroke-width="1.5"/>
+<rect x="654" y="103" width="6" height="62" rx="3" fill="#7c3aed"/>
+<text x="670" y="129" font-size="19" fill="#7c3aed" font-weight="700" text-anchor="start">P4</text>
+<text x="712" y="127" font-size="15" fill="#244158" font-weight="400" text-anchor="start">到达 3 · 运行 3</text>
+<text x="670" y="151" font-size="13" fill="#6a7e91" font-weight="400" text-anchor="start">单 CPU · 已到达才可选择</text>
+<rect x="42" y="183" width="816" height="70" rx="12" fill="#f4f8fc" stroke="#cddbea" stroke-width="1.5"/>
+<rect x="56" y="198" width="67" height="40" rx="9" fill="#dceafa" stroke="#bed2e7" stroke-width="1.5"/>
+<text x="89.5" y="224" font-size="17" fill="#185084" font-weight="700" text-anchor="middle">t=3</text>
+<text x="140" y="212" font-size="17" fill="#18354b" font-weight="700" text-anchor="start">P2、P3、P4 都已到达</text>
+<text x="140" y="237" font-size="15" fill="#52677b" font-weight="400" text-anchor="start">选 P2：它在 t=1 最早到达，尽管它需要运行 6 个时间单位</text>
+<rect x="42" y="265" width="816" height="70" rx="12" fill="#f4f8fc" stroke="#cddbea" stroke-width="1.5"/>
+<rect x="56" y="280" width="67" height="40" rx="9" fill="#dceafa" stroke="#bed2e7" stroke-width="1.5"/>
+<text x="89.5" y="306" font-size="17" fill="#185084" font-weight="700" text-anchor="middle">t=9</text>
+<text x="140" y="294" font-size="17" fill="#18354b" font-weight="700" text-anchor="start">P2 运行结束，再选 P3</text>
+<text x="140" y="319" font-size="15" fill="#52677b" font-weight="400" text-anchor="start">长进程占用 CPU 时，后来的短进程只能等待</text>
+<text x="42" y="378" font-size="19" fill="#173c5c" font-weight="700" text-anchor="start">CPU 运行时间轴</text>
+<text x="858" y="378" font-size="14" fill="#52677b" font-weight="400" text-anchor="end">时间 →</text>
+<rect x="70" y="398" width="162" height="54" fill="#2563eb" stroke="#ffffff" stroke-width="3" rx="4"/>
+<text x="151" y="433" font-size="19" fill="#ffffff" font-weight="700" text-anchor="middle">P1</text>
+<rect x="232" y="398" width="324" height="54" fill="#b45309" stroke="#ffffff" stroke-width="3" rx="4"/>
+<text x="394" y="433" font-size="19" fill="#ffffff" font-weight="700" text-anchor="middle">P2</text>
+<rect x="556" y="398" width="108" height="54" fill="#059669" stroke="#ffffff" stroke-width="3" rx="4"/>
+<text x="610" y="433" font-size="19" fill="#ffffff" font-weight="700" text-anchor="middle">P3</text>
+<rect x="664" y="398" width="162" height="54" fill="#7c3aed" stroke="#ffffff" stroke-width="3" rx="4"/>
+<text x="745" y="433" font-size="19" fill="#ffffff" font-weight="700" text-anchor="middle">P4</text>
+<line x1="70" y1="454" x2="70" y2="462" stroke="#64748b" stroke-width="1.5"/>
+<text x="70" y="481" font-size="14" fill="#475569" font-weight="500" text-anchor="middle">0</text>
+<line x1="232" y1="454" x2="232" y2="462" stroke="#64748b" stroke-width="1.5"/>
+<text x="232" y="481" font-size="14" fill="#475569" font-weight="500" text-anchor="middle">3</text>
+<line x1="556" y1="454" x2="556" y2="462" stroke="#64748b" stroke-width="1.5"/>
+<text x="556" y="481" font-size="14" fill="#475569" font-weight="500" text-anchor="middle">9</text>
+<line x1="664" y1="454" x2="664" y2="462" stroke="#64748b" stroke-width="1.5"/>
+<text x="664" y="481" font-size="14" fill="#475569" font-weight="500" text-anchor="middle">11</text>
+<line x1="826" y1="454" x2="826" y2="462" stroke="#64748b" stroke-width="1.5"/>
+<text x="826" y="481" font-size="14" fill="#475569" font-weight="500" text-anchor="middle">14</text>
+<rect x="42" y="505" width="816" height="46" rx="10" fill="#eaf4ff" stroke="#c5ddf5" stroke-width="1.5"/>
+<text x="58" y="534" font-size="16" fill="#16446e" font-weight="600" text-anchor="start">顺序：P1 → P2 → P3 → P4；按到达先后，不比较运行时长。</text>
 </g></svg>

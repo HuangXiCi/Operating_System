@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>实验五：内存管理 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=4fea21f1" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7c91f8fd"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=beaddf03"></script>
+      <script src="../_static/copy-code.js?v=e60ad841"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="There&#39;s nothing here" href="TODO.html" />
+    <link rel="prev" title="实验四：xv6进程调度" href="lab4.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            深圳理工大学-操作系统-实验课程
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">实验课程目录</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lab1.html">实验一 搭建实验环境</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab2.html">实验二 xv6 用户程序与系统调用</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab3.html">实验三 系统调用、异常处理和中断</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab4.html">实验四 xv6进程调度</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">实验五 内存管理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lab5-buddy">第一部分：物理内存管理</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#xv6">xv6 的物理页分配方式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">伙伴系统</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">从单页分配到块分配</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">需要保存哪些状态</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">申请：向上查找，向下拆分</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">释放：检查伙伴，向上合并</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">代价与适用场景</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">xv6 改造物理页分配器</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id10">先看原始代码和内存范围</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">第一步：替换空闲链表并建立元数据</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">第二步：改造初始化</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">第三步：实现多页申请和释放</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15">第四步：保留单页接口</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id16">验证与思考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TODO.html">敬请期待</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">深圳理工大学-操作系统-实验课程</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">实验五：内存管理</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/labs/lab5.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>实验五：内存管理<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>第一部分先分析 xv6 原有的物理页分配器，再学习伙伴系统的拆分与合并，
+最后改造 <code class="docutils literal notranslate"><span class="pre">kernel/kalloc.c</span></code>，实现连续物理页的分配。本部分处理的是
+<strong>物理内存</strong>；虚拟地址到物理地址的映射仍由页表完成。</p>
+<section id="lab5-buddy">
+<span id="id2"></span><h2>第一部分：物理内存管理<a class="headerlink" href="#lab5-buddy" title="Link to this heading"></a></h2>
+<section id="xv6">
+<h3>xv6 的物理页分配方式<a class="headerlink" href="#xv6" title="Link to this heading"></a></h3>
+<p>在 xv6 中，物理内存被划分为 4 KiB 的页。内核映像结束位置 <code class="docutils literal notranslate"><span class="pre">end</span></code>
+之后，从 <code class="docutils literal notranslate"><span class="pre">PGROUNDUP(end)</span></code> 开始的完整页可供分配；<code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code>
+是内存上界，不是可分配页的起始地址。原始 <code class="docutils literal notranslate"><span class="pre">kalloc()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">kfree()</span></code>
+只管理单页，使用一条单向链表维护空闲页，无法保证连续物理页的分配。</p>
+<figure class="tutorial-figure tutorial-figure-wide align-center" id="id17">
+<a class="reference internal image-reference" href="../_images/物理内存.png"><img alt="物理内存分配示意图" src="../_images/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98.png" style="width: 92%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">内核映像结束位置 <code class="docutils literal notranslate"><span class="pre">end</span></code> 之后，从下一页边界到 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 之前的完整页可分配。</span><a class="headerlink" href="#id17" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition mytodo">
+   <p class="admonition-title">任务 1：读懂原始物理页分配器</p>
+   <p>阅读原始 <code>kernel/kalloc.c</code>，画出
+   <code>kinit() → freerange() → kfree()</code> 建立空闲链表的过程，
+   再说明 <code>kalloc()</code> 如何取出一页、<code>kfree()</code> 如何归还一页。
+   在实验报告中画出至少三页的链表变化，并分析单页头插分配的优点与局限。</p>
+</div><div class="myhint admonition">
+<p class="admonition-title">提示：先分清地址和页号</p>
+<p><code class="docutils literal notranslate"><span class="pre">end</span></code> 是地址，不一定在页边界；<code class="docutils literal notranslate"><span class="pre">PGROUNDUP(end)</span></code> 才是第一张
+可能被分配的完整页的起点。原始 <code class="docutils literal notranslate"><span class="pre">kalloc()</span></code> 只取链表头，不会遍历
+链表搜索“最合适”的页。</p>
+</div>
+</section>
+<section id="id3">
+<h3>伙伴系统<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>完成本部分后，应能够解释以下问题：</p>
+<ul class="simple">
+<li><p>为什么“两个空闲块相邻”仍不足以保证它们可以合并？</p></li>
+<li><p>申请连续的 <code class="docutils literal notranslate"><span class="pre">2^n</span></code> 页时，怎样找到并拆分更大的块？</p></li>
+<li><p>释放一个块时，怎样计算它的伙伴，并逐级合并？</p></li>
+<li><p>xv6 原有的 <code class="docutils literal notranslate"><span class="pre">kalloc()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">kfree()</span></code> 怎样兼容新的分配器？</p></li>
+</ul>
+<section id="id4">
+<h4>从单页分配到块分配<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<p>假设物理内存被划为等大的页，并从 0 开始编号。伙伴系统把页组织为
+<strong>大小为 2 的幂、起点按块大小对齐</strong> 的连续块。块的“阶”表示它包含多少页：</p>
+<table class="docutils align-default" id="id18">
+<caption><span class="caption-text">阶数与块大小（每页 4 KiB）</span><a class="headerlink" href="#id18" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 30.8%" />
+<col style="width: 30.8%" />
+<col style="width: 38.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>阶数</p></th>
+<th class="head"><p>连续页数</p></th>
+<th class="head"><p>块大小</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>4 KiB</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>2</p></td>
+<td><p>8 KiB</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>4</p></td>
+<td><p>16 KiB</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>8</p></td>
+<td><p>32 KiB</p></td>
+</tr>
+</tbody>
+</table>
+<p>例如，第 2 阶块可以是页 <code class="docutils literal notranslate"><span class="pre">[8..11]</span></code>，它的起点 8 是 4 的倍数。
+页 <code class="docutils literal notranslate"><span class="pre">[12..15]</span></code> 是它的伙伴：两块大小相同，并且恰好组成以 8 为起点的
+第 3 阶块 <code class="docutils literal notranslate"><span class="pre">[8..15]</span></code>。伙伴并非任意相邻块：第 2 阶的
+<code class="docutils literal notranslate"><span class="pre">[4..7]</span></code> 与 <code class="docutils literal notranslate"><span class="pre">[8..11]</span></code> 虽然相邻，却不能合并成正确对齐的
+第 3 阶块。</p>
+<p>对首页页号 <code class="docutils literal notranslate"><span class="pre">i</span></code>、阶数 <code class="docutils literal notranslate"><span class="pre">n</span></code>，伙伴首页页号为：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>buddy(i, n) = i XOR (1 &lt;&lt; n)
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">XOR</span></code> 是按位异或。它翻转区分同一大块左右两半的那一位：
+<code class="docutils literal notranslate"><span class="pre">8</span> <span class="pre">XOR</span> <span class="pre">4</span> <span class="pre">=</span> <span class="pre">12</span></code>，<code class="docutils literal notranslate"><span class="pre">12</span> <span class="pre">XOR</span> <span class="pre">4</span> <span class="pre">=</span> <span class="pre">8</span></code>。使用此公式的前提是页号
+从同一段对齐的物理内存起点计算，且每个块按自身大小对齐。</p>
+</section>
+<section id="id5">
+<h4>需要保存哪些状态<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<p>理论上需要为每一阶维护一条空闲块链表 <code class="docutils literal notranslate"><span class="pre">freelist[n]</span></code>，还要知道一个块是否
+空闲、属于哪一阶。实现时可只在**块的首页**记录阶数和空闲状态；块内其他页
+不是独立块头。维护如下不变量：</p>
+<ol class="arabic simple">
+<li><p>一个空闲块只出现在与其阶数相同的链表中；</p></li>
+<li><p>两个空闲的同阶伙伴应合并为一个高一阶块；</p></li>
+<li><p>已分配块不会出现在任何空闲链表中；</p></li>
+<li><p>每个块的首页、大小和对齐方式一致。</p></li>
+</ol>
+<p>第二条说明合并应持续进行，而不是只检查一次。只有保持这些不变量，
+分配器才能通过查找某阶链表判断是否有足够大的连续区域。</p>
+<div class="myhint admonition">
+<p class="admonition-title">提示：阶数不是块的数量</p>
+<p>第 0～15 阶共有 16 种大小，但同一阶可以同时存在许多块。
+例如四个互不相邻的空闲页都是第 0 阶块，分别拥有自己的块首页；
+不能只用一条“第 0 阶状态”表示它们。</p>
+</div>
+</section>
+<section id="id6">
+<h4>申请：向上查找，向下拆分<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
+<p>申请第 <code class="docutils literal notranslate"><span class="pre">n</span></code> 阶块时，先查看 <code class="docutils literal notranslate"><span class="pre">freelist[n]</span></code>。如果为空，就向更高阶
+查找；若找到第 <code class="docutils literal notranslate"><span class="pre">m</span></code> 阶块，其中 <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">&gt;</span> <span class="pre">n</span></code>，便反复平分：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>从第 3 阶的 [8..15] 申请第 1 阶块
+
+[8..15]  第 3 阶
+  ├─ [8..11]   第 2 阶，继续拆
+  │    ├─ [8..9]    第 1 阶，返回
+  │    └─ [10..11]  第 1 阶，放回空闲链表
+  └─ [12..15] 第 2 阶，放回空闲链表
+</pre></div>
+</div>
+<p>若所有不小于 <code class="docutils literal notranslate"><span class="pre">n</span></code> 阶的链表都为空，申请失败。这里返回的两页在
+<strong>物理地址</strong> 上连续；它们是否被映射到用户虚拟地址，是页表管理的另一件事。</p>
+</section>
+<section id="id7">
+<h4>释放：检查伙伴，向上合并<a class="headerlink" href="#id7" title="Link to this heading"></a></h4>
+<p>释放第 <code class="docutils literal notranslate"><span class="pre">n</span></code> 阶块时，先验证地址、对齐、阶数及“已分配”状态，再计算
+同阶伙伴。只有伙伴 <strong>空闲且同阶</strong>，才能从空闲链表摘除它，把两块合为
+第 <code class="docutils literal notranslate"><span class="pre">n+1</span></code> 阶。新块取两者中较低的首页页号，然后继续检查更高阶伙伴。
+无法再合并时，将最终块插入其所属阶数的链表。</p>
+<p>例如先释放 <code class="docutils literal notranslate"><span class="pre">[8..11]</span></code>、再释放 <code class="docutils literal notranslate"><span class="pre">[12..15]</span></code>：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[8..11]  +  [12..15]  →  [8..15]
+第 2 阶     第 2 阶       第 3 阶
+</pre></div>
+</div>
+<p>若 <code class="docutils literal notranslate"><span class="pre">[12..15]</span></code> 正在使用，<code class="docutils literal notranslate"><span class="pre">[8..11]</span></code> 必须作为第 2 阶块保留；
+“地址相邻”不能替代对伙伴状态的检查。</p>
+<div class="admonition mytodo">
+   <p class="admonition-title">任务 2：手工推演拆分与合并</p>
+   <p>以页号 8～15 为例，画出从一个第 3 阶空闲块申请第 1 阶块后，
+   各阶空闲链表中剩余的块；再推演释放时怎样逐级合并。
+   分别计算页号 8 和 12 作为第 2 阶块首页时的伙伴。
+   最后回答：连续的 2 MiB 物理内存需要多少页、应申请第几阶？</p>
+</div></section>
+<section id="id8">
+<h4>代价与适用场景<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
+<p>每次查找、拆分和合并最多跨越最高阶数那么多级。若空闲链表支持根据节点
+直接摘除伙伴，结构操作的复杂度为 <code class="docutils literal notranslate"><span class="pre">O(log</span> <span class="pre">N)</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">N</span></code> 是页数。
+实现还可能为调试而填充整块内存；这部分耗时与块大小成正比。</p>
+<p>伙伴系统适合按 2 的幂申请连续物理页，也能在释放后恢复大块。它的代价是
+<strong>内部碎片</strong>：申请 5 页需要占用第 3 阶的 8 页块，暂时浪费 3 页。
+单一全局锁还可能在多核频繁分配时形成争用。</p>
+</section>
+</section>
+<section id="id9">
+<h3>xv6 改造物理页分配器<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<section id="id10">
+<h4>先看原始代码和内存范围<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
+<p>原始 <code class="docutils literal notranslate"><span class="pre">kernel/kalloc.c</span></code> 只有一条单向空闲页链表。<code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 把
+<code class="docutils literal notranslate"><span class="pre">end</span></code> 到 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 之间的完整页逐一交给 <code class="docutils literal notranslate"><span class="pre">kfree()</span></code>；
+<code class="docutils literal notranslate"><span class="pre">kalloc()</span></code> 从链表头取一页。它不会搜索连续页，也没有合并机制。</p>
+<p>改造前先读以下文件：</p>
+<table class="docutils align-default" id="id19">
+<caption><span class="caption-text">源码阅读顺序</span><a class="headerlink" href="#id19" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 35.0%" />
+<col style="width: 65.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>文件</p></th>
+<th class="head"><p>关注内容</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kernel/kernel.ld</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">end</span></code> 是内核映像结束位置；之前的页不得交给分配器。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kernel/memlayout.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">KERNBASE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 确定管理的物理地址范围。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kernel/riscv.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PGSIZE</span></code> 为 4096，<code class="docutils literal notranslate"><span class="pre">PGROUNDUP</span></code> 用于页对齐。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kernel/kalloc.c</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">kinit()</span></code>、<code class="docutils literal notranslate"><span class="pre">kalloc()</span></code>、<code class="docutils literal notranslate"><span class="pre">kfree()</span></code> 是本部分的改造对象。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kernel/vm.c</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uvmalloc()</span></code>、<code class="docutils literal notranslate"><span class="pre">uvmunmap()</span></code> 展示单页接口的调用方式。</p></td>
+</tr>
+</tbody>
+</table>
+<p>本实验的 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span> <span class="pre">-</span> <span class="pre">KERNBASE</span></code> 为 128 MiB，即 <code class="docutils literal notranslate"><span class="pre">2^15</span></code> 页，
+因此实现定义 <code class="docutils literal notranslate"><span class="pre">MAX_ORDER</span> <span class="pre">=</span> <span class="pre">15</span></code>。内核已经占用部分内存，实际空闲范围
+未必包含一个完整的第 15 阶块。</p>
+<p>按下面的顺序动手：<strong>先建立元数据和链表操作，再初始化空闲页，
+然后实现申请与释放，最后接回原有单页接口并验证</strong>。每一步都保持
+“块首页的阶数、空闲状态、所属链表”三者一致。</p>
+</section>
+<section id="id11">
+<h4>第一步：替换空闲链表并建立元数据<a class="headerlink" href="#id11" title="Link to this heading"></a></h4>
+<p>在 <code class="docutils literal notranslate"><span class="pre">kernel/kalloc.c</span></code> 中，把单个 <code class="docutils literal notranslate"><span class="pre">freelist</span></code> 改为
+<code class="docutils literal notranslate"><span class="pre">freelist[MAX_ORDER</span> <span class="pre">+</span> <span class="pre">1]</span></code>。空闲块首页用 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">run</span></code> 存储
+<code class="docutils literal notranslate"><span class="pre">next</span></code> 和 <code class="docutils literal notranslate"><span class="pre">prev</span></code>，这样已知伙伴地址时可以直接从链表摘除伙伴。
+再增加两个以物理页号为索引的数组：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define NPAGES ((PHYSTOP - KERNBASE) / PGSIZE)</span>
+<span class="cp">#define MAX_ORDER 15</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">run</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">run</span><span class="w"> </span><span class="o">*</span><span class="n">next</span><span class="p">;</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">run</span><span class="w"> </span><span class="o">*</span><span class="n">prev</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">spinlock</span><span class="w"> </span><span class="n">lock</span><span class="p">;</span>
+<span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">run</span><span class="w"> </span><span class="o">*</span><span class="n">freelist</span><span class="p">[</span><span class="n">MAX_ORDER</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+<span class="w">  </span><span class="kt">signed</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">order</span><span class="p">[</span><span class="n">NPAGES</span><span class="p">];</span>
+<span class="w">  </span><span class="n">uchar</span><span class="w"> </span><span class="n">free</span><span class="p">[</span><span class="n">NPAGES</span><span class="p">];</span>
+<span class="p">}</span><span class="w"> </span><span class="n">kmem</span><span class="p">;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">order[i]</span></code> 只记录块首页的阶数；块内部页和保留页记为 <code class="docutils literal notranslate"><span class="pre">-1</span></code>。
+<code class="docutils literal notranslate"><span class="pre">free[i]</span></code> 区分空闲块头和已分配块头。<code class="docutils literal notranslate"><span class="pre">pageindex(pa)</span></code> 将地址转为页号：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">pa</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">KERNBASE</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>元数据是内核的静态数组，位于 <code class="docutils literal notranslate"><span class="pre">end</span></code> 之前，不会被当作空闲页分配。
+<code class="docutils literal notranslate"><span class="pre">pushfree()</span></code> 负责插入空闲链表，<code class="docutils literal notranslate"><span class="pre">removefree()</span></code> 负责摘除；
+它们与元数据更新都由 <code class="docutils literal notranslate"><span class="pre">kmem.lock</span></code> 保护。
+<code class="docutils literal notranslate"><span class="pre">NPAGES</span></code> 是从 <code class="docutils literal notranslate"><span class="pre">KERNBASE</span></code> 到 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 的总页数，
+<strong>不是当前空闲页数</strong>。数组按页号直接索引，查询伙伴状态无需扫描链表。</p>
+<div class="admonition mytodo">
+   <p class="admonition-title">任务 3：建立分阶空闲链表和元数据</p>
+   <ol>
+      <li>在 <code>kernel/kalloc.c</code> 定义 <code>NPAGES</code>、
+      <code>MAX_ORDER</code>、各阶空闲链表与页状态数组。</li>
+      <li>实现 <code>pageindex()</code>，把物理地址换算为相对
+      <code>KERNBASE</code> 的页号。</li>
+      <li>实现 <code>pushfree()</code> 和 <code>removefree()</code>：
+      插入或摘除指定阶数的块，同时维护链表指针与 <code>free[]</code>。</li>
+   </ol>
+   <p>完成后，请解释为什么合并时已经知道伙伴地址，却仍需要双向链表。</p>
+</div><div class="mycaution admonition">
+<p class="admonition-title">小心：链表指针写在空闲块内</p>
+<p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">run</span></code> 占用的是空闲块首页开头的字节。块被分配后，
+这些字节属于调用者，不能继续读取 <code class="docutils literal notranslate"><span class="pre">next</span></code> 或 <code class="docutils literal notranslate"><span class="pre">prev</span></code>。
+若释放时要用 <code class="docutils literal notranslate"><span class="pre">memset</span></code> 填充页面，应先核对元数据，再填充，
+最后用 <code class="docutils literal notranslate"><span class="pre">pushfree()</span></code> 写入新的链表指针。</p>
+</div>
+</section>
+<section id="id12">
+<h4>第二步：改造初始化<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 先把全部 <code class="docutils literal notranslate"><span class="pre">order[]</span></code> 设为 <code class="docutils literal notranslate"><span class="pre">-1</span></code>，然后从
+<code class="docutils literal notranslate"><span class="pre">PGROUNDUP(end)</span></code> 起逐页初始化，到 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 为止。
+每个新加入的页先视为第 0 阶块，再交给 <code class="docutils literal notranslate"><span class="pre">kfree_pages(p,</span> <span class="pre">0)</span></code>。
+这会立即尝试与已经加入的空闲伙伴合并。<code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 本身是上界，
+不代表一页可分配内存。</p>
+<section id="id13">
+<h5>从第一张空闲页推演<a class="headerlink" href="#id13" title="Link to this heading"></a></h5>
+<p>为了看清每一步，假设 <strong>第一个可分配页的页号是 8</strong>。页号 8 按两页、
+四页和八页块的大小对齐，因此随后加入的页 9、10、11 能演示逐级合并。
+这里的页号由 <code class="docutils literal notranslate"><span class="pre">pageindex(pa)</span></code> 计算，是相对 <code class="docutils literal notranslate"><span class="pre">KERNBASE</span></code> 的页号；
+它不是从物理地址 0 开始计算的页号。</p>
+<p><strong>第一次循环：加入页 8。</strong> <code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 先设置 <code class="docutils literal notranslate"><span class="pre">order[8]</span> <span class="pre">=</span> <span class="pre">0</span></code>，
+表示页 8 暂时是一个第 0 阶块的首页。<code class="docutils literal notranslate"><span class="pre">free[8]</span></code> 初始为 0。
+<code class="docutils literal notranslate"><span class="pre">kfree_pages()</span></code> 计算第 0 阶伙伴：<code class="docutils literal notranslate"><span class="pre">8</span> <span class="pre">XOR</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">9</span></code>。页 9 尚未加入，
+所以不能合并。<code class="docutils literal notranslate"><span class="pre">pushfree()</span></code> 将页 8 头插到 <code class="docutils literal notranslate"><span class="pre">freelist[0]</span></code>，
+并设置 <code class="docutils literal notranslate"><span class="pre">order[8]</span> <span class="pre">=</span> <span class="pre">0</span></code>、<code class="docutils literal notranslate"><span class="pre">free[8]</span> <span class="pre">=</span> <span class="pre">1</span></code>。</p>
+<p><strong>第二次循环：加入页 9。</strong> <code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 暂时设置 <code class="docutils literal notranslate"><span class="pre">order[9]</span> <span class="pre">=</span> <span class="pre">0</span></code>，
+而 <code class="docutils literal notranslate"><span class="pre">free[9]</span></code> 仍为 0。<code class="docutils literal notranslate"><span class="pre">kfree_pages()</span></code> 算出
+<code class="docutils literal notranslate"><span class="pre">9</span> <span class="pre">XOR</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">8</span></code>；页 8 是空闲的第 0 阶伙伴，因此执行以下动作：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">removefree(8,</span> <span class="pre">0)</span></code> 把页 8 从 <code class="docutils literal notranslate"><span class="pre">freelist[0]</span></code> 摘除，并将
+<code class="docutils literal notranslate"><span class="pre">free[8]</span></code> 改为 0；</p></li>
+<li><p>两页合成第 1 阶块。页 9 不再是块首页，故 <code class="docutils literal notranslate"><span class="pre">order[9]</span> <span class="pre">=</span> <span class="pre">-1</span></code>；</p></li>
+<li><p>新块首页取较低页号 8，局部变量 <code class="docutils literal notranslate"><span class="pre">order</span></code> 从 0 增至 1，
+并将 <code class="docutils literal notranslate"><span class="pre">order[8]</span></code> 更新为 1；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pushfree(8,</span> <span class="pre">1)</span></code> 把新块 <code class="docutils literal notranslate"><span class="pre">[8..9]</span></code> 头插到
+<code class="docutils literal notranslate"><span class="pre">freelist[1]</span></code>，设置 <code class="docutils literal notranslate"><span class="pre">free[8]</span> <span class="pre">=</span> <span class="pre">1</span></code>。</p></li>
+</ol>
+<p>注意，代码增加的是 <code class="docutils literal notranslate"><span class="pre">kfree_pages()</span></code> 的局部变量 <code class="docutils literal notranslate"><span class="pre">order</span></code>，
+然后将新阶数写回块首页；并非直接对 <code class="docutils literal notranslate"><span class="pre">order[8]</span></code> 做自增。
+页 9 的 <code class="docutils literal notranslate"><span class="pre">free[9]</span></code> 始终为 0，因为它不是空闲块的首页。</p>
+<p><strong>第三、四次循环：加入页 10 和 11。</strong> 加入页 10 时，其第 0 阶伙伴
+<code class="docutils literal notranslate"><span class="pre">10</span> <span class="pre">XOR</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">11</span></code> 尚未加入，因此页 10 暂留在 <code class="docutils literal notranslate"><span class="pre">freelist[0]</span></code>。
+加入页 11 后，先将 <code class="docutils literal notranslate"><span class="pre">[10]</span></code> 与 <code class="docutils literal notranslate"><span class="pre">[11]</span></code> 合成第 1 阶块
+<code class="docutils literal notranslate"><span class="pre">[10..11]</span></code>。此时继续计算新块的第 1 阶伙伴：
+<code class="docutils literal notranslate"><span class="pre">10</span> <span class="pre">XOR</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">8</span></code>，于是 <code class="docutils literal notranslate"><span class="pre">[10..11]</span></code> 又与空闲的
+<code class="docutils literal notranslate"><span class="pre">[8..9]</span></code> 合为第 2 阶块 <code class="docutils literal notranslate"><span class="pre">[8..11]</span></code>。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>加入页 8 后：   freelist[0] → [8]          order[8]=0, free[8]=1
+加入页 9 后：   freelist[1] → [8..9]       order[8]=1, free[8]=1
+加入页 10 后：  freelist[0] → [10]
+                freelist[1] → [8..9]
+加入页 11 后：  freelist[2] → [8..11]      order[8]=2, free[8]=1
+</pre></div>
+</div>
+<p>最后一行中，页 9、10、11 都是块内页，<code class="docutils literal notranslate"><span class="pre">order[]</span></code> 为 <code class="docutils literal notranslate"><span class="pre">-1</span></code>。
+这也说明 <code class="docutils literal notranslate"><span class="pre">freelist[n]</span></code> 的每个节点代表一个 <code class="docutils literal notranslate"><span class="pre">2^n</span></code> 页的块，
+并非链表节点之间逐页连接。</p>
+<p><strong>对齐是这段推演的前提。</strong> 如果第一个可分配页是页号 9，
+那么页 9 的第 0 阶伙伴是页 8，而页 10 的伙伴是页 11。
+页 9 与 10 虽然相邻，加入第二页时也不能合并。
+真实的 <code class="docutils literal notranslate"><span class="pre">PGROUNDUP(end)</span></code> 不保证落在页号 8 这样的边界上，
+所以初始化得到的会是若干个不同阶数的空闲块。</p>
+<p><code class="docutils literal notranslate"><span class="pre">pageindex()</span></code> 负责从地址得到页号，供元数据访问和伙伴计算使用。
+<code class="docutils literal notranslate"><span class="pre">pushfree()</span></code> 把一个块插入相应阶数链表；
+<code class="docutils literal notranslate"><span class="pre">removefree()</span></code> 则摘除 <strong>指定的块</strong>，可能要修改链表头，也可能要连接
+它的前后节点。合并时已经通过异或算出了伙伴地址，双向链表让中间节点也能
+直接摘除，不必从链表头寻找前驱。</p>
+<div class="admonition mytodo">
+   <p class="admonition-title">任务 4：让 kinit 建立伙伴系统</p>
+   <p>初始化锁和 <code>order[]</code>，从 <code>PGROUNDUP(end)</code>
+   起逐页加入空闲区域。每页在交给 <code>kfree_pages(p, 0)</code> 前，
+   先把该页登记为第 0 阶、尚未空闲的块头。
+   在实验报告中按页号 8～11 复现上面的四次循环，
+   写出每次循环后非空的 <code>freelist[]</code>。</p>
+</div><div class="mycaution admonition">
+<p class="admonition-title">小心：按同一个基准计算伙伴</p>
+<p>伙伴异或运算使用的是相对 <code class="docutils literal notranslate"><span class="pre">KERNBASE</span></code> 的页号，而不是
+<code class="docutils literal notranslate"><span class="pre">(pa</span> <span class="pre">-</span> <span class="pre">end)</span> <span class="pre">/</span> <span class="pre">PGSIZE</span></code>。<code class="docutils literal notranslate"><span class="pre">end</span></code> 不一定按大块对齐；
+若以它作为页号零点，相邻块可能被错误地认作伙伴。</p>
+</div>
+</section>
+</section>
+<section id="id14">
+<h4>第三步：实现多页申请和释放<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">kalloc_pages(order)</span></code> 按理论部分的“向上查找、向下拆分”实现：
+从请求阶数开始向上查找；没有合适块时返回 <code class="docutils literal notranslate"><span class="pre">0</span></code>。找到块后，
+用 <code class="docutils literal notranslate"><span class="pre">removefree()</span></code> 将其取出。只要当前阶数仍大于请求阶数，就将
+当前阶数减一，保留左半块继续拆，把右半块用 <code class="docutils literal notranslate"><span class="pre">pushfree()</span></code>
+放回对应链表。最后把左半块记录为已分配的目标阶块，再返回其首页地址。
+每次拆分都要更新两个子块的元数据，不能只修改链表。</p>
+<p><code class="docutils literal notranslate"><span class="pre">kfree_pages(pa,</span> <span class="pre">order)</span></code> 先检查阶数、地址范围、块对齐和分配状态，
+再用页号异或计算伙伴。如果伙伴越界、不空闲或阶数不同，就停止合并；
+否则用 <code class="docutils literal notranslate"><span class="pre">removefree()</span></code> 摘除伙伴，清理不再作为块首页的元数据，
+以较低页号为新块首页继续向高阶合并。最后通过 <code class="docutils literal notranslate"><span class="pre">pushfree()</span></code>
+把合并后的块放回对应链表。错误阶数或重复释放会触发 <code class="docutils literal notranslate"><span class="pre">panic</span></code>。</p>
+<p>源码沿用 xv6 的调试填充值：申请后用 <code class="docutils literal notranslate"><span class="pre">5</span></code> 填充，释放时用 <code class="docutils literal notranslate"><span class="pre">1</span></code>
+填充。它们不是零初始化；例如 <code class="docutils literal notranslate"><span class="pre">uvmalloc()</span></code> 仍要自行清零用户页。</p>
+<div class="admonition mytodo">
+   <p class="admonition-title">任务 5：实现拆分与合并</p>
+   <ol>
+      <li>实现 <code>kalloc_pages(order)</code>：处理非法阶数和无可用块，
+      完成向上查找、逐级拆分、元数据更新，并返回按块大小对齐的地址。</li>
+      <li>实现 <code>kfree_pages(pa, order)</code>：检查地址与分配状态，
+      根据伙伴页号逐级合并；只有空闲且同阶的伙伴才能被摘除。</li>
+      <li>保护对空闲链表和页状态的共同修改；检查所有提前返回路径是否正确释放锁。</li>
+   </ol>
+   <p>用页号 8～15 的例子逐行对照代码，说明每次拆分或合并后
+   <code>order[]</code>、<code>free[]</code> 和 <code>freelist[]</code> 的变化。</p>
+</div><div class="mycaution admonition">
+<p class="admonition-title">小心：传入的阶数必须与实际分配阶数相同</p>
+<p><code class="docutils literal notranslate"><span class="pre">kalloc_pages(2)</span></code> 返回的是一个四页块，释放时必须调用
+<code class="docutils literal notranslate"><span class="pre">kfree_pages(pa,</span> <span class="pre">2)</span></code>；不能拆成四次 <code class="docutils literal notranslate"><span class="pre">kfree()</span></code>。
+对齐也要按 <strong>整个块的大小</strong> 检查：第 2 阶是 16 KiB 对齐，
+第 9 阶是 2 MiB 对齐。合并时还应检查伙伴页号是否小于
+<code class="docutils literal notranslate"><span class="pre">NPAGES</span></code>。</p>
+</div>
+</section>
+<section id="id15">
+<h4>第四步：保留单页接口<a class="headerlink" href="#id15" title="Link to this heading"></a></h4>
+<p>在 <code class="docutils literal notranslate"><span class="pre">kernel/defs.h</span></code> 声明 <code class="docutils literal notranslate"><span class="pre">kalloc_pages()</span></code>、
+<code class="docutils literal notranslate"><span class="pre">kfree_pages()</span></code>，并使原有接口成为第 0 阶包装：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="nf">kalloc</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">kalloc_pages</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">kfree</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">pa</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">kfree_pages</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>因此 <code class="docutils literal notranslate"><span class="pre">kernel/vm.c</span></code>、<code class="docutils literal notranslate"><span class="pre">kernel/proc.c</span></code> 等单页调用者无需修改。
+若新调用者需要 4 个连续物理页，应配对使用：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">pa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kalloc_pages</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">pa</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span>
+<span class="w">  </span><span class="c1">// 使用 [pa, pa + 4*PGSIZE)</span>
+<span class="w">  </span><span class="n">kfree_pages</span><span class="p">(</span><span class="n">pa</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>不能把此块拆成四次 <code class="docutils literal notranslate"><span class="pre">kfree()</span></code>；分配器记录它是一个第 2 阶块。</p>
+<div class="admonition mytodo">
+   <p class="admonition-title">任务 6：接回 xv6 原有调用</p>
+   <p>在 <code>kernel/defs.h</code> 声明两个新接口；
+   用第 0 阶包装实现 <code>kalloc()</code> 和 <code>kfree()</code>。
+   保持 <code>kernel/vm.c</code>、<code>kernel/proc.c</code> 等
+   原有单页调用可以直接编译、运行。说明为什么页表能够把不连续的
+   物理页映射为进程看到的连续虚拟地址。</p>
+</div></section>
+<section id="id16">
+<h4>验证与思考<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
+<p>先在 xv6 目录运行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>，确认内核启动并出现 <code class="docutils literal notranslate"><span class="pre">$</span></code>
+提示符。这验证原有单页接口至少能够服务页表、进程内核栈等调用者。
+如果启动时出现 <code class="docutils literal notranslate"><span class="pre">panic</span></code>，先检查 <code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 是否在页表建立之前
+完成初始化，以及首次加入空闲页时元数据是否已经设置。</p>
+<p>随后在初始化全部空闲页之后临时调用多页接口，至少验证第 0、1、2 阶。
+例如申请第 2 阶块时，应能访问第 4 页的最后一个字节，再用原阶数释放：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kalloc_pages</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">KERNBASE</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;buddy test&quot;</span><span class="p">);</span>
+<span class="n">p</span><span class="p">[</span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">PGSIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
+<span class="n">kfree_pages</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>测试前后可统计各阶空闲链表所代表的总页数：
+<code class="docutils literal notranslate"><span class="pre">总空闲页数</span> <span class="pre">=</span> <span class="pre">Σ(第</span> <span class="pre">n</span> <span class="pre">阶空闲块数</span> <span class="pre">×</span> <span class="pre">2^n)</span></code>。
+申请后该数应减少，完整释放后应恢复。这个统计只能检查页数是否丢失；
+要验证**合并**，还应在调试时观察释放前后各阶链表的块数与块首页变化，
+确认两个同阶伙伴被摘除并形成高一阶块。不要仅凭 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>
+能启动，就认定多页申请与合并已经正确。</p>
+<div class="admonition mytodo">
+   <p class="admonition-title">任务 7：验证并提交实验结果</p>
+   <p>提交 <code>kernel/kalloc.c</code>、<code>kernel/defs.h</code>
+   的修改；提供 <code>make qemu</code> 启动到 shell 的截图，
+   以及第 0、1、2 阶分配与释放的测试记录。
+   在实验报告中给出页号 8～11 的初始化推演、一次拆分和一次合并时
+   各阶空闲链表的变化，并解释为什么申请 5 页需要占用 8 页。</p>
+</div><div class="myhint admonition">
+<p class="admonition-title">测试提示</p>
+<p>将临时测试放在 <code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 完成所有空闲页初始化之后；
+不要在初始化到一半时申请大块。测试中故意传错阶数或重复释放会触发
+<code class="docutils literal notranslate"><span class="pre">panic</span></code>，应单独验证，避免和正常启动测试混在一起。
+验证结束后移除临时测试代码。</p>
+</div>
+<p>最后思考：如果要封装“申请任意页数”的接口，需要由谁记录实际分配的
+阶数，以便日后正确释放？</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="lab4.html" class="btn btn-neutral float-left" title="实验四：xv6进程调度" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="TODO.html" class="btn btn-neutral float-right" title="There&#39;s nothing here" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
