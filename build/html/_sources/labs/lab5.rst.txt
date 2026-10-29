@@ -27,15 +27,12 @@
 
 .. code-block:: bash
 
-   git branch --show-current
-   git status --short
-   git add kernel user Makefile
-   git commit -m "lab4 done"
-   git switch -c lab5
+  git add .
+  git commit -m "lab4 done"
+  git checkout master
+  git merge lab4
+  git checkout -b lab5
 
-如果 Lab4 已经提交，可以跳过 ``git add`` 和 ``git commit``；
-如果 ``lab5`` 分支已经存在，直接执行 ``git switch lab5``。
-进入第二部分时继续使用该分支，不再另建 Lab6 分支。
 
 .. _lab5-buddy:
 
