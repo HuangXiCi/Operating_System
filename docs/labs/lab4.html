@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>实验四：xv6进程调度 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=4fea21f1" />
       <link rel="stylesheet" type="text/css" href="../_static/lab5_part2.css?v=016d0e1e" />
 
@@ -108,7 +108,7 @@
 <h1>实验四：xv6进程调度<a class="headerlink" href="#xv6" title="Link to this heading"></a></h1>
 <p>在开始实验之前，提交 lab3 分支，合并到 master(main) 分支，并创建新的 lab4 分支：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"lab3 done"</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;lab3 done&quot;</span>
 git<span class="w"> </span>checkout<span class="w"> </span>master
 git<span class="w"> </span>merge<span class="w"> </span>lab3
 git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>lab4
@@ -307,7 +307,7 @@ proc[NPROC] ───→ 共享的进程表；每项都有自己的 state、cont
 <span class="w">    </span><span class="n">release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">found</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="w">    </span><span class="k">asm</span><span class="w"> </span><span class="k">volatile</span><span class="p">(</span><span class="s">"wfi"</span><span class="p">);</span><span class="w">           </span><span class="c1">// 等待中断，再扫描</span>
+<span class="w">    </span><span class="k">asm</span><span class="w"> </span><span class="k">volatile</span><span class="p">(</span><span class="s">&quot;wfi&quot;</span><span class="p">);</span><span class="w">           </span><span class="c1">// 等待中断，再扫描</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -499,7 +499,7 @@ P2 已在 <code class="docutils literal notranslate"><span class="pre">t=1</span
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷.</p>
+    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷。</p>
   </div>
 
   利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 

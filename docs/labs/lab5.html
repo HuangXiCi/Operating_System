@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>实验五：内存管理 &mdash; 深圳理工大学-操作系统-实验课程 0.1 文档</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=4fea21f1" />
       <link rel="stylesheet" type="text/css" href="../_static/lab5_part2.css?v=016d0e1e" />
 
@@ -64,18 +64,17 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-buddy-metadata">1.3 改造准备与元数据</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id10">先看原始代码和内存范围</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id11">替换空闲链表并建立元数据</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">替换空闲链表并建立元数据</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-buddy-init">1.4 改造初始化</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id13">从第一张空闲页推演</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">从第一张空闲页推演</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-buddy-alloc-free">1.5 实现多页申请和释放</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-buddy-compat">1.6 保留单页接口</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-buddy-tests">1.7 验证与提交</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id17">保存第一部分的阶段性成果</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id16">保存第一部分的阶段性成果</a></li>
 </ul>
 </li>
 </ul>
@@ -83,27 +82,27 @@
 <li class="toctree-l2"><a class="reference internal" href="#lab5-part2-cow">第二部分：页表与写时复制</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-cow-prepare">2.1 实验准备</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-cow-pagetable">2.2 观察页表与地址转换</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id21">阅读三级页表</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id22">实现页表打印</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id23">实现地址查询系统调用</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id20">阅读三级页表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id21">实现页表打印</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id22">实现地址查询系统调用</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#fork">2.3 记录普通 fork 的行为</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-cow-implement">2.4 实现写时复制</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#cow">共享映射与 COW 标记</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id25">共享页的引用管理</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id26">用户态写缺页</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id27">内核向用户空间写入</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id28">权限更新与地址转换缓存</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id24">共享页的引用管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id25">用户态写缺页</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id26">内核向用户空间写入</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id27">权限更新与地址转换缓存</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-cow-tests">2.5 测试与验收</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id30">加入专项测试程序</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id31">单核与多核运行</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id29">加入专项测试程序</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id30">单核与多核运行</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#lab5-cow-report">2.6 实验报告与提交要求</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id33">参考阅读</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id32">参考阅读</a></li>
 </ul>
 </li>
 </ul>
@@ -157,7 +156,7 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>branch<span class="w"> </span>--show-current
 git<span class="w"> </span>status<span class="w"> </span>--short
 git<span class="w"> </span>add<span class="w"> </span>kernel<span class="w"> </span>user<span class="w"> </span>Makefile
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"lab4 done"</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;lab4 done&quot;</span>
 git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>lab5
 </pre></div>
 </div>
@@ -182,11 +181,11 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 之后，从 <code class="docutils literal notranslate"><span class="pre">PGROUNDUP(end)</span></code> 开始的完整页可供分配；<code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code>
 是内存上界，不是可分配页的起始地址。原始 <code class="docutils literal notranslate"><span class="pre">kalloc()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">kfree()</span></code>
 只管理单页，使用一条单向链表维护空闲页，无法保证连续物理页的分配。</p>
-<figure class="tutorial-figure tutorial-figure-wide align-center" id="id36">
+<figure class="tutorial-figure tutorial-figure-wide align-center" id="id35">
 <a class="reference internal image-reference" href="../_images/物理内存.png"><img alt="物理内存分配示意图" src="../_images/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98.png" style="width: 92%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">内核映像结束位置 <code class="docutils literal notranslate"><span class="pre">end</span></code> 之后，从下一页边界到 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 之前的完整页可分配。</span><a class="headerlink" href="#id36" title="Link to this image"></a></p>
+<p><span class="caption-text">内核映像结束位置 <code class="docutils literal notranslate"><span class="pre">end</span></code> 之后，从下一页边界到 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 之前的完整页可分配。</span><a class="headerlink" href="#id35" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <div class="admonition mytodo">
@@ -215,8 +214,8 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 <h4>从单页分配到块分配<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
 <p>假设物理内存被划为等大的页，并从 0 开始编号。伙伴系统把页组织为
 <strong>大小为 2 的幂、起点按块大小对齐</strong> 的连续块。块的“阶”表示它包含多少页：</p>
-<table class="docutils align-default" id="id37">
-<caption><span class="caption-text">阶数与块大小（每页 4 KiB）</span><a class="headerlink" href="#id37" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id36">
+<caption><span class="caption-text">阶数与块大小（每页 4 KiB）</span><a class="headerlink" href="#id36" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 30.8%" />
 <col style="width: 30.8%" />
@@ -328,14 +327,9 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 </section>
 <section id="lab5-buddy-metadata">
 <span id="id9"></span><h3>1.3 改造准备与元数据<a class="headerlink" href="#lab5-buddy-metadata" title="Link to this heading"></a></h3>
-<section id="id10">
-<h4>先看原始代码和内存范围<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
-<p>原始 <code class="docutils literal notranslate"><span class="pre">kernel/kalloc.c</span></code> 只有一条单向空闲页链表。<code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 把
-<code class="docutils literal notranslate"><span class="pre">end</span></code> 到 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 之间的完整页逐一交给 <code class="docutils literal notranslate"><span class="pre">kfree()</span></code>；
-<code class="docutils literal notranslate"><span class="pre">kalloc()</span></code> 从链表头取一页。它不会搜索连续页，也没有合并机制。</p>
-<p>改造前先读以下文件：</p>
-<table class="docutils align-default" id="id38">
-<caption><span class="caption-text">源码阅读顺序</span><a class="headerlink" href="#id38" title="Link to this table"></a></caption>
+<p>开始改造前，对照以下文件确认内存范围和原有单页调用：</p>
+<table class="docutils align-default" id="id37">
+<caption><span class="caption-text">源码阅读顺序</span><a class="headerlink" href="#id37" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 35.0%" />
 <col style="width: 65.0%" />
@@ -369,9 +363,8 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 <p>按下面的顺序动手：<strong>先建立元数据和链表操作，再初始化空闲页，
 然后实现申请与释放，最后接回原有单页接口并验证</strong>。每一步都保持
 “块首页的阶数、空闲状态、所属链表”三者一致。</p>
-</section>
-<section id="id11">
-<h4>替换空闲链表并建立元数据<a class="headerlink" href="#id11" title="Link to this heading"></a></h4>
+<section id="id10">
+<h4>替换空闲链表并建立元数据<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
 <p>在 <code class="docutils literal notranslate"><span class="pre">kernel/kalloc.c</span></code> 中，把单个 <code class="docutils literal notranslate"><span class="pre">freelist</span></code> 改为
 <code class="docutils literal notranslate"><span class="pre">freelist[MAX_ORDER</span> <span class="pre">+</span> <span class="pre">1]</span></code>。空闲块首页用 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">run</span></code> 存储
 <code class="docutils literal notranslate"><span class="pre">next</span></code> 和 <code class="docutils literal notranslate"><span class="pre">prev</span></code>，这样已知伙伴地址时可以直接从链表摘除伙伴。
@@ -423,14 +416,14 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 </section>
 </section>
 <section id="lab5-buddy-init">
-<span id="id12"></span><h3>1.4 改造初始化<a class="headerlink" href="#lab5-buddy-init" title="Link to this heading"></a></h3>
+<span id="id11"></span><h3>1.4 改造初始化<a class="headerlink" href="#lab5-buddy-init" title="Link to this heading"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 先把全部 <code class="docutils literal notranslate"><span class="pre">order[]</span></code> 设为 <code class="docutils literal notranslate"><span class="pre">-1</span></code>，然后从
 <code class="docutils literal notranslate"><span class="pre">PGROUNDUP(end)</span></code> 起逐页初始化，到 <code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 为止。
 每个新加入的页先视为第 0 阶块，再交给 <code class="docutils literal notranslate"><span class="pre">kfree_pages(p,</span> <span class="pre">0)</span></code>。
 这会立即尝试与已经加入的空闲伙伴合并。<code class="docutils literal notranslate"><span class="pre">PHYSTOP</span></code> 本身是上界，
 不代表一页可分配内存。</p>
-<section id="id13">
-<h4>从第一张空闲页推演<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
+<section id="id12">
+<h4>从第一张空闲页推演<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
 <p>为了看清每一步，假设 <strong>第一个可分配页的页号是 8</strong>。页号 8 按两页、
 四页和八页块的大小对齐，因此随后加入的页 9、10、11 能演示逐级合并。
 这里的页号由 <code class="docutils literal notranslate"><span class="pre">pageindex(pa)</span></code> 计算，是相对 <code class="docutils literal notranslate"><span class="pre">KERNBASE</span></code> 的页号；
@@ -497,7 +490,7 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 </section>
 </section>
 <section id="lab5-buddy-alloc-free">
-<span id="id14"></span><h3>1.5 实现多页申请和释放<a class="headerlink" href="#lab5-buddy-alloc-free" title="Link to this heading"></a></h3>
+<span id="id13"></span><h3>1.5 实现多页申请和释放<a class="headerlink" href="#lab5-buddy-alloc-free" title="Link to this heading"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">kalloc_pages(order)</span></code> 按理论部分的“向上查找、向下拆分”实现：
 从请求阶数开始向上查找；没有合适块时返回 <code class="docutils literal notranslate"><span class="pre">0</span></code>。找到块后，
 用 <code class="docutils literal notranslate"><span class="pre">removefree()</span></code> 将其取出。只要当前阶数仍大于请求阶数，就将
@@ -532,7 +525,7 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 </div>
 </section>
 <section id="lab5-buddy-compat">
-<span id="id15"></span><h3>1.6 保留单页接口<a class="headerlink" href="#lab5-buddy-compat" title="Link to this heading"></a></h3>
+<span id="id14"></span><h3>1.6 保留单页接口<a class="headerlink" href="#lab5-buddy-compat" title="Link to this heading"></a></h3>
 <p>在 <code class="docutils literal notranslate"><span class="pre">kernel/defs.h</span></code> 声明 <code class="docutils literal notranslate"><span class="pre">kalloc_pages()</span></code>、
 <code class="docutils literal notranslate"><span class="pre">kfree_pages()</span></code>，并使原有接口成为第 0 阶包装：</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="nf">kalloc</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">kalloc_pages</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
@@ -558,7 +551,7 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
    物理页映射为进程看到的连续虚拟地址。</p>
 </div></section>
 <section id="lab5-buddy-tests">
-<span id="id16"></span><h3>1.7 验证与提交<a class="headerlink" href="#lab5-buddy-tests" title="Link to this heading"></a></h3>
+<span id="id15"></span><h3>1.7 验证与提交<a class="headerlink" href="#lab5-buddy-tests" title="Link to this heading"></a></h3>
 <p>先在 xv6 目录运行 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>，确认内核启动并出现 <code class="docutils literal notranslate"><span class="pre">$</span></code>
 提示符。这验证原有单页接口至少能够服务页表、进程内核栈等调用者。
 如果启动时出现 <code class="docutils literal notranslate"><span class="pre">panic</span></code>，先检查 <code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 是否在页表建立之前
@@ -567,7 +560,7 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 例如申请第 2 阶块时，应能访问第 4 页的最后一个字节，再用原阶数释放：</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kalloc_pages</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">((</span><span class="n">uint64</span><span class="p">)</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">KERNBASE</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">PGSIZE</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="w">  </span><span class="n">panic</span><span class="p">(</span><span class="s">"buddy test"</span><span class="p">);</span>
+<span class="w">  </span><span class="n">panic</span><span class="p">(</span><span class="s">&quot;buddy test&quot;</span><span class="p">);</span>
 <span class="n">p</span><span class="p">[</span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">PGSIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="n">kfree_pages</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
 </pre></div>
@@ -579,12 +572,13 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 确认两个同阶伙伴被摘除并形成高一阶块。不要仅凭 <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">qemu</span></code>
 能启动，就认定多页申请与合并已经正确。</p>
 <div class="admonition mytodo">
-   <p class="admonition-title">任务 7：验证并提交实验结果</p>
-   <p>提交 <code>kernel/kalloc.c</code>、<code>kernel/defs.h</code>
-   的修改；提供 <code>make qemu</code> 启动到 shell 的截图，
-   以及第 0、1、2 阶分配与释放的测试记录。
-   在实验报告中给出页号 8～11 的初始化推演、一次拆分和一次合并时
-   各阶空闲链表的变化，并解释为什么申请 5 页需要占用 8 页。</p>
+   <p class="admonition-title">任务 7：验证伙伴分配器</p>
+   <p>提供 <code>make qemu</code> 启动到 shell 的截图，
+   分别记录第 0、1、2 阶申请返回的地址和对齐结果；
+   对比申请前、申请后、释放后的空闲页总数。
+   在实验报告中给出页号 8～11 的初始化推演，
+   记录一次拆分和一次合并前后相关阶数的空闲块变化，
+   并解释为什么申请 5 页需要占用 8 页。</p>
 </div><div class="myhint admonition">
 <p class="admonition-title">测试提示</p>
 <p>将临时测试放在 <code class="docutils literal notranslate"><span class="pre">kinit()</span></code> 完成所有空闲页初始化之后；
@@ -594,28 +588,23 @@ git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </sp
 </div>
 <p>最后思考：如果要封装“申请任意页数”的接口，需要由谁记录实际分配的
 阶数，以便日后正确释放？</p>
-<section id="id17">
-<h4>保存第一部分的阶段性成果<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
+<section id="id16">
+<h4>保存第一部分的阶段性成果<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
 <p>完成上述验证并移除临时测试后，在 xv6 工程中保存阶段性提交：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status<span class="w"> </span>--short
 git<span class="w"> </span>add<span class="w"> </span>kernel/kalloc.c<span class="w"> </span>kernel/defs.h
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"lab5: implement buddy allocator"</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;lab5: implement buddy allocator&quot;</span>
 </pre></div>
 </div>
 <p>若另外新增了需要保留的测试源码，也应一并加入提交。
 报告中保留第一部分的测试记录；随后继续在 <code class="docutils literal notranslate"><span class="pre">lab5</span></code> 分支完成第二部分，
 沿用已有的伙伴系统和单页接口。</p>
-<div class="admonition mytodo">
-   <p class="admonition-title">完成第一部分并保存提交</p>
-   <p>确认原有单页接口、连续页申请与伙伴合并均通过验证，
-   再提交本阶段代码。第二部分继续使用本次实现，
-   最终将两部分的整合工程与实验报告作为一次 Lab5 大作业提交。</p>
-</div><p>继续阅读 <a class="reference internal" href="#lab5-part2-cow"><span class="std std-ref">第二部分：页表与写时复制</span></a>，实现页表观察与写时复制。</p>
+<p>继续在本分支阅读 <a class="reference internal" href="#lab5-part2-cow"><span class="std std-ref">第二部分：页表与写时复制</span></a>，在伙伴分配器上实现页表观察与写时复制。</p>
 </section>
 </section>
 </section>
 <section id="lab5-part2-cow">
-<span id="id18"></span><h2>第二部分：页表与写时复制<a class="headerlink" href="#lab5-part2-cow" title="Link to this heading"></a></h2>
+<span id="id17"></span><h2>第二部分：页表与写时复制<a class="headerlink" href="#lab5-part2-cow" title="Link to this heading"></a></h2>
 <p>第一部分已经完成物理内存分配及伙伴系统。本部分继续使用同一份 xv6 工程，
 从进程的虚拟地址空间出发，观察页表映射，并实现写时复制
 （Copy-on-Write，COW）机制。</p>
@@ -632,7 +621,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
   <a href="#lab5-cow-tests"><span>2.5</span>测试与验收</a>
   <a href="#lab5-cow-report"><span>2.6</span>报告要求</a>
 </nav><section id="lab5-cow-prepare">
-<span id="id19"></span><h3>2.1 实验准备<a class="headerlink" href="#lab5-cow-prepare" title="Link to this heading"></a></h3>
+<span id="id18"></span><h3>2.1 实验准备<a class="headerlink" href="#lab5-cow-prepare" title="Link to this heading"></a></h3>
 <p>完成本部分后，应能够：</p>
 <ul class="simple">
 <li><p>根据三级页表解释用户虚拟地址如何转换为物理地址；</p></li>
@@ -644,8 +633,8 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <p>继续使用 Lab5 的工程和分支，在第一部分的基础上追加修改。开始前保存已有工作，
 确认第一部分的程序仍能编译和运行。本部分不要求重新搭建环境或创建独立的实验分支。</p>
 <p>本部分主要参考以下文件：</p>
-<table class="docutils align-default" id="id39">
-<caption><span class="caption-text">源码阅读范围</span><a class="headerlink" href="#id39" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id38">
+<caption><span class="caption-text">源码阅读范围</span><a class="headerlink" href="#id38" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 70.0%" />
@@ -676,17 +665,24 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<p>以课程发放的源码接口为准。当前版本的 <code class="docutils literal notranslate"><span class="pre">copyin()</span></code>、<code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">vmfault()</span></code>
-包含进程大小等参数，并已支持懒分配。修改时保留这些参数和原有逻辑，
-同时保留前面实验已经实现的系统调用及异常处理分支。</p>
+<p>以课程发放的源码接口为准。当前版本已经处理懒分配，
+修改 <code class="docutils literal notranslate"><span class="pre">vmfault()</span></code>、<code class="docutils literal notranslate"><span class="pre">copyin()</span></code>、<code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 时须保留原有函数签名和逻辑，
+也要保留前面实验实现的系统调用与异常处理分支。</p>
+<div class="myhint admonition">
+<p class="admonition-title">建议的完成顺序</p>
+<p>先完成页表打印和地址查询，用 <code class="docutils literal notranslate"><span class="pre">vmtest</span></code> 保存普通 <code class="docutils literal notranslate"><span class="pre">fork()</span></code> 的输出；
+再实现共享映射与引用计数，接着处理写缺页和 <code class="docutils literal notranslate"><span class="pre">copyout()</span></code>；
+最后比较改造前后的结果并运行专项测试。每一步通过后再进入下一步，
+便于判断问题出现在哪条路径。</p>
+</div>
 </section>
 <section id="lab5-cow-pagetable">
-<span id="id20"></span><h3>2.2 观察页表与地址转换<a class="headerlink" href="#lab5-cow-pagetable" title="Link to this heading"></a></h3>
-<section id="id21">
-<h4>阅读三级页表<a class="headerlink" href="#id21" title="Link to this heading"></a></h4>
+<span id="id19"></span><h3>2.2 观察页表与地址转换<a class="headerlink" href="#lab5-cow-pagetable" title="Link to this heading"></a></h3>
+<section id="id20">
+<h4>阅读三级页表<a class="headerlink" href="#id20" title="Link to this heading"></a></h4>
 <p>本实验使用 xv6 的 Sv39 页表和 4 KiB 页面。一个虚拟地址的低 39 位可分为：</p>
-<table class="docutils align-default" id="id40">
-<caption><span class="caption-text">虚拟地址字段</span><a class="headerlink" href="#id40" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id39">
+<caption><span class="caption-text">虚拟地址字段</span><a class="headerlink" href="#id39" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 25.0%" />
 <col style="width: 25.0%" />
@@ -721,8 +717,8 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 取出索引，以及 <code class="docutils literal notranslate"><span class="pre">alloc</span></code> 参数何时允许分配中间页表。<code class="docutils literal notranslate"><span class="pre">walk()</span></code> 返回页表项指针；
 <code class="docutils literal notranslate"><span class="pre">walkaddr()</span></code> 则检查用户映射并返回物理页起始地址。二者返回值的含义不同。</p>
 </section>
-<section id="id22">
-<h4>实现页表打印<a class="headerlink" href="#id22" title="Link to this heading"></a></h4>
+<section id="id21">
+<h4>实现页表打印<a class="headerlink" href="#id21" title="Link to this heading"></a></h4>
 <p>在 <code class="docutils literal notranslate"><span class="pre">kernel/vm.c</span></code> 实现 <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">vmprint(pagetable_t</span> <span class="pre">pagetable)</span></code>，
 并在 <code class="docutils literal notranslate"><span class="pre">kernel/defs.h</span></code> 中声明。打印根页表地址，再递归打印有效页表项；
 每项至少包含索引、PTE 原值、物理地址及 <code class="docutils literal notranslate"><span class="pre">R/W/X/U</span></code> 权限。</p>
@@ -740,11 +736,11 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <p>在进程用户页表建立完成后的合适位置调用 <code class="docutils literal notranslate"><span class="pre">vmprint()</span></code>，记录至少一个进程的页表。
 应限制调试打印的触发范围，避免每次 <code class="docutils literal notranslate"><span class="pre">exec()</span></code> 都大量打印而干扰后续测试。</p>
 </section>
-<section id="id23">
-<h4>实现地址查询系统调用<a class="headerlink" href="#id23" title="Link to this heading"></a></h4>
+<section id="id22">
+<h4>实现地址查询系统调用<a class="headerlink" href="#id22" title="Link to this heading"></a></h4>
 <p>增加用户接口：</p>
-<div class="literal-block-wrapper docutils container" id="id41">
-<div class="code-block-caption"><span class="caption-text">user/user.h</span><a class="headerlink" href="#id41" title="Link to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id40">
+<div class="code-block-caption"><span class="caption-text">user/user.h</span><a class="headerlink" href="#id40" title="Link to this code"></a></div>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">uint64</span><span class="w"> </span><span class="nf">vmtranslate</span><span class="p">(</span><span class="n">uint64</span><span class="w"> </span><span class="n">va</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -771,6 +767,12 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 </div>
 <p>用于核对地址的页表必须属于同一进程和同一运行阶段。
 启动时打印的 <code class="docutils literal notranslate"><span class="pre">init</span></code> 页表，不能直接用来核对后续 <code class="docutils literal notranslate"><span class="pre">vmtest</span></code> 进程的物理地址。</p>
+<div class="mycaution admonition">
+<p class="admonition-title">小心：地址查询不能改变被观察的映射</p>
+<p>查询时使用不分配中间页表的遍历方式，并检查 <code class="docutils literal notranslate"><span class="pre">PTE_V</span></code> 与
+<code class="docutils literal notranslate"><span class="pre">PTE_U</span></code>。若查询本身触发懒分配，测试得到的物理地址就不再代表
+查询前的状态。返回完整物理地址时别漏掉页内偏移。</p>
+</div>
 </section>
 </section>
 <section id="fork">
@@ -780,8 +782,8 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量修改为 <code class="docutils literal notranslate"><span class="pre">999</span></code> 和 <code class="docutils literal notranslate"><span class="pre">888</span></code>，
 打印修改后的结果并退出。父进程通过 <code class="docutils literal notranslate"><span class="pre">wait()</span></code> 等待子进程结束，再检查自己的变量。</p>
 <p>使用 <code class="docutils literal notranslate"><span class="pre">wait()</span></code> 安排输出顺序即可，不要依赖固定延时来保证子进程先完成。</p>
-<table class="docutils align-default" id="id42">
-<caption><span class="caption-text">普通 fork 的预期现象</span><a class="headerlink" href="#id42" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id41">
+<caption><span class="caption-text">普通 fork 的预期现象</span><a class="headerlink" href="#id41" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 40.0%" />
 <col style="width: 60.0%" />
@@ -814,7 +816,7 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 </div>
 </section>
 <section id="lab5-cow-implement">
-<span id="id24"></span><h3>2.4 实现写时复制<a class="headerlink" href="#lab5-cow-implement" title="Link to this heading"></a></h3>
+<span id="id23"></span><h3>2.4 实现写时复制<a class="headerlink" href="#lab5-cow-implement" title="Link to this heading"></a></h3>
 <p>本节应连通共享映射、引用计数、用户态写缺页以及 <code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 四条路径。
 仅让父子进程映射到同一物理页，尚不能保证写入隔离和正确回收。</p>
 <section id="cow">
@@ -822,8 +824,8 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 <p>修改 <code class="docutils literal notranslate"><span class="pre">uvmcopy()</span></code>：为子进程建立页表，但不立即复制父进程的用户物理页。
 对父进程中原本可写的页面，清除父子页表项中的 <code class="docutils literal notranslate"><span class="pre">PTE_W</span></code>，
 并设置一个软件使用的 <code class="docutils literal notranslate"><span class="pre">PTE_COW</span></code> 标记。可使用尚未占用的 RSW 位，例如：</p>
-<div class="literal-block-wrapper docutils container" id="id43">
-<div class="code-block-caption"><span class="caption-text">kernel/riscv.h</span><a class="headerlink" href="#id43" title="Link to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id42">
+<div class="code-block-caption"><span class="caption-text">kernel/riscv.h</span><a class="headerlink" href="#id42" title="Link to this code"></a></div>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define PTE_COW (1L &lt;&lt; 8)</span>
 </pre></div>
 </div>
@@ -833,14 +835,16 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 保持懒分配留下的未映射区域，不得为了 <code class="docutils literal notranslate"><span class="pre">fork()</span></code> 预先补齐所有页面。</p>
 <p>建立子进程映射成功后，确保共享页的引用计数增加。
 若中途失败，应撤销已建立的子进程映射并正确恢复引用数量；
-不能将仍被父进程使用的物理页提前释放。</p>
+不能将仍被父进程使用的物理页提前释放。父进程已修改的页表项
+也必须保持可正常使用：可以回滚权限，或保留引用数为 1 的 COW 标记
+并由写缺页路径正确处理。</p>
 </section>
-<section id="id25">
-<h4>共享页的引用管理<a class="headerlink" href="#id25" title="Link to this heading"></a></h4>
+<section id="id24">
+<h4>共享页的引用管理<a class="headerlink" href="#id24" title="Link to this heading"></a></h4>
 <p>复用第一部分的物理页分配、回收接口，在其上维护每个物理页的共享引用。
 本节只要求以下生命周期规则：</p>
-<table class="docutils align-default" id="id44">
-<caption><span class="caption-text">引用计数规则</span><a class="headerlink" href="#id44" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id43">
+<caption><span class="caption-text">引用计数规则</span><a class="headerlink" href="#id43" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 42.0%" />
 <col style="width: 58.0%" />
@@ -871,9 +875,16 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 <p><strong>保留第一部分已经实现的分配策略与元数据。</strong>
 若底层采用伙伴系统，只在最后一个引用消失时进入原有的回收路径；
 不要用新的空闲链表实现覆盖第一部分的分配器，也不要重复编写拆分、合并算法。</p>
+<div class="mycaution admonition">
+<p class="admonition-title">小心：引用计数管理的是共享页的生命周期</p>
+<p>COW 共享的是单个用户物理页。新增映射时增加引用，解除映射时减少引用，
+仅在计数变为 0 时才真正调用底层回收逻辑。初始化伙伴系统时加入的
+空闲页尚无引用，不能错误地走“减少引用”路径。多页块仍按申请时的
+阶数整体释放，不要把它拆成多个单页引用来回收。</p>
+</div>
 </section>
-<section id="id26">
-<h4>用户态写缺页<a class="headerlink" href="#id26" title="Link to this heading"></a></h4>
+<section id="id25">
+<h4>用户态写缺页<a class="headerlink" href="#id25" title="Link to this heading"></a></h4>
 <p>用户程序写入不可写页面时产生 store page fault，<code class="docutils literal notranslate"><span class="pre">scause</span> <span class="pre">==</span> <span class="pre">15</span></code>。
 <code class="docutils literal notranslate"><span class="pre">stval</span></code> 给出出错虚拟地址；先检查地址范围，再向下对齐到页边界，
 查找并验证该页表项。</p>
@@ -886,16 +897,18 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 <li><p>返回用户态，重新执行引发缺页的写指令。</p></li>
 </ol>
 <p>当旧页仅剩当前一个引用时，可以直接恢复写权限并清除 COW 标记，
-省去分配和复制。该优化不应使真正的只读页变为可写。</p>
+省去分配和复制。这是可选优化；无论是否实现，真正的只读页都不能
+因此变为可写。</p>
 <p>当前源码已经由 <code class="docutils literal notranslate"><span class="pre">usertrap()</span></code> 将缺页交给 <code class="docutils literal notranslate"><span class="pre">vmfault()</span></code>，
 可在 <code class="docutils literal notranslate"><span class="pre">vmfault()</span></code> 中区分“尚未映射的懒分配页面”和“已经映射的 COW 页面”，
 保留现有懒分配处理。读缺页 <code class="docutils literal notranslate"><span class="pre">scause</span> <span class="pre">==</span> <span class="pre">13</span></code> 不能被当成 COW 写入来处理。</p>
 <p>地址非法、写入真正的只读页或分配新页失败时，应终止出错进程，
 不能让整个内核崩溃。处理成功后，不要将保存的 <code class="docutils literal notranslate"><span class="pre">epc</span></code> 加 <code class="docutils literal notranslate"><span class="pre">4</span></code>：
-本次必须重试原写指令，与前面实验处理 <code class="docutils literal notranslate"><span class="pre">ecall</span></code> 的返回位置不同。</p>
+本次必须重试原写指令，与前面实验处理 <code class="docutils literal notranslate"><span class="pre">ecall</span></code> 的返回位置不同。
+还要保留栈保护页原有的 <code class="docutils literal notranslate"><span class="pre">PTE_U</span></code> 状态，不能在复制后让它对用户可访问。</p>
 </section>
-<section id="id27">
-<h4>内核向用户空间写入<a class="headerlink" href="#id27" title="Link to this heading"></a></h4>
+<section id="id26">
+<h4>内核向用户空间写入<a class="headerlink" href="#id26" title="Link to this heading"></a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">read()</span></code> 等系统调用可能通过 <code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 将内核数据写入用户缓冲区。
 <code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 根据用户页表取得物理地址后复制数据，
 这一路径不会自动通过用户态 store page fault 处理 COW。</p>
@@ -903,9 +916,14 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 目标是 COW 页时，先解除共享，成功后使用 <strong>更新后的物理地址</strong> 写入；
 目标是真正的只读页时仍然拒绝写入。跨页写入时，每一页都要正确处理，
 并保留原有的懒分配逻辑及失败返回约定。</p>
+<div class="mycaution admonition">
+<p class="admonition-title">小心：写入时重新取得物理地址</p>
+<p>COW 处理会把页表项指向新物理页。<code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 不能沿用处理前
+缓存的旧物理地址；跨页复制时还须对每个目标页分别检查权限与 COW 标记。</p>
+</div>
 </section>
-<section id="id28">
-<h4>权限更新与地址转换缓存<a class="headerlink" href="#id28" title="Link to this heading"></a></h4>
+<section id="id27">
+<h4>权限更新与地址转换缓存<a class="headerlink" href="#id27" title="Link to this heading"></a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">fork()</span></code> 清除父进程的写权限，以及 COW 处理改变物理页或恢复写权限后，
 应在适当位置调用 <code class="docutils literal notranslate"><span class="pre">sfence_vma()</span></code>，使修改后的页表生效。
 否则 CPU 可能继续使用旧的地址转换或权限缓存。</p>
@@ -923,10 +941,10 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 </section>
 </section>
 <section id="lab5-cow-tests">
-<span id="id29"></span><h3>2.5 测试与验收<a class="headerlink" href="#lab5-cow-tests" title="Link to this heading"></a></h3>
+<span id="id28"></span><h3>2.5 测试与验收<a class="headerlink" href="#lab5-cow-tests" title="Link to this heading"></a></h3>
 <p>先用同一个 <code class="docutils literal notranslate"><span class="pre">vmtest</span></code> 重新观察 COW 的行为。重点比较全局变量所在页面：</p>
-<table class="docutils align-default" id="id45">
-<caption><span class="caption-text">普通 fork 与 COW fork 对照</span><a class="headerlink" href="#id45" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id44">
+<caption><span class="caption-text">普通 fork 与 COW fork 对照</span><a class="headerlink" href="#id44" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 34.0%" />
 <col style="width: 33.0%" />
@@ -956,12 +974,12 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 <p><strong>栈页可能在显式变量赋值之前就已经分离。</strong> 函数调用和打印也会写栈，
 不能仅凭“child before write”中的栈 PA 不同就判定 COW 失败。
 若全局变量所在页还包含其他会被修改的数据，也应说明这些写入对观察结果的影响。</p>
-<section id="id30">
-<h4>加入专项测试程序<a class="headerlink" href="#id30" title="Link to this heading"></a></h4>
+<section id="id29">
+<h4>加入专项测试程序<a class="headerlink" href="#id29" title="Link to this heading"></a></h4>
 <p>下载课程提供的 <a class="reference download internal" download="" href="../_downloads/e5d11bcf792075a0a0b5223c1e4e0728/cowtest.c"><code class="xref download docutils literal notranslate"><span class="pre">cowtest.c</span></code></a>，
 放入工程的 <code class="docutils literal notranslate"><span class="pre">user/cowtest.c</span></code>。本测试由课程配套提供，用于以下专项验证：</p>
-<table class="docutils align-default" id="id46">
-<caption><span class="caption-text">cowtest 测试内容</span><a class="headerlink" href="#id46" title="Link to this table"></a></caption>
+<table class="docutils align-default" id="id45">
+<caption><span class="caption-text">cowtest 测试内容</span><a class="headerlink" href="#id45" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 70.0%" />
@@ -992,16 +1010,16 @@ PID、变量值、VA 和 PA。子进程先打印相同信息，再将两变量�
 <code class="docutils literal notranslate"><span class="pre">reclaim</span></code> 是回收回归测试，不能单凭它证明完全不存在任何小规模内存泄漏。</p>
 <p>将 <code class="docutils literal notranslate"><span class="pre">vmtest</span></code>、<code class="docutils literal notranslate"><span class="pre">cowtest</span></code> 加入 <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> 的 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code>，
 列表中已有的程序不要重复添加。以下条目放在列表中间，并保留末尾反斜杠：</p>
-<div class="literal-block-wrapper docutils container" id="id47">
-<div class="code-block-caption"><span class="caption-text">Makefile 中的 UPROGS 列表条目</span><a class="headerlink" href="#id47" title="Link to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id46">
+<div class="code-block-caption"><span class="caption-text">Makefile 中的 UPROGS 列表条目</span><a class="headerlink" href="#id46" title="Link to this code"></a></div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$U/_vmtest\
 $U/_cowtest\
 </pre></div>
 </div>
 </div>
 </section>
-<section id="id31">
-<h4>单核与多核运行<a class="headerlink" href="#id31" title="Link to this heading"></a></h4>
+<section id="id30">
+<h4>单核与多核运行<a class="headerlink" href="#id30" title="Link to this heading"></a></h4>
 <p>下面的编译命令在 <strong>Linux 终端、xv6 工程根目录</strong> 执行：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>qemu<span class="w"> </span><span class="nv">CPUS</span><span class="o">=</span><span class="m">1</span>
 </pre></div>
@@ -1020,23 +1038,21 @@ reclaim: OK
 ALL COW TESTS PASSED
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">usertests</span> <span class="pre">-q</span></code> 最后应显示：</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ALL TESTS PASSED
-</pre></div>
-</div>
+<p><code class="docutils literal notranslate"><span class="pre">usertests</span> <span class="pre">-q</span></code> 应以 <code class="docutils literal notranslate"><span class="pre">ALL</span> <span class="pre">TESTS</span> <span class="pre">PASSED</span></code> 结束。</p>
 <p>退出 QEMU：先按 <code class="docutils literal notranslate"><span class="pre">Ctrl+A</span></code>，松开后再按 <code class="docutils literal notranslate"><span class="pre">X</span></code>。回到 Linux 终端后执行：</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>qemu<span class="w"> </span><span class="nv">CPUS</span><span class="o">=</span><span class="m">3</span>
 </pre></div>
 </div>
-<p>在新启动的 xv6 中，再运行同样三个测试，检查多核并发下的引用管理是否正确。
-最终提交应包含单核和多核结果。结束时关闭不必要的调试打印，
-并确认第一部分原有的测试仍然通过。</p>
+<p>在新启动的 xv6 中再次运行 <code class="docutils literal notranslate"><span class="pre">vmtest</span></code>、<code class="docutils literal notranslate"><span class="pre">cowtest</span></code> 和
+<code class="docutils literal notranslate"><span class="pre">usertests</span> <span class="pre">-q</span></code>，检查多核并发下的引用管理。
+学生发放的工程包含 <code class="docutils literal notranslate"><span class="pre">usertests</span></code>，三个程序均为必做验收。
+最终记录单核和多核结果，关闭临时调试打印，并确认第一部分的分配器测试仍然通过。</p>
 <div class="mytodo admonition">
 <p class="admonition-title">必做：完成验收并记录证据</p>
 <ol class="arabic simple">
 <li><p>保存普通 <code class="docutils literal notranslate"><span class="pre">fork()</span></code> 与 COW <code class="docutils literal notranslate"><span class="pre">fork()</span></code> 的 <code class="docutils literal notranslate"><span class="pre">vmtest</span></code> 对照结果。</p></li>
-<li><p>在 <code class="docutils literal notranslate"><span class="pre">CPUS=1</span></code>、<code class="docutils literal notranslate"><span class="pre">CPUS=3</span></code> 下分别通过 <code class="docutils literal notranslate"><span class="pre">cowtest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">usertests</span> <span class="pre">-q</span></code>，
-同时确认 <code class="docutils literal notranslate"><span class="pre">vmtest</span></code> 正常。</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">CPUS=1</span></code>、<code class="docutils literal notranslate"><span class="pre">CPUS=3</span></code> 下分别通过 <code class="docutils literal notranslate"><span class="pre">vmtest</span></code>、
+<code class="docutils literal notranslate"><span class="pre">cowtest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">usertests</span> <span class="pre">-q</span></code>。</p></li>
 <li><p>说明大内存测试为什么能体现 COW 的作用，不能通过跳过测试、
 修改成功输出或缩小压力区域来替代实现。</p></li>
 <li><p>确认第一部分的分配器接口与测试仍然可用，提交整合后的工程。</p></li>
@@ -1044,39 +1060,36 @@ ALL COW TESTS PASSED
 </div>
 <p>若出现 <code class="docutils literal notranslate"><span class="pre">exec</span> <span class="pre">cowtest</span> <span class="pre">failed</span></code>，先检查 <code class="docutils literal notranslate"><span class="pre">user/cowtest.c</span></code> 是否存在、
 <code class="docutils literal notranslate"><span class="pre">UPROGS</span></code> 是否包含该程序，以及是否已重新编译启动。
+<code class="docutils literal notranslate"><span class="pre">usertests</span></code> 找不到时也应先检查它是否已构建并写入文件系统镜像。
 <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">user/cowtest.c</span></code>、<code class="docutils literal notranslate"><span class="pre">rg</span></code> 和 <code class="docutils literal notranslate"><span class="pre">make</span></code> 应在 Linux 终端执行，
 不要在 xv6 shell 中执行这些源码检查命令。</p>
 </section>
 </section>
 <section id="lab5-cow-report">
-<span id="id32"></span><h3>2.6 实验报告与提交要求<a class="headerlink" href="#lab5-cow-report" title="Link to this heading"></a></h3>
-<p>本部分与第一部分共同组成 <strong>一次 Lab5 大作业</strong>。在同一份实验报告中设置
-“第二部分：页表与写时复制”，按 Lab5 总说明统一命名、打包和提交，
-不为本部分另设一次作业。</p>
+<span id="id31"></span><h3>2.6 实验报告与提交要求<a class="headerlink" href="#lab5-cow-report" title="Link to this heading"></a></h3>
+<p>两部分合为 <strong>一次 Lab5 作业</strong>。在同一份报告中分别说明伙伴系统和 COW，
+提交同一份整合后的 xv6 工程，不为第二部分另建分支或单独交一份工程。</p>
 <p>报告应包含：</p>
 <ol class="arabic simple">
-<li><p><strong>实现说明</strong>：列出新增、修改的文件，说明地址查询系统调用、共享映射、
-引用计数、写缺页及 <code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 如何连接。与第一部分共同修改的文件应说明整合位置。</p></li>
-<li><p><strong>映射对照</strong>：选择一个变量，记录普通 <code class="docutils literal notranslate"><span class="pre">fork()</span></code> 和 COW <code class="docutils literal notranslate"><span class="pre">fork()</span></code>
-中的 VA、写入前 PA、写入后 PA 及父子变量值，解释输出变化。</p></li>
-<li><p><strong>测试证据</strong>：提供页表打印、地址查询、普通/COW 对照，以及单核、多核测试的
-关键输出或截图。完整运行日志可作为附件。</p></li>
-<li><p><strong>问题分析</strong>：记录遇到的一个实际问题及定位过程；若没有运行故障，
-分析一个实现中的边界情况，如分配失败或最后一个共享引用被释放。</p></li>
-<li><p><strong>源码提交</strong>：提交能编译运行的整合工程及测试程序，
-保留第一部分成果。目录组织和压缩包命名按 Lab5 总要求执行。</p></li>
+<li><p><strong>实现说明</strong>：列出修改的文件，用一张流程图或简短文字说明
+伙伴分配器、共享映射、引用计数、写缺页和 <code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 如何衔接。</p></li>
+<li><p><strong>地址对照</strong>：选择一个变量，记录普通 <code class="docutils literal notranslate"><span class="pre">fork()</span></code> 和 COW <code class="docutils literal notranslate"><span class="pre">fork()</span></code>
+的 VA、写入前后 PA 与父子变量值，解释何时共享、何时分离。</p></li>
+<li><p><strong>测试证据</strong>：提供页表打印、地址查询，以及单核和多核下
+<code class="docutils literal notranslate"><span class="pre">vmtest</span></code>、<code class="docutils literal notranslate"><span class="pre">cowtest</span></code>、<code class="docutils literal notranslate"><span class="pre">usertests</span> <span class="pre">-q</span></code> 的关键输出；
+保留第一部分的测试记录。</p></li>
+<li><p><strong>问题分析</strong>：说明一个实际调试问题或一个边界情况，
+例如分配失败、真正只读页被写入、最后一个引用消失。</p></li>
 </ol>
 <p>在报告中回答以下问题：</p>
 <ul class="simple">
-<li><p>父子进程访问相同的 VA，为什么既可能映射到不同 PA，也可能暂时共享同一 PA？</p></li>
-<li><p>为什么必须区分“真正只读页”与“暂时不可写的 COW 页”？仅检查 <code class="docutils literal notranslate"><span class="pre">(*pte</span> <span class="pre">&amp;</span> <span class="pre">PTE_W)</span> <span class="pre">==</span> <span class="pre">0</span></code> 够不够？</p></li>
-<li><p>处理 COW 写缺页成功后，为什么不能像处理 <code class="docutils literal notranslate"><span class="pre">ecall</span></code> 那样将 <code class="docutils literal notranslate"><span class="pre">epc</span></code> 加 <code class="docutils literal notranslate"><span class="pre">4</span></code>？</p></li>
-<li><p>用户态写缺页已经处理后，为什么 <code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 仍需单独检查 COW？</p></li>
-<li><p>一个进程退出时，为什么不能立即把所有映射过的物理页交回伙伴系统？</p></li>
-<li><p>旧物理页仅剩一个引用时，如何避免不必要的复制？该做法为什么仍能保持隔离？</p></li>
+<li><p>父子进程访问同一 VA，为什么普通 <code class="docutils literal notranslate"><span class="pre">fork()</span></code> 的 PA 不同，而 COW <code class="docutils literal notranslate"><span class="pre">fork()</span></code> 在写入前可能相同？</p></li>
+<li><p>为什么必须区分真正只读页和 COW 页？写缺页处理成功后为什么重试原指令？</p></li>
+<li><p>用户态写缺页已处理，为什么 <code class="docutils literal notranslate"><span class="pre">copyout()</span></code> 仍需单独检查 COW？</p></li>
+<li><p>进程退出时如何用引用计数决定是否回收物理页？引用数为 1 时可怎样避免复制？</p></li>
 </ul>
-<section id="id33">
-<h4>参考阅读<a class="headerlink" href="#id33" title="Link to this heading"></a></h4>
+<section id="id32">
+<h4>参考阅读<a class="headerlink" href="#id32" title="Link to this heading"></a></h4>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/mit-pdos/xv6-riscv/blob/riscv/kernel/vm.c">xv6 源码：虚拟内存与地址复制</a></p></li>
 <li><p><a class="reference external" href="https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html">MIT xv6 COW 实验说明</a></p></li>
@@ -1100,7 +1113,7 @@ ALL COW TESTS PASSED
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷.</p>
+    <p>&#169; 版权所有 2026, 王洋，黄夕祠，周雨荷。</p>
   </div>
 
   利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的 
